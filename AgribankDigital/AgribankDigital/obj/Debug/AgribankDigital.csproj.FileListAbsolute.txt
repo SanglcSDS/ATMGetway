@@ -7,3 +7,12 @@ C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\Ag
 C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
 C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
 C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.AssemblyReference.cache
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.AssemblyReference.cache
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb

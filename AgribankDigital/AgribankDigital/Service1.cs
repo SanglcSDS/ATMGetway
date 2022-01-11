@@ -29,18 +29,51 @@ namespace AgribankDigital
         Dictionary<int, string> asciiDictionary = new Dictionary<int, string>()
         {
             {1, "\\1"},// SOH
+            {2, "\\2"},// STX
+            {3, "\\3"},// ETX
             {4, "\\4"},// EOT
+            {5, "\\5"},// ENQ
+            {6, "\\6"},// ACK
+            {7, "\\7"},// BEL
             {8, "\\8"},// BS
+            {9, "\\9"},// TAB
+            {10, "\\a"},// LF
+            {11, "\\b"},// VT
             {12, "\\c"},// FF
+            {13, "\\d"},// CR
             {14, "\\e"},// SO
             {15, "\\f"},// SI
+            {16, "\\10"},// DLE
+            {17, "\\11"},// DC1
+            {18, "\\12"},// DC2
             {19, "\\13"},// DC3
+            {20, "\\14"},// DC4
             {21, "\\15"},// NAK
+            {22, "\\16"},// SYN
+            {23, "\\17"},// ETB
+            {24, "\\18"},// CAM
+            {25, "\\19"},// EM
+            {26, "\\1a"},// SUB
             {27, "\\1b"},// ESC
-            {28, "\\1c"}, // FS
-            {29, "\\1b"},// GS
-        };
+            {28, "\\1c"},// FS
+            {29, "\\1d"},// GS
+            {30, "\\1e"},// RS
+            {31, "\\1f"},//UE 
 
+
+
+        };
+        Dictionary<int, string> characters = new Dictionary<int, string>()
+        { {36, "\\24"},// $
+          {37, "\\25"},// %
+          {39, "\\27"},// '
+          {43, "\\2b"},// +
+          {61, "\\3d"},// =
+          {63, "\\3f"},// ?
+          {95, "\\5f"},// _
+          {122,"\\7a"},// z
+
+        };
         public Service1()
         {
             InitializeComponent();
@@ -125,9 +158,9 @@ namespace AgribankDigital
                     Byte[] data = ReceiveAll(socketATM);
                     if (data.Length > 0)
                     {
-                        Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                      //  Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                         string dataStr = convertToHex(System.Text.Encoding.ASCII.GetString(data), asciiDictionary);
-                               dataStr = formatCardNumber(dataStr, "\\1c;", "=", "?\\1c", "t11\\1c");
+                               dataStr = formatCardNumber(dataStr, "\\1c;", "=", "?\\1c", "11\\1c");
                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                         Logger.Log("> " + dataStr);
 
@@ -154,7 +187,7 @@ namespace AgribankDigital
 
                     if (data.Length > 0)
                     {
-                        Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                    //    Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                         string dataStr = convertToHex(System.Text.Encoding.ASCII.GetString(data), asciiDictionary);
                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                         Logger.Log("< " + dataStr);
@@ -177,31 +210,73 @@ namespace AgribankDigital
             char[] charValues = str.ToCharArray();
             string hexOutput = "";
 
-            foreach (char _eachChar in charValues)
+            for (var i = 0; i < charValues.Length; i++)
             {
-                int value = Convert.ToInt32(_eachChar);
-                if (asciiDictionary.ContainsKey(value))
+                int value = Convert.ToInt32(charValues[i]);
+                if (i == 0)
                 {
-                    hexOutput += asciiDictionary[value];
+                    if (asciiDictionary.ContainsKey(value)|| characters.ContainsKey(value))
+                    {
+                        hexOutput += "";
+                    }
+                }
+                 else if (i == 1){
+                    if (characters.ContainsKey(value))
+                    {
+                        hexOutput += "";
+                    }
+                    else
+                    {
+                        if (asciiDictionary.ContainsKey(value))
+                        {
+                            hexOutput += asciiDictionary[value];
+                        }
+                        else
+                        {
+                            hexOutput += charValues[i];
+                        }
+
+                    }
                 }
                 else
                 {
-                    hexOutput += _eachChar;
+                    if (asciiDictionary.ContainsKey(value))
+                    {
+                        hexOutput += asciiDictionary[value];
+                    }
+                    else
+                    {
+                        hexOutput += charValues[i];
+                    }
+
                 }
+
+           
             }
+         
             return hexOutput;
         }
 
+
         string formatCardNumber(string data, string prefix, string middle, string surfix, string condition)
         {
+           // dataStr = formatCardNumber(dataStr, "\\1c;", "=", "?\\1c", "11\\1c");
             if (data.Substring(0, condition.Length).Equals(condition))
             {
                 int phayIndex = data.IndexOf(prefix);
                 int bangIndex = data.IndexOf(middle);
                 int hoiIndex = data.IndexOf(surfix);
+                string cardnumber1 = data.Substring(phayIndex + prefix.Length, bangIndex - phayIndex - prefix.Length+1);
+                string cardnumber2 = data.Substring(bangIndex + middle.Length-1, hoiIndex - bangIndex - middle.Length);
 
-                data = data.Replace(data.Substring(phayIndex + prefix.Length, bangIndex - phayIndex - prefix.Length), xLenght(5, "*") + xLenght(bangIndex - 10 - phayIndex - prefix.Length, "X") + xLenght(5, "*"));
-                data = data.Replace(data.Substring(bangIndex + middle.Length, hoiIndex - bangIndex - middle.Length), xLenght(7, "*") + xLenght(hoiIndex - 7 - bangIndex - middle.Length, "X"));
+            
+              
+                Console.WriteLine(cardnumber1);
+                Console.WriteLine(cardnumber2);
+
+                data = data.Replace(data.Substring(phayIndex + prefix.Length, bangIndex - phayIndex - prefix.Length+1), xLenght(5, "*") + xLenght(bangIndex - 10 - phayIndex - prefix.Length, "X") + xLenght(5, "*")+"=");
+                data = data.Replace(data.Substring(bangIndex + middle.Length-1, hoiIndex - bangIndex - middle.Length), "="+xLenght(7, "*") + xLenght(hoiIndex - 6 - bangIndex - middle.Length, "X"));
+                int bangbangIndex = data.IndexOf("==\\1c");
 
                 return data;
             }
