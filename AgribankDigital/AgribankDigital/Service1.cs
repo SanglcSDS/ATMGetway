@@ -20,7 +20,10 @@ namespace AgribankDigital
         private static string HOST_CLIENT = ConfigurationManager.AppSettings["ip_host"];
         private static int PORT_FORWARD = Int32.Parse(ConfigurationManager.AppSettings["port_listen"]);
         private static int PORT_CLIENT = Int32.Parse(ConfigurationManager.AppSettings["port_host"]);
-
+        private static string[] SEND_CHARACTER = ConfigurationManager.AppSettings["send_character"].Split(new char[] { ',' });
+        private static string[] RECEIVE_CHARACTER = ConfigurationManager.AppSettings["receive_character"].Split(new char[] { ',' });
+ 
+     
         Thread listenerThread;
 
         TcpListener listener = null;
@@ -63,17 +66,7 @@ namespace AgribankDigital
 
 
         };
-        Dictionary<int, string> characters = new Dictionary<int, string>()
-        { {36, "\\24"},// $
-          {37, "\\25"},// %
-          {39, "\\27"},// '
-          {43, "\\2b"},// +
-          {61, "\\3d"},// =
-          {63, "\\3f"},// ?
-          {95, "\\5f"},// _
-          {122,"\\7a"},// z
-
-        };
+  
         public Service1()
         {
             InitializeComponent();
@@ -87,6 +80,9 @@ namespace AgribankDigital
 
         protected override void OnStart(string[] args)
         {
+            Console.WriteLine(SEND_CHARACTER);
+            Console.WriteLine(RECEIVE_CHARACTER);
+
             listenerThread = new Thread(new ThreadStart(ListenerMethod));
 
             listenerThread.Start();
@@ -159,8 +155,9 @@ namespace AgribankDigital
                     if (data.Length > 0)
                     {
                       //  Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
-                        string dataStr = convertToHex(System.Text.Encoding.ASCII.GetString(data), asciiDictionary);
-                               dataStr = formatCardNumber(dataStr, "\\1c;", "=", "?\\1c", "11\\1c");
+                        string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), asciiDictionary, SEND_CHARACTER, @"\1c");
+                               dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
+
                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                         Logger.Log("> " + dataStr);
 
@@ -188,7 +185,7 @@ namespace AgribankDigital
                     if (data.Length > 0)
                     {
                     //    Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
-                        string dataStr = convertToHex(System.Text.Encoding.ASCII.GetString(data), asciiDictionary);
+                        string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), asciiDictionary, RECEIVE_CHARACTER, @"\1c");
                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                         Logger.Log("< " + dataStr);
 
@@ -204,94 +201,9 @@ namespace AgribankDigital
                 Logger.Log("Error: " + ex.Message);
             }
         }
-
-         string convertToHex(String str, Dictionary<int, string> asciiDictionary)
-        {
-            char[] charValues = str.ToCharArray();
-            string hexOutput = "";
-
-            for (var i = 0; i < charValues.Length; i++)
-            {
-                int value = Convert.ToInt32(charValues[i]);
-                if (i == 0)
-                {
-                    if (asciiDictionary.ContainsKey(value)|| characters.ContainsKey(value))
-                    {
-                        hexOutput += "";
-                    }
-                }
-                 else if (i == 1){
-                    if (characters.ContainsKey(value))
-                    {
-                        hexOutput += "";
-                    }
-                    else
-                    {
-                        if (asciiDictionary.ContainsKey(value))
-                        {
-                            hexOutput += asciiDictionary[value];
-                        }
-                        else
-                        {
-                            hexOutput += charValues[i];
-                        }
-
-                    }
-                }
-                else
-                {
-                    if (asciiDictionary.ContainsKey(value))
-                    {
-                        hexOutput += asciiDictionary[value];
-                    }
-                    else
-                    {
-                        hexOutput += charValues[i];
-                    }
-
-                }
-
-           
-            }
-         
-            return hexOutput;
-        }
-
-
-        string formatCardNumber(string data, string prefix, string middle, string surfix, string condition)
-        {
-           // dataStr = formatCardNumber(dataStr, "\\1c;", "=", "?\\1c", "11\\1c");
-            if (data.Substring(0, condition.Length).Equals(condition))
-            {
-                int phayIndex = data.IndexOf(prefix);
-                int bangIndex = data.IndexOf(middle);
-                int hoiIndex = data.IndexOf(surfix);
-                string cardnumber1 = data.Substring(phayIndex + prefix.Length, bangIndex - phayIndex - prefix.Length+1);
-                string cardnumber2 = data.Substring(bangIndex + middle.Length-1, hoiIndex - bangIndex - middle.Length);
-
-            
-              
-                Console.WriteLine(cardnumber1);
-                Console.WriteLine(cardnumber2);
-
-                data = data.Replace(data.Substring(phayIndex + prefix.Length, bangIndex - phayIndex - prefix.Length+1), xLenght(5, "*") + xLenght(bangIndex - 10 - phayIndex - prefix.Length, "X") + xLenght(5, "*")+"=");
-                data = data.Replace(data.Substring(bangIndex + middle.Length-1, hoiIndex - bangIndex - middle.Length), "="+xLenght(7, "*") + xLenght(hoiIndex - 6 - bangIndex - middle.Length, "X"));
-                int bangbangIndex = data.IndexOf("==\\1c");
-
-                return data;
-            }
-            return data;
-        }
-
-        string xLenght(int lenght, string character)
-        {
-            string result = "";
-            for (int i = 0; i < lenght; i++)
-            {
-                result += character;
-            }
-            return result;
-        }
+      
+     
+    
         protected override void OnStop()
         {
             if (socketATM != null)
