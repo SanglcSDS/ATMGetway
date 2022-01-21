@@ -10,13 +10,13 @@ using System.Net.Sockets;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
-
+using WebSocketSharp;
 
 namespace AgribankDigital
 {
     public partial class Service1 : ServiceBase
     {
-
+        private static string IP_WEBSOCKET = ConfigurationManager.AppSettings["ip_webSocket"];
         private static string HOST_CLIENT = ConfigurationManager.AppSettings["ip_host"];
         private static int PORT_FORWARD = Int32.Parse(ConfigurationManager.AppSettings["port_listen"]);
         private static int PORT_CLIENT = Int32.Parse(ConfigurationManager.AppSettings["port_host"]);
@@ -25,6 +25,7 @@ namespace AgribankDigital
  
      
         Thread listenerThread;
+        Thread fingrprintrThread;
 
         TcpListener listener = null;
         Socket socketATM = null;
@@ -80,16 +81,29 @@ namespace AgribankDigital
 
         protected override void OnStart(string[] args)
         {
-            Console.WriteLine(SEND_CHARACTER);
-            Console.WriteLine(RECEIVE_CHARACTER);
-
             listenerThread = new Thread(new ThreadStart(ListenerMethod));
-
             listenerThread.Start();
+            fingrprintrThread = new Thread(new ThreadStart(Fingrprint));
+            fingrprintrThread.Start();
 
         }
 
+        protected  void Fingrprint ()
+        {
+            using (var ws = new WebSocket(IP_WEBSOCKET))
+            {
+                ws.OnMessage += (sender, e) =>
+                {
+                    Logger.LogFingrprint(e.Data);
+                    if (e.Data.Contains("\"Status\":\"STOP\""))
+                        ws.Send("FINGERPRINT");
+                };
 
+                ws.Connect();
+                ws.Send("FINGERPRINT");
+                
+            }
+        }
         protected void ListenerMethod()
         {
             try
@@ -216,6 +230,7 @@ namespace AgribankDigital
                 listener.Stop();
 
             listenerThread.Abort();
+            fingrprintrThread.Abort();
         }
     }
 }
