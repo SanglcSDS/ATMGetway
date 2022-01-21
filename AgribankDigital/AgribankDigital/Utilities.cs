@@ -10,41 +10,41 @@ namespace AgribankDigital
         public static string convertToHex(string str, Dictionary<int, string> asciiDictionary, string[] character, string cindex)
         {
             char[] charValues = str.ToCharArray();
-            string hexOutput = "";
+            string textOutput = "";
 
             foreach (char _eachChar in charValues)
             {
                 int value = Convert.ToInt32(_eachChar);
                 if (asciiDictionary.ContainsKey(value))
                 {
-                    hexOutput += asciiDictionary[value];
+                    textOutput += asciiDictionary[value];
                 }
                 else
                 {
-                    hexOutput += _eachChar;
+                    textOutput += _eachChar;
                 }
             }
           
             for (var i = 0; i < character.Length; i++)
             {
-                if (hexOutput.Length > 1)
+                if (textOutput.Length > 1)
                 {
-                    int phayIndex = hexOutput.Substring(0, hexOutput.IndexOf(cindex) + 3).IndexOf(character[i]);
-                    if (hexOutput.Substring(0, hexOutput.IndexOf(cindex) + 3).Equals(cindex))
+                    int characterIndex = textOutput.Substring(0, textOutput.IndexOf(cindex) + 3).IndexOf(character[i]);
+                    if (textOutput.Substring(0, textOutput.IndexOf(cindex) + 3).Equals(cindex))
                     {
-                        hexOutput = hexOutput.Substring(cindex.Length, hexOutput.Length - cindex.Length);
+                        textOutput = textOutput.Substring(cindex.Length, textOutput.Length - cindex.Length);
                         break;
                     }
-                    if (phayIndex >= 0)
+                    if (characterIndex >= 0)
                     {
-                        hexOutput = hexOutput.Substring(phayIndex, hexOutput.Length - phayIndex);
+                        textOutput = textOutput.Substring(characterIndex, textOutput.Length - characterIndex);
                         break;
 
                     }
                 }
 
             }
-            return hexOutput;
+            return textOutput;
         }
 
 
@@ -54,13 +54,13 @@ namespace AgribankDigital
             {
                 if (data.Substring(0, condition.Length).Equals(condition))
                 {
-                    int phayIndex = data.IndexOf(prefix);
-                    int bangIndex = data.IndexOf(middle);
-                    int hoiIndex = data.IndexOf(surfix);
-                    if (phayIndex > 0 && hoiIndex > 0)
+                    int prefixIndex = data.IndexOf(prefix);
+                    int middleIndex = data.IndexOf(middle);
+                    int surfixIndex = data.IndexOf(surfix);
+                    if (prefixIndex > 0 && surfixIndex > 0)
                     {
-                        string cardnumber1 = data.Substring(phayIndex + prefix.Length, bangIndex - phayIndex - prefix.Length);
-                        string cardnumber2 = data.Substring(bangIndex + middle.Length, hoiIndex - bangIndex - middle.Length);
+                        string cardnumber1 = data.Substring(prefixIndex + prefix.Length, middleIndex - prefixIndex - prefix.Length);
+                        string cardnumber2 = data.Substring(middleIndex + middle.Length, surfixIndex - middleIndex - middle.Length);
                         data = data.Replace(cardnumber1 + "=" + cardnumber2, xLenght(5, "*") + xLenght(cardnumber1.Length - 10, "X") + xLenght(5, "*") + "=" + xLenght(7, "*") + xLenght(cardnumber2.Length - 7, "X"));
                         if (data.IndexOf(cardnumber1) > 0 && data.IndexOf(cardnumber2) > 0)
                         {
