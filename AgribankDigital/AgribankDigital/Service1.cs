@@ -98,10 +98,8 @@ namespace AgribankDigital
                     if (e.Data.Contains("\"Status\":\"STOP\""))
                         ws.Send("FINGERPRINT");
                 };
-
                 ws.Connect();
-                ws.Send("FINGERPRINT");
-                
+                ws.Send("FINGERPRINT");  
             }
         }
         protected void ListenerMethod()
@@ -121,10 +119,17 @@ namespace AgribankDigital
                 Logger.Log("ATM connected: " + socketATM.Connected);
 
                 //Tao ket noi toi Host
+              
                 Logger.Log("Connecting to Host ...");
 
-                TcpClient tcpClient = new TcpClient(HOST_CLIENT, PORT_CLIENT);
-                socketHost = tcpClient.Client;
+                while (true)
+                {
+                    TcpClient tcpClient = new TcpClient(HOST_CLIENT, PORT_CLIENT);
+                    socketHost = tcpClient.Client;
+                    if (socketHost.Connected)
+                        break;
+
+                }
 
                 Logger.Log("Connected to Host : " + socketHost.Connected);
 

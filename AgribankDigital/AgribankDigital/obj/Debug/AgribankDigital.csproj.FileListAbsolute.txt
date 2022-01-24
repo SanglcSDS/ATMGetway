@@ -16,3 +16,5 @@ C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Deb
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.xml
