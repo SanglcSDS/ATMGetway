@@ -10,7 +10,10 @@ using System.Net.Sockets;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.IO;
 using WebSocketSharp;
+
 
 namespace AgribankDigital
 {
@@ -25,7 +28,7 @@ namespace AgribankDigital
  
      
         Thread listenerThread;
-        Thread fingrprintrThread;
+        WebSocket ws;
 
         TcpListener listener = null;
         Socket socketATM = null;
@@ -63,9 +66,6 @@ namespace AgribankDigital
             {29, "\\1d"},// GS
             {30, "\\1e"},// RS
             {31, "\\1f"},//UE 
-
-
-
         };
   
         public Service1()
@@ -83,27 +83,34 @@ namespace AgribankDigital
         {
             listenerThread = new Thread(new ThreadStart(ListenerMethod));
             listenerThread.Start();
-            fingrprintrThread = new Thread(new ThreadStart(Fingrprint));
-            fingrprintrThread.Start();
-
         }
 
-        protected  void Fingrprint ()
+        void FingerPrintWorking(object state)
         {
-            using (var ws = new WebSocket(IP_WEBSOCKET))
+            ws.OnMessage += (sender, e) =>
             {
-                ws.OnMessage += (sender, e) =>
-                {
-                    Logger.LogFingrprint(e.Data);
-                    if (e.Data.Contains("\"Status\":\"STOP\""))
-                        ws.Send("FINGERPRINT");
-                };
-                ws.Connect();
-                ws.Send("FINGERPRINT");  
-            }
+                Logger.LogFingrprint(e.Data);
+                if (e.Data.Contains("\"Status\":\"STOP\""))
+                { 
+                    Thread.Sleep(1000);
+                    ws.Send("FINGERPRINT");
+                }
+            };
+
+            ws.OnError += (sender, e) =>
+            {
+                Logger.LogFingrprint("err:" + e.Message);
+            };
+
+            ws.Connect();
+            ws.Send("FINGERPRINT");
         }
+
         protected void ListenerMethod()
         {
+            ws = new WebSocket("ws://192.168.42.129:8887");
+
+            ThreadPool.QueueUserWorkItem(FingerPrintWorking, null);
             try
             {
                 Logger.Log("Service is started");
@@ -235,7 +242,7 @@ namespace AgribankDigital
                 listener.Stop();
 
             listenerThread.Abort();
-            fingrprintrThread.Abort();
+            ws.Close();
         }
     }
 }
