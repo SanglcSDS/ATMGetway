@@ -220,8 +220,6 @@ namespace AgribankDigital
                 Logger.Log("Error: " + ex.Message);
             }
         }
-      
-     
     
         protected override void OnStop()
         {
