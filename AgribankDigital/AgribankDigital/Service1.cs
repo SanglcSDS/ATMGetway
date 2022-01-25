@@ -18,8 +18,11 @@ namespace AgribankDigital
         private static int PORT_CLIENT = Int32.Parse(ConfigurationManager.AppSettings["port_host"]);
         private static string[] SEND_CHARACTER = ConfigurationManager.AppSettings["send_character"].Split(new char[] { ',' });
         private static string[] RECEIVE_CHARACTER = ConfigurationManager.AppSettings["receive_character"].Split(new char[] { ',' });
- 
-     
+
+        private static bool HAVE_CONTROLLER = Boolean.Parse(ConfigurationManager.AppSettings["haveController"]);
+        //haveController
+
+
         Thread listenerThread;
         WebSocket ws;
 
@@ -102,10 +105,7 @@ namespace AgribankDigital
                 Console.WriteLine("err: " + e.Message);
                 Logger.LogFingrprint("err:" + e.Message);
             };
-
-            //ws.Connect();
-            //ws.Send("FINGERPRINT");
-
+           
             ws.OnClose += (sender, e) =>
             {
                 Console.WriteLine("Disconnected");
@@ -119,8 +119,11 @@ namespace AgribankDigital
 
         protected void ListenerMethod()
         {
-            ws = new WebSocket("ws://192.168.42.129:8887");
-            ThreadPool.QueueUserWorkItem(FingerPrintWorking, null);
+            if (HAVE_CONTROLLER)
+            {
+                ws = new WebSocket("ws://192.168.42.129:8887");
+                ThreadPool.QueueUserWorkItem(FingerPrintWorking, null);
+            }
             try
             {
                 Logger.Log("Service is started");
