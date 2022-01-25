@@ -1,15 +1,18 @@
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.AssemblyReference.cache
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\SuperSocket.ClientEngine.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Collections.Specialized.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Net.NameResolution.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Net.Security.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Net.Sockets.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Algorithms.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Encoding.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Primitives.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\WebSocket4Net.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.xml
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.AssemblyReference.cache
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
@@ -19,14 +22,6 @@ C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Deb
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csprojAssemblyReference.cache
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\SuperSocket.ClientEngine.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Collections.Specialized.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Net.NameResolution.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Net.Security.dll
@@ -35,6 +30,12 @@ D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.S
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Encoding.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Primitives.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.X509Certificates.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\WebSocket4Net.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.xml
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csprojAssemblyReference.cache
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
+D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb

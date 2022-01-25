@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.IO;
 using WebSocketSharp;
 
 
@@ -31,6 +24,7 @@ namespace AgribankDigital
         WebSocket ws;
 
         TcpListener listener = null;
+        TcpClient tcpClient = null;
         Socket socketATM = null;
         Socket socketHost = null;
         Dictionary<int, string> asciiDictionary = new Dictionary<int, string>()
@@ -87,6 +81,12 @@ namespace AgribankDigital
 
         void FingerPrintWorking(object state)
         {
+            while (!ws.IsAlive)
+            {
+                ws.Connect();
+                ws.Send("FINGERPRINT");
+            }
+
             ws.OnMessage += (sender, e) =>
             {
                 Logger.LogFingrprint(e.Data);
@@ -99,50 +99,49 @@ namespace AgribankDigital
 
             ws.OnError += (sender, e) =>
             {
+                Console.WriteLine("err: " + e.Message);
                 Logger.LogFingrprint("err:" + e.Message);
             };
 
-            ws.Connect();
-            ws.Send("FINGERPRINT");
+            //ws.Connect();
+            //ws.Send("FINGERPRINT");
+
+            ws.OnClose += (sender, e) =>
+            {
+                Console.WriteLine("Disconnected");
+                while (!ws.IsAlive)
+                {
+                    ws.Connect();
+                    ws.Send("FINGERPRINT");
+                }
+            };
         }
 
         protected void ListenerMethod()
         {
             ws = new WebSocket("ws://192.168.42.129:8887");
-
             ThreadPool.QueueUserWorkItem(FingerPrintWorking, null);
             try
             {
                 Logger.Log("Service is started");
-
+                
                 listener = new TcpListener(IPAddress.Any, PORT_FORWARD);
-
                 listener.Start();
-
-                Logger.Log("Listening connect from ATM ...");
-
                 socketATM = listener.AcceptSocket();
 
-                Logger.Log("ATM connected: " + socketATM.Connected);
+                //Logger.Log("ATM connected: " + socketATM.Connected);
 
-                //Tao ket noi toi Host
-                Logger.Log("Connecting to Host ...");
+                //Tao ket noi toi Host 
+                tcpClient = new TcpClient(HOST_CLIENT, PORT_CLIENT);
+                socketHost = SocketConnection.ConnectHost(socketHost, tcpClient, HOST_CLIENT, PORT_CLIENT);
 
-                TcpClient tcpClient = new TcpClient(HOST_CLIENT, PORT_CLIENT);
-                socketHost = tcpClient.Client;
-
-                Logger.Log("Connected to Host : " + socketHost.Connected);
-
-                if (socketATM.Connected && socketHost.Connected)
-                {
-                    //Gui/nhan data tu ATM - Host
-                    ThreadPool.QueueUserWorkItem(ReceiveDataFromATM, null);
-                    ThreadPool.QueueUserWorkItem(ReceiveDataFromHost, null);
-                }
+                //Gui/nhan data tu ATM - Host
+                ThreadPool.QueueUserWorkItem(ReceiveDataFromATM, null);
+                ThreadPool.QueueUserWorkItem(ReceiveDataFromHost, null);
             }
             catch (Exception ex)
             {
-                Logger.Log("Error: " + ex.Message);
+                Logger.Log("ListenerMethod Error: " + ex.Message);
             }
         }
 
@@ -189,7 +188,18 @@ namespace AgribankDigital
             }
             catch (Exception ex)
             {
-                Logger.Log("Error: " + ex.Message);
+                Logger.Log("ReceiveDataFromATM Error: " + ex.Message);
+
+                Logger.Log("ATM disconnected");
+                SocketConnection.CloseSocket(socketATM);
+                SocketConnection.CloseSocket(socketHost);
+
+                socketHost = SocketConnection.ConnectHost(socketHost, tcpClient, HOST_CLIENT, PORT_CLIENT);
+                socketATM = SocketConnection.ConnectATM(socketATM, listener, PORT_FORWARD);
+
+                //Gui/nhan data tu ATM - Host
+                ThreadPool.QueueUserWorkItem(ReceiveDataFromATM, null);
+                ThreadPool.QueueUserWorkItem(ReceiveDataFromHost, null);
             }
         }
 
@@ -217,17 +227,24 @@ namespace AgribankDigital
             }
             catch (Exception ex)
             {
-                Logger.Log("Error: " + ex.Message);
+                Logger.Log("ReceiveDataFromHost Error: " + ex.Message);
+                Logger.Log("Host disconnected");
+                SocketConnection.CloseSocket(socketATM);
+                SocketConnection.CloseSocket(socketHost);
+
+                socketHost = SocketConnection.ConnectHost(socketHost, tcpClient, HOST_CLIENT, PORT_CLIENT);
+                socketATM = SocketConnection.ConnectATM(socketATM, listener, PORT_FORWARD);
+
+                //Gui/nhan data tu ATM - Host
+                ThreadPool.QueueUserWorkItem(ReceiveDataFromATM, null);
+                ThreadPool.QueueUserWorkItem(ReceiveDataFromHost, null);
             }
         }
     
         protected override void OnStop()
         {
-            if (socketATM != null)
-                socketATM.Close();
-
-            if (socketHost != null)
-                socketHost.Close();
+            SocketConnection.CloseSocket(socketATM);
+            SocketConnection.CloseSocket(socketHost);
 
             if (listener != null)
                 listener.Stop();
