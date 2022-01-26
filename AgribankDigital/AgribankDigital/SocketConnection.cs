@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 
@@ -34,7 +33,7 @@ namespace AgribankDigital
         public static Socket ConnectHost(Socket socketHost, TcpClient tcpClient, string ipHost, int portHost)
         {
             Logger.Log("Connecting to Host ...");
-            if (tcpClient != null)
+            if (tcpClient != null && !tcpClient.Connected)
             {
                 tcpClient.Close();
             }
@@ -42,15 +41,12 @@ namespace AgribankDigital
             {
                 TcpClient newTcpClient = new TcpClient(ipHost, portHost);
                 socketHost = newTcpClient.Client;
+
                 if (socketHost.Connected)
                 {
                     Logger.Log("Connected to Host : " + socketHost.Connected);
                     return socketHost;
-                }else
-                {
-                    newTcpClient.Close();
                 }
-                 
             }
         }
 

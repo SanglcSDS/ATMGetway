@@ -22,14 +22,6 @@ C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Deb
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Collections.Specialized.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Net.NameResolution.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Net.Security.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Net.Sockets.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Algorithms.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Encoding.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.Primitives.dll
-D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\System.Security.Cryptography.X509Certificates.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.dll
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.xml
 D:\lab\Bank Service\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csprojAssemblyReference.cache
