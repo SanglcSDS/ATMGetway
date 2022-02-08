@@ -53,19 +53,6 @@ namespace AgribankDigital
             }
         }
 
-        public ATM(TcpListener listener, Socket socketATM)
-        {
-            this.listener = listener;
-            this.socketATM = socketATM;
-        }
-
-        public ATM(Socket socketATM, Socket socketHost)
-        {
-            this.socketATM = socketATM;
-            this.socketHost = socketHost;
-            
-        } 
-
         public Socket createListener()
         {
             Logger.Log("Waiting connect from ATM ...");
@@ -81,9 +68,9 @@ namespace AgribankDigital
             return socketATM;
         }
 
-        public void ReceiveDataFromATM(object state)
+        public void ReceiveDataFromATM(Host host)
         {
-            Host host = (Host)state;
+            //Host host = (Host)state;
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -129,18 +116,9 @@ namespace AgribankDigital
             }
         }
 
-        //internal ThreadStart ReceiveDataFromATM()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public void Close()
         {
-            Console.WriteLine("Close Socket ATM ");
             socketATM.Disconnect(true);
-
-            Console.WriteLine("Close Listener");
-            listener.Stop();
         }
     }
 }

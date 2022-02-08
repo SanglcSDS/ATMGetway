@@ -149,9 +149,9 @@ namespace AgribankDigital
             catch (ObjectDisposedException) { return false; }
         }
 
-        public void ReceiveDataFromHost(object state)
+        public void ReceiveDataFromHost(ATM atm)
         {
-            ATM atm = (ATM)state;
+            //ATM atm = (ATM)state;
 
             while (true)
             {
@@ -199,9 +199,7 @@ namespace AgribankDigital
 
         public void Close()
         {
-            Console.WriteLine("Close socket Host");
             socketHost.Disconnect(true);
-            //tcpClient.Close();
         }
     }
 }

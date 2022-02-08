@@ -12,7 +12,8 @@ namespace AgribankDigital
 {
     public partial class Service1 : ServiceBase
     {
-        static Thread listenerThread;
+        static Thread atmThread;
+        static Thread hostThread;
         static Thread checkConnectionThread;
         static Thread fingerPrintThread;
         static ATM atm = null;
@@ -45,8 +46,11 @@ namespace AgribankDigital
             atm = new ATM();
             host = new Host();
 
-            listenerThread = new Thread(new ThreadStart(main));
-            listenerThread.Start();
+            atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+            atmThread.Start();
+
+            hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+            hostThread.Start();
 
             checkConnectionThread = new Thread(new ThreadStart(checkConnection));
             checkConnectionThread.Start();
@@ -70,49 +74,39 @@ namespace AgribankDigital
                     if (!atm.IsConnected() || !host.IsConnected())
                     {
                         Console.WriteLine("false");
-                        if (listenerThread.IsAlive)
+                        if (atmThread.IsAlive)
                         {
-                            listenerThread.Abort();
+                            atmThread.Abort();
+                            Console.WriteLine("ListenerThread Abort");
+                        }
+
+                        if (hostThread.IsAlive)
+                        {
+                            hostThread.Abort();
                             Console.WriteLine("ListenerThread Abort");
                         }
 
                         if (!host.IsConnected())
                         {
+                            //atm.Close();
                             host.reset();
+                            //atm = new ATM();
+                            host.isResetting = false;
                         }
                         if (!atm.IsConnected())
                         {
                             atm.reset();
+                            atm.isResetting = false;
                         }
 
-                        Thread.Sleep(100);
-                        listenerThread = new Thread(new ThreadStart(main));
-                        listenerThread.Start();
+                        atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                        atmThread.Start();
+
+                        hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                        hostThread.Start();
                     }
                 }
-
-                Thread.Sleep(100);
             }
-        }
-
-        static void main()
-        {
-            //Tao cong lang nghe ket noi tu ATM
-            //listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-            //listener.Start();
-            //socketATM = atm.createListener();
-
-            //Tao ket noi toi Host 
-            //socketHost = new Host().connect();
-
-            //Gui/nhan data tu ATM - Host
-            ThreadPool.QueueUserWorkItem(atm.ReceiveDataFromATM, host);
-            ThreadPool.QueueUserWorkItem(host.ReceiveDataFromHost, atm);
-
-            //Thread listenATMThread = new Thread(new ATM(socketATM, socketHost).ReceiveDataFromATM);
-            //listenATMThread.Start();
-            //Thread callHostThread = new Thread(new Host(socketATM, socketHost, tcpClient, listener).ReceiveDataFromHost);
-            //callHostThread.Start();
         }
         
         protected override void OnStop()
@@ -126,7 +120,8 @@ namespace AgribankDigital
             if (listener != null)
                 listener.Stop();
 
-            listenerThread.Abort();
+            atmThread.Abort();
+            hostThread.Abort();
             checkConnectionThread.Abort();
 
             ws.Close();
