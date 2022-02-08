@@ -96,9 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATM.cs" />
+    <Compile Include="ConnectionModel.cs" />
     <Compile Include="FingerPrint.cs" />
     <Compile Include="Host.cs" />
-    <Compile Include="SocketConnection.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

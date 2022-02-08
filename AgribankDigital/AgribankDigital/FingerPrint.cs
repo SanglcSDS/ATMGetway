@@ -8,6 +8,11 @@ namespace AgribankDigital
 {
     public class FingerPrint
     {
+        FingerPrint()
+        {
+
+        }
+
         WebSocketSharp.WebSocket ws;
         public FingerPrint(WebSocketSharp.WebSocket ws) {
             this.ws = ws;

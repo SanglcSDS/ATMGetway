@@ -1,23 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Net;
 
 namespace AgribankDigital
 {
     class ATM
     {
-        Socket socketATM;
+        public Socket socketATM;
         Socket socketHost;
         TcpClient tcpClient;
         TcpListener listener;
+        public bool isResetting = false;
 
         public ATM()
         {
+            Logger.Log("Waiting connect from ATM ...");
+            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
+            listener.Start();
+            socketATM = listener.AcceptSocket();
+            listener.Stop();
+            if (socketATM.Connected)
+            {
+                Logger.Log("Connected to ATM : " + socketATM.Connected);
+            }
+        }
 
+        public bool IsConnected()
+        {
+            try
+            {
+                return !(socketATM.Poll(1, SelectMode.SelectRead) && socketATM.Available == 0);
+            }
+            catch (SocketException) { return false; }
+            catch (ObjectDisposedException) { return false; }
+        }
+
+        public void reset()
+        {
+            isResetting = true;
+
+            socketATM.Disconnect(true);
+
+            Logger.Log("Waiting connect from ATM ...");
+            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
+            listener.Start();
+            socketATM = listener.AcceptSocket();
+            listener.Stop();
+            if (socketATM.Connected)
+            {
+                Logger.Log("Connected to ATM : " + socketATM.Connected);
+            }
         }
 
         public ATM(TcpListener listener, Socket socketATM)
@@ -36,6 +69,9 @@ namespace AgribankDigital
         public Socket createListener()
         {
             Logger.Log("Waiting connect from ATM ...");
+           
+            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
+            listener.Start();
             var socketATM = listener.AcceptSocket();
             listener.Stop();
             if (socketATM.Connected)
@@ -47,26 +83,12 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(object state)
         {
+            Host host = (Host)state;
             while (true)
             {
-                if (socketATM.Connected && socketHost.Connected)
+                if (!this.isResetting && !host.isResetting)
                 {
-                    if (socketATM.Poll(100, SelectMode.SelectRead) && socketATM.Available == 0)
-                    {
-                        Logger.Log("Cannot connect to ATM, trying to connect");
-
-                        socketHost = new Host().connect();
-
-                        if (!socketHost.Connected && socketATM.Connected)
-                            socketATM.Disconnect(true);
-
-                        if (socketHost.Connected && !socketATM.Connected)
-                        {
-                            listener.Start();
-                            socketATM = new ATM().createListener();
-                        }
-                    }
-                    else
+                    if (this.IsConnected())
                     {
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
@@ -78,32 +100,47 @@ namespace AgribankDigital
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                             Logger.Log("> " + dataStr);
 
-                            try
+                            if (host.IsConnected())
                             {
-                                socketHost.Send(data);
+                                host.socketHost.Send(data);
 
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                                 Logger.Log("> " + dataStr);
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.Log("Exception while connecting to Host: " + ex.Message);
-                                Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                            //else
+                            //{
+                            //    this.reset();
+                            //    host.reset();
 
-                                socketATM.Disconnect(true);
-                                Thread.Sleep(100);
-
-                                socketHost = new Host().connect();
-                                if (socketHost.Connected && !socketATM.Connected)
-                                {
-                                    listener.Start();
-                                    socketATM = createListener();
-                                }
-                            }
+                            //    this.isResetting = false;
+                            //    host.isResetting = false;
+                            //}
                         }
                     }
+                    //else
+                    //{
+                    //    this.reset();
+                    //    host.reset();
+
+                    //    this.isResetting = false;
+                    //    host.isResetting = false;
+                    //}
                 }
             }
+        }
+
+        //internal ThreadStart ReceiveDataFromATM()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public void Close()
+        {
+            Console.WriteLine("Close Socket ATM ");
+            socketATM.Disconnect(true);
+
+            Console.WriteLine("Close Listener");
+            listener.Stop();
         }
     }
 }
