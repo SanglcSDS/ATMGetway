@@ -15,3 +15,14 @@ C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Rel
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CoreCompileInputs.cache
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe.config
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.pdb
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.dll
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.xml
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.ProjectInstaller.resources
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.GenerateResource.cache
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CoreCompileInputs.cache
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CopyComplete
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb

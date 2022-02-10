@@ -12,19 +12,15 @@ namespace AgribankDigital
 {
     public partial class Service1 : ServiceBase
     {
-        static Thread atmThread;
-        static Thread hostThread;
-        static Thread checkConnectionThread;
-        static Thread fingerPrintThread;
+        static Thread mainThread = null;
+        static Thread atmThread = null;
+        static Thread hostThread = null;
+        static Thread checkConnectionThread = null;
+        static Thread fingerPrintThread = null;
         static ATM atm = null;
         static Host host = null;
 
-        WebSocket ws;
-
-        static TcpListener listener = null;
-        static TcpClient tcpClient = null;
-        static Socket socketATM = null;
-        static Socket socketHost = null;
+        WebSocket ws = null;
   
         public Service1()
         {
@@ -38,6 +34,12 @@ namespace AgribankDigital
         }
 
         protected override void OnStart(string[] args)
+        {
+            mainThread = new Thread(new ThreadStart(main));
+            mainThread.Start();
+        }
+
+        public void main()
         {
             fingerPrintThread = new Thread(new ThreadStart(initFingerPrint));
             fingerPrintThread.Start();
@@ -70,28 +72,29 @@ namespace AgribankDigital
                 if (atm == null || host == null) continue;
                 else
                 {
-                    Console.WriteLine("Checking");
                     if (!atm.IsConnected() || !host.IsConnected())
                     {
-                        Console.WriteLine("false");
                         if (atmThread.IsAlive)
                         {
                             atmThread.Abort();
-                            Console.WriteLine("ListenerThread Abort");
                         }
 
                         if (hostThread.IsAlive)
                         {
                             hostThread.Abort();
-                            Console.WriteLine("ListenerThread Abort");
                         }
 
                         if (!host.IsConnected())
                         {
-                            //atm.Close();
+                            atm.Close();
                             host.reset();
-                            //atm = new ATM();
+
+                            // Reconnect ATM 
+                            atm.isResetting = true;
+                            atm = new ATM();
+                            
                             host.isResetting = false;
+                            atm.isResetting = false;
                         }
                         if (!atm.IsConnected())
                         {
@@ -99,11 +102,14 @@ namespace AgribankDigital
                             atm.isResetting = false;
                         }
 
-                        atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
-                        atmThread.Start();
-
-                        hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
-                        hostThread.Start();
+                        if (atm.IsConnected() && host.IsConnected())
+                        {
+                            atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                            atmThread.Start();
+                            hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                            hostThread.Start();
+                        }
+                        Thread.Sleep(Utils.CHECK_CONNECTION_TIMEOUT);
                     }
                 }
             }
@@ -111,21 +117,24 @@ namespace AgribankDigital
         
         protected override void OnStop()
         {
-            socketHost.Disconnect(false);
-            socketATM.Disconnect(true);
+            if (checkConnectionThread != null)
+                checkConnectionThread.Abort();
+            if (atmThread != null)
+                atmThread.Abort();
+            if (hostThread != null)
+                hostThread.Abort();
 
-            if (tcpClient != null)
-                tcpClient.Close();
+            if (atm != null)
+                atm.Terminate();
+            if (host != null)
+                host.Terminate();
 
-            if (listener != null)
-                listener.Stop();
-
-            atmThread.Abort();
-            hostThread.Abort();
-            checkConnectionThread.Abort();
-
-            ws.Close();
-            fingerPrintThread.Abort();
+            if (ws != null)
+                ws.Close();
+            if (fingerPrintThread != null)
+                fingerPrintThread.Abort();
+            if (mainThread != null)
+                mainThread.Abort();
         }
     }
 }

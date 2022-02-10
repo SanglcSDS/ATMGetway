@@ -15,7 +15,9 @@ namespace AgribankDigital
         public static string[] RECEIVE_CHARACTER = ConfigurationManager.AppSettings["receive_character"].Split(new char[] { ',' });
 
         public static bool HAS_CONTROLLER = Boolean.Parse(ConfigurationManager.AppSettings["hasController"]);
-
+        public static int CHECK_CONNECTION_TIMEOUT = Int32.Parse(ConfigurationManager.AppSettings["check_connection_timeout"]);
+        public static int RESET_ERR_DELAY = Int32.Parse(ConfigurationManager.AppSettings["reset_err_delay"]);
+        public static int FINGER_PRINT_DELAY = Int32.Parse(ConfigurationManager.AppSettings["finger_print_delay"]);
         public static Dictionary<int, string> asciiDictionary = new Dictionary<int, string>()
         {
             {1, "\\1"},// SOH

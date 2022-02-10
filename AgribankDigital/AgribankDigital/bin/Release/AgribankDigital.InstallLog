@@ -1,0 +1,9 @@
+﻿Uninstalling assembly 'D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.InstallLog
+   assemblypath = D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe
+Removing EventLog source Agribank Digital.
+An exception occurred during the uninstallation of the System.Diagnostics.EventLogInstaller installer.
+System.Security.SecurityException: Requested registry access is not allowed.
+An exception occurred while uninstalling. This exception will be ignored and the uninstall will continue. However, the application might not be fully uninstalled after the uninstall is complete.

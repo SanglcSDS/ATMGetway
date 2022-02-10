@@ -31,20 +31,19 @@ namespace AgribankDigital
                 Logger.LogFingrprint(e.Data);
                 if (e.Data.Contains("\"Status\":\"STOP\""))
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(Utils.FINGER_PRINT_DELAY);
                     ws.Send("FINGERPRINT");
                 }
             };
 
             ws.OnError += (sender, e) =>
             {
-                Console.WriteLine("err: " + e.Message);
                 Logger.LogFingrprint("err:" + e.Message);
             };
 
             ws.OnClose += (sender, e) =>
             {
-                Console.WriteLine("Disconnected");
+                Logger.LogFingrprint("Disconnected");
                 while (!ws.IsAlive)
                 {
                     ws.Connect();

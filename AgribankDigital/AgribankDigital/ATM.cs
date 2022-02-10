@@ -30,10 +30,16 @@ namespace AgribankDigital
         {
             try
             {
-                return !(socketATM.Poll(1, SelectMode.SelectRead) && socketATM.Available == 0);
+                return !(socketATM.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketATM.Available == 0);
             }
-            catch (SocketException) { return false; }
-            catch (ObjectDisposedException) { return false; }
+            catch (SocketException) {
+                Logger.Log("ATM not responding");
+                return false;
+            }
+            catch (ObjectDisposedException) {
+                Logger.Log("ATM not responding");
+                return false;
+            }
         }
 
         public void reset()
@@ -70,7 +76,6 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(Host host)
         {
-            //Host host = (Host)state;
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -80,7 +85,7 @@ namespace AgribankDigital
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
                         {
-                            //  Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                            Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
 
@@ -94,31 +99,23 @@ namespace AgribankDigital
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                                 Logger.Log("> " + dataStr);
                             }
-                            //else
-                            //{
-                            //    this.reset();
-                            //    host.reset();
-
-                            //    this.isResetting = false;
-                            //    host.isResetting = false;
-                            //}
                         }
                     }
-                    //else
-                    //{
-                    //    this.reset();
-                    //    host.reset();
-
-                    //    this.isResetting = false;
-                    //    host.isResetting = false;
-                    //}
                 }
             }
         }
 
         public void Close()
         {
-            socketATM.Disconnect(true);
+            if (socketATM.Connected)
+                socketATM.Disconnect(true);
+        }
+
+        public void Terminate()
+        {
+            if (socketATM.Connected)
+                socketATM.Disconnect(true);
+            listener.Stop();
         }
     }
 }

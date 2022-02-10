@@ -29,7 +29,7 @@ namespace AgribankDigital
                     else
                     {
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
-                        //Thread.Sleep(1000);
+                        Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
                         tcpClient.Close();
                     }
@@ -38,7 +38,6 @@ namespace AgribankDigital
                 {
                     Logger.Log("Exception while connecting to Host: " + ex.Message);
                     Logger.Log("Cannot connect to Host, trying to reconnect ...");
-                    //Thread.Sleep(1000);
                 }
             }
         }
@@ -46,10 +45,6 @@ namespace AgribankDigital
         public void reset()
         {
             isResetting = true;
-
-            //socketHost.Disconnect(true);
-
-            //socketHost.Connect(Utils.IP_HOST, Utils.PORT_HOST);
 
             while (true)
             {
@@ -66,7 +61,7 @@ namespace AgribankDigital
                     else
                     {
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
-                        Thread.Sleep(100);
+                        Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
                         tcpClient.Close();
                     }
@@ -75,7 +70,6 @@ namespace AgribankDigital
                 {
                     Logger.Log("Exception while connecting to Host: " + ex.Message);
                     Logger.Log("Cannot connect to Host, trying to reconnect ...");
-                    //Thread.Sleep(1000);
                 }
             }
         }
@@ -97,7 +91,6 @@ namespace AgribankDigital
                     else
                     {
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
-                        //Thread.Sleep(1000);
                         socketHost.Close();
                         tcpClient.Close();
                     }
@@ -106,7 +99,6 @@ namespace AgribankDigital
                 {
                     Logger.Log("Exception while connecting to Host: " + ex.Message);
                     Logger.Log("Cannot connect to Host, trying to reconnect ...");
-                    //Thread.Sleep(1000);
                 }
             }
         }
@@ -143,16 +135,20 @@ namespace AgribankDigital
         {
             try
             {
-                return !(socketHost.Poll(100, SelectMode.SelectRead) && socketHost.Available == 0);
+                return !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
             }
-            catch (SocketException) { return false; }
-            catch (ObjectDisposedException) { return false; }
+            catch (SocketException) {
+                Logger.Log("Host not responding");
+                return false;
+            }
+            catch (ObjectDisposedException) {
+                Logger.Log("Host not responding");
+                return false;
+            }
         }
 
         public void ReceiveDataFromHost(ATM atm)
         {
-            //ATM atm = (ATM)state;
-
             while (true)
             {
                 if (!this.isResetting && !atm.isResetting)
@@ -163,7 +159,7 @@ namespace AgribankDigital
 
                         if (data.Length > 0)
                         {
-                            //    Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                            Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
@@ -175,31 +171,24 @@ namespace AgribankDigital
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                 Logger.Log("< " + dataStr);
                             }
-                            //else
-                            //{
-                            //    atm.reset();
-                            //    this.reset();
-
-                            //    atm.isResetting = false;
-                            //    this.isResetting = false;
-                            //}
                         }
                     }
-                    //else
-                    //{
-                    //    atm.reset();
-                    //    this.reset();
-
-                    //    atm.isResetting = false;
-                    //    this.isResetting = false;
-                    //}
                 }
             }
         }
 
         public void Close()
         {
-            socketHost.Disconnect(true);
+            if (socketHost.Connected)
+                socketHost.Disconnect(true);
+        }
+
+        public void Terminate()
+        {
+            if (socketHost.Connected)
+                socketHost.Disconnect(true);
+            if (tcpClient.Connected)
+                tcpClient.Close();
         }
     }
 }
