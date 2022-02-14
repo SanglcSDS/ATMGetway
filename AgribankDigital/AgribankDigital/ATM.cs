@@ -8,8 +8,8 @@ namespace AgribankDigital
     class ATM
     {
         public Socket socketATM;
-        Socket socketHost;
-        TcpClient tcpClient;
+        //Socket socketHost;
+        //TcpClient tcpClient;
         TcpListener listener;
         public bool isResetting = false;
 
@@ -30,7 +30,10 @@ namespace AgribankDigital
         {
             try
             {
-                return !(socketATM.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketATM.Available == 0);
+                bool check = !(socketATM.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketATM.Available == 0);
+                if (!check)
+                    Logger.Log("ATM not responding");
+                return check;
             }
             catch (SocketException) {
                 Logger.Log("ATM not responding");
@@ -85,7 +88,7 @@ namespace AgribankDigital
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
                         {
-                            Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
 
@@ -108,13 +111,14 @@ namespace AgribankDigital
         public void Close()
         {
             if (socketATM.Connected)
-                socketATM.Disconnect(true);
+                socketATM.Disconnect(false);
+            listener.Stop();
         }
 
         public void Terminate()
         {
             if (socketATM.Connected)
-                socketATM.Disconnect(true);
+                socketATM.Disconnect(false);
             listener.Stop();
         }
     }

@@ -98,8 +98,15 @@ namespace AgribankDigital
                         }
                         if (!atm.IsConnected())
                         {
+                            host.Close();
                             atm.reset();
+
+                            // Reconnect Host
+                            host.isResetting = true;
+                            host = new Host();
+
                             atm.isResetting = false;
+                            host.isResetting = false;
                         }
 
                         if (atm.IsConnected() && host.IsConnected())
@@ -109,7 +116,7 @@ namespace AgribankDigital
                             hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                             hostThread.Start();
                         }
-                        Thread.Sleep(Utils.CHECK_CONNECTION_TIMEOUT);
+                        Thread.Sleep(Utils.CHECK_CONNECTION_DELAY);
                     }
                 }
             }

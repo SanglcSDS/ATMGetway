@@ -6,10 +6,10 @@ namespace AgribankDigital
 {
     class Host
     {
-        Socket socketATM;
+        //Socket socketATM;
         public Socket socketHost;
         TcpClient tcpClient;
-        TcpListener listener;
+        //TcpListener listener;
         public bool isResetting = false;
 
         public Host()
@@ -103,14 +103,6 @@ namespace AgribankDigital
             }
         }
 
-        public Host(Socket socketATM, Socket socketHost, TcpClient tcpClient, TcpListener listener)
-        {
-            this.socketATM = socketATM;
-            this.socketHost = socketHost;
-            this.tcpClient = tcpClient;
-            this.listener = listener;
-        }
-
         public static Socket Connect(Socket socketHost, TcpClient tcpClient, string ipHost, int portHost)
         {
             Logger.Log("Connecting to Host ...");
@@ -135,7 +127,10 @@ namespace AgribankDigital
         {
             try
             {
-                return !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
+                bool check = !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
+                if (!check)
+                    Logger.Log("Host not responding");
+                return check;
             }
             catch (SocketException) {
                 Logger.Log("Host not responding");
@@ -159,7 +154,7 @@ namespace AgribankDigital
 
                         if (data.Length > 0)
                         {
-                            Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
@@ -180,13 +175,15 @@ namespace AgribankDigital
         public void Close()
         {
             if (socketHost.Connected)
-                socketHost.Disconnect(true);
+                socketHost.Disconnect(false);
+            if (tcpClient.Connected)
+                tcpClient.Close();
         }
 
         public void Terminate()
         {
             if (socketHost.Connected)
-                socketHost.Disconnect(true);
+                socketHost.Disconnect(false);
             if (tcpClient.Connected)
                 tcpClient.Close();
         }
