@@ -175,7 +175,7 @@ namespace AgribankDigital
         public void Close()
         {
             if (socketHost.Connected)
-                socketHost.Disconnect(false);
+                socketHost.Disconnect(true);
             if (tcpClient.Connected)
                 tcpClient.Close();
         }
@@ -183,7 +183,7 @@ namespace AgribankDigital
         public void Terminate()
         {
             if (socketHost.Connected)
-                socketHost.Disconnect(false);
+                socketHost.Disconnect(true);
             if (tcpClient.Connected)
                 tcpClient.Close();
         }

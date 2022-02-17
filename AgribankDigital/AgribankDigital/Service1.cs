@@ -14,7 +14,8 @@ namespace AgribankDigital
     {
         static Thread mainThread = null;
         static Thread atmThread = null;
-        static Thread hostThread = null;
+        static Thread receiveDataAtmThread = null;
+        static Thread receiveDataHostThread = null;
         static Thread checkConnectionThread = null;
         static Thread fingerPrintThread = null;
         static ATM atm = null;
@@ -45,17 +46,30 @@ namespace AgribankDigital
             fingerPrintThread.Start();
 
             Logger.Log("Service is started");
-            atm = new ATM();
+
             host = new Host();
-
-            atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+            // Thread for atm
+            atmThread = new Thread(new ThreadStart(initATM));
             atmThread.Start();
+            //atm = new ATM();
 
-            hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
-            hostThread.Start();
+            if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
+            {
+                receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                receiveDataAtmThread.Start();
 
-            checkConnectionThread = new Thread(new ThreadStart(checkConnection));
-            checkConnectionThread.Start();
+                receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                receiveDataHostThread.Start();
+
+                checkConnectionThread = new Thread(new ThreadStart(checkConnection));
+                checkConnectionThread.Start();
+            }
+        }
+
+        public static void initATM()
+        {
+            Console.WriteLine("Thread ATM starting...");
+            atm = new ATM();
         }
 
         public void initFingerPrint()
@@ -74,47 +88,65 @@ namespace AgribankDigital
                 {
                     if (!atm.IsConnected() || !host.IsConnected())
                     {
+                        if (receiveDataAtmThread.IsAlive)
+                        {
+                            receiveDataAtmThread.Abort();
+                        }
+
+                        if (receiveDataHostThread.IsAlive)
+                        {
+                            receiveDataHostThread.Abort();
+                        }
+
+                        host.Close();
+                        atm.Close();
+                        // Close port Listener
                         if (atmThread.IsAlive)
                         {
+                            Console.WriteLine("Thread ATM aborting...");
                             atmThread.Abort();
                         }
 
-                        if (hostThread.IsAlive)
-                        {
-                            hostThread.Abort();
-                        }
+                        host.isResetting = true;
 
-                        if (!host.IsConnected())
-                        {
-                            atm.Close();
-                            host.reset();
+                        host = new Host();
+                        atmThread = new Thread(new ThreadStart(initATM));
+                        atmThread.Start();
 
-                            // Reconnect ATM 
-                            atm.isResetting = true;
-                            atm = new ATM();
+                        host.isResetting = false;
+                        atm.isResetting = false;
+
+                        //if (!host.IsConnected())
+                        //{
+                        //    //atm.Close();
+                        //    host.reset();
+
+                        //    // Reconnect ATM 
+                        //    //atm.isResetting = true;
+                        //    //atm = new ATM();
                             
-                            host.isResetting = false;
-                            atm.isResetting = false;
-                        }
-                        if (!atm.IsConnected())
-                        {
-                            host.Close();
-                            atm.reset();
+                        //    host.isResetting = false;
+                        //    atm.isResetting = false;
+                        //}
+                        //if (!atm.IsConnected())
+                        //{
+                        //    host.Close();
+                        //    //atm.reset();
 
-                            // Reconnect Host
-                            host.isResetting = true;
-                            host = new Host();
+                        //    // Reconnect Host
+                        //    host.isResetting = true;
+                        //    host = new Host();
 
-                            atm.isResetting = false;
-                            host.isResetting = false;
-                        }
+                        //    atm.isResetting = false;
+                        //    host.isResetting = false;
+                        //}
 
                         if (atm.IsConnected() && host.IsConnected())
                         {
-                            atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
-                            atmThread.Start();
-                            hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
-                            hostThread.Start();
+                            receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                            receiveDataAtmThread.Start();
+                            receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                            receiveDataHostThread.Start();
                         }
                         Thread.Sleep(Utils.CHECK_CONNECTION_DELAY);
                     }
@@ -126,15 +158,18 @@ namespace AgribankDigital
         {
             if (checkConnectionThread != null)
                 checkConnectionThread.Abort();
-            if (atmThread != null)
-                atmThread.Abort();
-            if (hostThread != null)
-                hostThread.Abort();
+            if (receiveDataAtmThread != null)
+                receiveDataAtmThread.Abort();
+            if (receiveDataHostThread != null)
+                receiveDataHostThread.Abort();
 
             if (atm != null)
                 atm.Terminate();
             if (host != null)
                 host.Terminate();
+
+            if (atmThread != null)
+                atmThread.Abort();
 
             if (ws != null)
                 ws.Close();

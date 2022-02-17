@@ -111,14 +111,14 @@ namespace AgribankDigital
         public void Close()
         {
             if (socketATM.Connected)
-                socketATM.Disconnect(false);
+                socketATM.Close();
             listener.Stop();
         }
 
         public void Terminate()
         {
             if (socketATM.Connected)
-                socketATM.Disconnect(false);
+                socketATM.Close();
             listener.Stop();
         }
     }

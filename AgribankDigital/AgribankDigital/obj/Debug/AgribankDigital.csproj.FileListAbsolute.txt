@@ -42,3 +42,4 @@ D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.c
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
+D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csprojAssemblyReference.cache
