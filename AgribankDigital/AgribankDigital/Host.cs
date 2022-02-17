@@ -128,16 +128,16 @@ namespace AgribankDigital
             try
             {
                 bool check = !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
-                if (!check)
-                    Logger.Log("Host not responding");
+                //if (!check)
+                //    Logger.Log("Host not responding");
                 return check;
             }
             catch (SocketException) {
-                Logger.Log("Host not responding");
+                //Logger.Log("Host not responding");
                 return false;
             }
             catch (ObjectDisposedException) {
-                Logger.Log("Host not responding");
+                //Logger.Log("Host not responding");
                 return false;
             }
         }
@@ -176,8 +176,8 @@ namespace AgribankDigital
         {
             if (socketHost.Connected)
                 socketHost.Disconnect(true);
-            if (tcpClient.Connected)
-                tcpClient.Close();
+            //if (tcpClient.Connected)
+            //    tcpClient.Close();
         }
 
         public void Terminate()

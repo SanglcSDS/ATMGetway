@@ -31,16 +31,16 @@ namespace AgribankDigital
             try
             {
                 bool check = !(socketATM.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketATM.Available == 0);
-                if (!check)
-                    Logger.Log("ATM not responding");
+                //if (!check)
+                //    Logger.Log("ATM not responding");
                 return check;
             }
             catch (SocketException) {
-                Logger.Log("ATM not responding");
+                //Logger.Log("ATM not responding");
                 return false;
             }
             catch (ObjectDisposedException) {
-                Logger.Log("ATM not responding");
+                //Logger.Log("ATM not responding");
                 return false;
             }
         }
