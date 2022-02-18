@@ -27,3 +27,14 @@ D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csprojAssemblyReference.cache
+E:\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe.config
+E:\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe
+E:\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.pdb
+E:\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.dll
+E:\ATMGetway\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.xml
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.ProjectInstaller.resources
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.GenerateResource.cache
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CoreCompileInputs.cache
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CopyComplete
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb
