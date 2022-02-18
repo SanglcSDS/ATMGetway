@@ -18,7 +18,14 @@ namespace AgribankDigital
             Logger.Log("Waiting connect from ATM ...");
             listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
             listener.Start();
+
+
             socketATM = listener.AcceptSocket();
+
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 1000);
+            LingerOption lingerOption = new LingerOption(true, 5);
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
+
             listener.Stop();
             if (socketATM.Connected)
             {

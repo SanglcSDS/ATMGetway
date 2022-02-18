@@ -64,6 +64,9 @@ namespace AgribankDigital
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                     receiveDataHostThread.Start();
 
+                    // time to load first script
+                    Thread.Sleep(300000);
+
                     checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                     checkConnectionThread.Start();
 
@@ -113,10 +116,11 @@ namespace AgribankDigital
                         atm.Close();
 
                         // Close port Listener
-                        if (atmThread.IsAlive)
+                        if (atmThread != null)
                         {
-                            Console.WriteLine("Thread ATM aborting...");
+                            Logger.Log("Thread ATM aborting...");
                             atmThread.Abort();
+                            atmThread = null;
                         }
 
                         host.isResetting = true;
@@ -133,12 +137,14 @@ namespace AgribankDigital
                         {
                             if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
                             {
-                                Console.WriteLine("Reconnect = true");
+                                Logger.Log("Reconnect = true");
                                 receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
                                 receiveDataAtmThread.Start();
                                 receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                                 receiveDataHostThread.Start();
 
+                                //// time to load first script
+                                //Thread.Sleep(300000);
                                 break;
                             }
                             else continue;
@@ -170,8 +176,8 @@ namespace AgribankDigital
                 ws.Close();
             if (fingerPrintThread != null)
                 fingerPrintThread.Abort();
-            if (mainThread != null)
-                mainThread.Abort();
+
+            mainThread.Abort();
         }
     }
 }
