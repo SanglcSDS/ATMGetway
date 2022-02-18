@@ -26,3 +26,6 @@ D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CopyComplete
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.xml
+C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.AssemblyReference.cache

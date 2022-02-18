@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceProcess;
@@ -12,6 +13,7 @@ namespace AgribankDigital
 {
     public partial class Service1 : ServiceBase
     {
+        static int _processId;
         static Thread mainThread = null;
         static Thread atmThread = null;
         static Thread hostThread = null;
@@ -21,7 +23,7 @@ namespace AgribankDigital
         static Host host = null;
 
         WebSocket ws = null;
-  
+
         public Service1()
         {
             InitializeComponent();
@@ -41,6 +43,21 @@ namespace AgribankDigital
 
         public void main()
         {
+            ProcessId();
+            Logger.ProcessById(_processId.ToString());
+         /*   var ProcessName = Process.GetProcessById(_processId).ProcessName;
+            Console.WriteLine("----------------------" + _processId + "++++++++" + ProcessName);
+          
+            Process[] runningProcesses = Process.GetProcesses();
+            foreach (Process process in runningProcesses)
+            {
+                if (process.ProcessName.Equals(ProcessName))
+                {
+                    process.Kill();
+                }
+
+            }*/
+
             fingerPrintThread = new Thread(new ThreadStart(initFingerPrint));
             fingerPrintThread.Start();
 
@@ -92,7 +109,7 @@ namespace AgribankDigital
                             // Reconnect ATM 
                             atm.isResetting = true;
                             atm = new ATM();
-                            
+
                             host.isResetting = false;
                             atm.isResetting = false;
                         }
@@ -121,7 +138,7 @@ namespace AgribankDigital
                 }
             }
         }
-        
+
         protected override void OnStop()
         {
             if (checkConnectionThread != null)
@@ -143,5 +160,19 @@ namespace AgribankDigital
             if (mainThread != null)
                 mainThread.Abort();
         }
+        public static int ProcessId()
+        {
+
+            using (var thisProcess = Process.GetCurrentProcess())
+            {
+                _processId = thisProcess.Id;
+            }
+
+            return _processId;
+
+        }
+
     }
+
 }
+
