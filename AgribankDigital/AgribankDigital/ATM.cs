@@ -2,11 +2,13 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using WebSocketSharp;
 
 namespace AgribankDigital
 {
     class ATM
     {
+        WebSocket ws = null;
         public Socket socketATM;
         //Socket socketHost;
         //TcpClient tcpClient;
@@ -42,16 +44,23 @@ namespace AgribankDigital
                 //    Logger.Log("ATM not responding");
                 return check;
             }
-            catch (SocketException) {
+            catch (SocketException)
+            {
                 //Logger.Log("ATM not responding");
                 return false;
             }
-            catch (ObjectDisposedException) {
+            catch (ObjectDisposedException)
+            {
                 //Logger.Log("ATM not responding");
                 return false;
             }
         }
-
+        public void initFingerPrint(Socket socketHost)
+        {
+            ws = new WebSocket("ws://192.168.42.129:8887");
+            FingerPrint fingerPrint = new FingerPrint(ws);
+            fingerPrint.FingerPrintWorking(socketHost);
+        }
         public void reset()
         {
             isResetting = true;
@@ -72,7 +81,7 @@ namespace AgribankDigital
         public Socket createListener()
         {
             Logger.Log("Waiting connect from ATM ...");
-           
+
             listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
             listener.Start();
             var socketATM = listener.AcceptSocket();
@@ -86,6 +95,7 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(Host host)
         {
+          //  initFingerPrint(host.socketHost);
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -98,17 +108,28 @@ namespace AgribankDigital
                             //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
-
-                            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
-                            Logger.Log("> " + dataStr);
-
-                            if (host.IsConnected())
+                            int message = dataStr.IndexOf("HBCI");
+                            if (message > 0)
                             {
-                                host.socketHost.Send(data);
+                               
+                             
 
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
-                                Logger.Log("> " + dataStr);
                             }
+                            else
+                            {
+                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
+                                Logger.Log("> " + dataStr);
+
+                                if (host.IsConnected())
+                                {
+                                    host.socketHost.Send(data);
+
+                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                                    Logger.Log("> " + dataStr);
+                                }
+                            }
+
+
                         }
                     }
                 }

@@ -38,3 +38,17 @@ E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CopyComplete
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe.config
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.exe
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\AgribankDigital.pdb
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\Newtonsoft.Json.dll
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.dll
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\Newtonsoft.Json.xml
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Release\websocket-sharp.xml
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.AssemblyReference.cache
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.ProjectInstaller.resources
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.GenerateResource.cache
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CoreCompileInputs.cache
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CopyComplete
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb

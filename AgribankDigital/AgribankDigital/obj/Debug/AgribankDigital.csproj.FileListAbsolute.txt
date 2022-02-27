@@ -55,3 +55,17 @@ E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.Co
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\Newtonsoft.Json.dll
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.dll
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\Newtonsoft.Json.xml
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.xml
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.AssemblyReference.cache
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
+D:\code\mitec\atmgetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb

@@ -20,9 +20,9 @@ namespace AgribankDigital
         static Thread fingerPrintThread = null;
         static ATM atm = null;
         static Host host = null;
-
         WebSocket ws = null;
-  
+
+
         public Service1()
         {
             InitializeComponent();
@@ -39,11 +39,16 @@ namespace AgribankDigital
             mainThread = new Thread(new ThreadStart(main));
             mainThread.Start();
         }
-
+     /*   public void initFingerPrint()
+        {
+            ws = new WebSocket("ws://192.168.42.129:8887");
+            FingerPrint fingerPrint = new FingerPrint(ws);
+            fingerPrint.FingerPrintWorking(null);
+        }*/
         public void main()
         {
-            fingerPrintThread = new Thread(new ThreadStart(initFingerPrint));
-            fingerPrintThread.Start();
+           /* fingerPrintThread = new Thread(new ThreadStart(initFingerPrint)); ;
+            fingerPrintThread.Start();*/
 
             Logger.Log("Service is started");
 
@@ -83,12 +88,7 @@ namespace AgribankDigital
             atm = new ATM();
         }
 
-        public void initFingerPrint()
-        {
-            ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrint fingerPrint = new FingerPrint(ws);
-            fingerPrint.FingerPrintWorking(null);
-        }
+   
 
         public static void checkConnection()
         {
