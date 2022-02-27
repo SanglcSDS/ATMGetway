@@ -36,8 +36,9 @@ namespace AgribankDigital
 
         protected override void OnStart(string[] args)
         {
-            mainThread = new Thread(new ThreadStart(main));
-            mainThread.Start();
+            //mainThread = new Thread(new ThreadStart(main));
+            //mainThread.Start();
+            FakeApi.fakeApi();
         }
 
         public void main()

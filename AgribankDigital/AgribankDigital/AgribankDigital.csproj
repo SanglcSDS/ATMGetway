@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATM.cs" />
+    <Compile Include="FakeApi.cs" />
     <Compile Include="FingerPrint.cs" />
     <Compile Include="Host.cs" />
     <Compile Include="Logger.cs" />

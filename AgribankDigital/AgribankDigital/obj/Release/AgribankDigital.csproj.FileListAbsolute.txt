@@ -38,3 +38,4 @@ E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csproj.CopyComplete
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.exe
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.pdb
+E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Release\AgribankDigital.csprojAssemblyReference.cache
