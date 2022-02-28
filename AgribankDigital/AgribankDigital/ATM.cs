@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dermalog.Imaging.Capturing;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -55,11 +56,21 @@ namespace AgribankDigital
                 return false;
             }
         }
-        public void initFingerPrint(Socket socketHost, Socket socketATM,string dataStr)
+        public void initFingerPrintCB10(Socket socketHost, Socket socketATM,string dataStr)
         {
             ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrint fingerPrint = new FingerPrint(ws);
+            FingerPrintCB10 fingerPrint = new FingerPrintCB10(ws);
             fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
+        }
+        public void initFingerPrintZF1(Socket socketHost, Socket socketATM, string dataStr)
+        {
+            FingerPrinZF1 fingerPrinZF1 = new FingerPrinZF1();
+            fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
+            fingerPrinZF1.socketATM = socketATM;
+            fingerPrinZF1.socketHost = socketHost;
+            fingerPrinZF1.dataStr = dataStr;
+            fingerPrinZF1.InitializeDevice();
+        
         }
         public void reset()
         {
@@ -111,7 +122,16 @@ namespace AgribankDigital
                          
                             if (dataStr.Contains("HBCI"))
                             {
-                                initFingerPrint(host.socketHost, socketATM, dataStr); 
+                                if (Utils.HAS_CONTROLLER==true)
+                                {
+                                    initFingerPrintZF1(host.socketHost, socketATM, dataStr);
+                                }
+                                if(Utils.HAS_CONTROLLER == false)
+                                {
+                                    initFingerPrintCB10(host.socketHost, socketATM, dataStr);
+
+                                }
+                               
                             }
                             else
                             {

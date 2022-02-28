@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dermalog.Imaging.Capturing, Version=3.2.0.1637, Culture=neutral, PublicKeyToken=d215f80b62562526, processorArchitecture=MSIL">
+    <Reference Include="Dermalog.Imaging.Capturing, Version=3.3.0.1707, Culture=neutral, PublicKeyToken=d215f80b62562526, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dll\Dermalog.Imaging.Capturing.dll</HintPath>
     </Reference>

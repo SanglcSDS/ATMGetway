@@ -7,3 +7,11 @@ D:\3DCam\BmpToBase64\BmpToBase64\obj\Debug\BmpToBase64.pdb
 D:\3DCam\BmpToBase64\BmpToBase64\obj\Debug\BmpToBase64.csprojAssemblyReference.cache
 D:\3DCam\BmpToBase64\BmpToBase64\bin\Debug\Dermalog.Imaging.Capturing.dll
 D:\3DCam\BmpToBase64\BmpToBase64\obj\Debug\BmpToBase64.csproj.CopyComplete
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Debug\BmpToBase64.exe.config
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Debug\BmpToBase64.exe
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Debug\BmpToBase64.pdb
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Debug\Dermalog.Imaging.Capturing.dll
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.csproj.AssemblyReference.cache
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.csproj.CoreCompileInputs.cache
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.exe
+C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.pdb

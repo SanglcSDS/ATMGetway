@@ -30,6 +30,8 @@ namespace AgribankDigital
                 return JsonConvert.DeserializeObject<Model>(value);
             } 
         }
-     
+      
+
     }
+  
 }

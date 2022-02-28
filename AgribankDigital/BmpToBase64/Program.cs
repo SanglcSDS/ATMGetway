@@ -46,13 +46,14 @@ namespace BmpToBase64
                     }
                 }
 
-                Console.ReadLine();
+                
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            
+
+            Console.ReadLine();
         }
     }
 }

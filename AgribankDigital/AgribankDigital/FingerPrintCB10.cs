@@ -10,15 +10,15 @@ using System.Threading;
 
 namespace AgribankDigital
 {
-    public class FingerPrint
+    public class FingerPrintCB10
     {
-        FingerPrint()
+        FingerPrintCB10()
         {
 
         }
 
         WebSocketSharp.WebSocket ws;
-        public FingerPrint(WebSocketSharp.WebSocket ws)
+        public FingerPrintCB10(WebSocketSharp.WebSocket ws)
         {
             this.ws = ws;
         }
