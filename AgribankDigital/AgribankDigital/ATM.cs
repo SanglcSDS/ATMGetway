@@ -55,11 +55,11 @@ namespace AgribankDigital
                 return false;
             }
         }
-        public void initFingerPrint(Socket socketHost)
+        public void initFingerPrint(Socket socketHost, Socket socketATM,string dataStr)
         {
             ws = new WebSocket("ws://192.168.42.129:8887");
             FingerPrint fingerPrint = new FingerPrint(ws);
-            fingerPrint.FingerPrintWorking(socketHost);
+            fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
         }
         public void reset()
         {
@@ -95,7 +95,7 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(Host host)
         {
-          //  initFingerPrint(host.socketHost);
+           
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -105,15 +105,13 @@ namespace AgribankDigital
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
                         {
-                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                           
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
-                            int message = dataStr.IndexOf("HBCI");
-                            if (message > 0)
+                         
+                            if (dataStr.Contains("HBCI"))
                             {
-                               
-                             
-
+                                initFingerPrint(host.socketHost, socketATM, dataStr); 
                             }
                             else
                             {
@@ -123,6 +121,7 @@ namespace AgribankDigital
                                 if (host.IsConnected())
                                 {
                                     host.socketHost.Send(data);
+                                   
 
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                                     Logger.Log("> " + dataStr);
