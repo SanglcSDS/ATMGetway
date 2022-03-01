@@ -100,6 +100,7 @@
   <ItemGroup>
     <Compile Include="ATM.cs" />
     <Compile Include="CustomerInfo.cs" />
+    <Compile Include="FakeApi.cs" />
     <Compile Include="FingerPrint.cs" />
     <Compile Include="FpData.cs" />
     <Compile Include="Host.cs" />

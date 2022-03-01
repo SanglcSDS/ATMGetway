@@ -68,10 +68,7 @@ namespace AgribankDigital
 
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                     receiveDataHostThread.Start();
-
-                    // time to load first script
-                    Thread.Sleep(300000);
-
+                   
                     checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                     checkConnectionThread.Start();
 
@@ -87,9 +84,7 @@ namespace AgribankDigital
             Console.WriteLine("Thread ATM starting...");
             atm = new ATM();
         }
-
-   
-
+        
         public static void checkConnection()
         {
             while (true)
