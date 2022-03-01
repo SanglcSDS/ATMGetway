@@ -55,3 +55,15 @@ E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.Co
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
 E:\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe.config
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.exe
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\AgribankDigital.pdb
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.dll
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\bin\Debug\websocket-sharp.xml
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csprojAssemblyReference.cache
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.ProjectInstaller.resources
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.GenerateResource.cache
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.csproj.CopyComplete
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.exe
+D:\lab\ATMGetway\AgribankDigital\AgribankDigital\obj\Debug\AgribankDigital.pdb

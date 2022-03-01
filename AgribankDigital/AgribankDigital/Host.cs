@@ -21,6 +21,12 @@ namespace AgribankDigital
                     TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
                     socketHost = newTcpClient.Client;
 
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                    LingerOption lingerOption = new LingerOption(false, 3);
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
+
                     if (socketHost.Connected)
                     {
                         Logger.Log("Connected to Host : " + socketHost.Connected);
@@ -52,6 +58,12 @@ namespace AgribankDigital
                 {
                     TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
                     socketHost = newTcpClient.Client;
+
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                    LingerOption lingerOption = new LingerOption(false, 3);
+                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
 
                     if (socketHost.Connected)
                     {

@@ -36,9 +36,8 @@ namespace AgribankDigital
 
         protected override void OnStart(string[] args)
         {
-            //mainThread = new Thread(new ThreadStart(main));
-            //mainThread.Start();
-            FakeApi.fakeApi();
+            mainThread = new Thread(new ThreadStart(main));
+            mainThread.Start();
         }
 
         public void main()
@@ -64,10 +63,7 @@ namespace AgribankDigital
 
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                     receiveDataHostThread.Start();
-
-                    // time to load first script
-                    Thread.Sleep(300000);
-
+                   
                     checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                     checkConnectionThread.Start();
 
@@ -86,9 +82,12 @@ namespace AgribankDigital
 
         public void initFingerPrint()
         {
-            ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrint fingerPrint = new FingerPrint(ws);
-            fingerPrint.FingerPrintWorking(null);
+            if (Utils.HAS_CONTROLLER)
+            {
+                ws = new WebSocket("ws://192.168.42.129:8887");
+                FingerPrint fingerPrint = new FingerPrint(ws);
+                fingerPrint.FingerPrintWorking(null);
+            }
         }
 
         public static void checkConnection()

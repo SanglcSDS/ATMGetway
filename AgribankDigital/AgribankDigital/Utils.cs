@@ -19,6 +19,7 @@ namespace AgribankDigital
         public static int CHECK_CONNECTION_DELAY = Int32.Parse(ConfigurationManager.AppSettings["check_connection_delay"]);
         public static int RESET_ERR_DELAY = Int32.Parse(ConfigurationManager.AppSettings["reset_err_delay"]);
         public static int FINGER_PRINT_DELAY = Int32.Parse(ConfigurationManager.AppSettings["finger_print_delay"]);
+        public static int SEND_DATA_TIMEOUT = Int32.Parse(ConfigurationManager.AppSettings["send_data_timeout"]);
         public static Dictionary<int, string> asciiDictionary = new Dictionary<int, string>()
         {
             {1, "\\1"},// SOH
