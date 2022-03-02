@@ -94,6 +94,7 @@ namespace AgribankDigital
                 {
                     if (!atm.IsConnected() || !host.IsConnected())
                     {
+                        // Close Thread receive data
                         Logger.Log("Check connection failed: ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
                         if (receiveDataAtmThread.IsAlive)
                         {
@@ -107,20 +108,33 @@ namespace AgribankDigital
                             receiveDataHostThread.Abort();
                         }
 
-                        host.Close();
+                        // Close ATM
                         atm.Close();
-
-                        // Close port Listener
                         if (atmThread != null)
                         {
                             Logger.Log("Thread ATM aborting...");
                             atmThread.Abort();
                             atmThread = null;
                         }
+                        atm.isResetting = true;
 
-                        host.isResetting = true;
+                        // Check Host 
+                        if (host.CheckNetwork())
+                        {
+                            host.Close();
 
-                        host = new Host();
+                            // reconnect Host
+                            host.isResetting = true;
+                            host = new Host();
+                        }
+                        else
+                        {
+                            while (!host.CheckNetwork())
+                            {
+                                Thread.Sleep(1000);
+                            }
+                        }
+
                         atmThread = new Thread(new ThreadStart(initATM));
                         atmThread.Start();
 
@@ -138,8 +152,6 @@ namespace AgribankDigital
                                 receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                                 receiveDataHostThread.Start();
 
-                                //// time to load first script
-                                //Thread.Sleep(300000);
                                 break;
                             }
                             else continue;

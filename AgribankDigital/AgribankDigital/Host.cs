@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -11,6 +12,7 @@ namespace AgribankDigital
         TcpClient tcpClient;
         //TcpListener listener;
         public bool isResetting = false;
+        public bool isClosed = false;
 
         public Host()
         {
@@ -21,11 +23,11 @@ namespace AgribankDigital
                     TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
                     socketHost = newTcpClient.Client;
 
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-                    LingerOption lingerOption = new LingerOption(false, 3);
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                    //LingerOption lingerOption = new LingerOption(false, 3);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
 
                     if (socketHost.Connected)
                     {
@@ -59,11 +61,11 @@ namespace AgribankDigital
                     TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
                     socketHost = newTcpClient.Client;
 
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-                    LingerOption lingerOption = new LingerOption(false, 3);
-                    socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                    //LingerOption lingerOption = new LingerOption(false, 3);
+                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
 
                     if (socketHost.Connected)
                     {
@@ -154,6 +156,20 @@ namespace AgribankDigital
             }
         }
 
+        public bool CheckNetwork()
+        {
+            Ping ping = new Ping();
+            PingReply pingresult = ping.Send(Utils.IP_HOST, Utils.CHECK_CONNECTION_TIMEOUT);
+            if (pingresult.Status.ToString() == "Success")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void ReceiveDataFromHost(ATM atm)
         {
             while (true)
@@ -190,14 +206,17 @@ namespace AgribankDigital
                 socketHost.Disconnect(true);
             //if (tcpClient.Connected)
             //    tcpClient.Close();
+
+            this.isClosed = true;
         }
 
         public void Terminate()
         {
             if (socketHost.Connected)
-                socketHost.Disconnect(true);
+                socketHost.Close();
             if (tcpClient.Connected)
                 tcpClient.Close();
+            this.isClosed = true;
         }
     }
 }
