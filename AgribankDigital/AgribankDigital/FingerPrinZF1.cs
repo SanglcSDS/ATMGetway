@@ -50,15 +50,14 @@ namespace AgribankDigital
         {
             try
             {
-                FpData str = JsonConvert.DeserializeObject<TestModel>(ImageToBase64String(e.Image)).FpData;
-
+                Console.WriteLine(ImageToBase64String(e.Image));
                 //Lấy vân tay thành công, không cho phép nhận vân tay thêm
                 this._capDevice.Freeze(true);
 
                 //Đèn xanh tắt
                 this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
 
-                Model fingerData = WeeFinger(str.Finger1);
+                Model fingerData = WeeFinger(ImageToBase64String(e.Image));
                 if (fingerData.code == 0)
                 {
                     string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
@@ -105,7 +104,8 @@ namespace AgribankDigital
         }
         public Model WeeFinger(string fingerData)
         {
-            Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
+            Model modelFinger = Http.GetModelFinger("http://192.168.1.149:8080/fake-api", new ModelFinger
+           // Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
             {
                 dpi = 508,
                 fingerData = fingerData,

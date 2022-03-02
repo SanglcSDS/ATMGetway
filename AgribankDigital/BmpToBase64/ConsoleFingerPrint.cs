@@ -61,9 +61,9 @@ namespace BmpToBase64
                 Console.WriteLine("Base64String: " + ImageToBase64String(filePath));
 
                 this._capDevice.Freeze(true);
-                FpData str = JsonConvert.DeserializeObject<TestModel>(ImageToBase64String(filePath)).FpData;
-                Model fingerData = WeeFinger(str.Finger1);
-                Console.WriteLine(fingerData.message);
+              //  FpData str = JsonConvert.DeserializeObject<TestModel>(ImageToBase64String(filePath)).FpData;
+               // Model fingerData = WeeFinger(str.Finger1);
+              //  Console.WriteLine(fingerData.message);
             }
             catch (Exception ex)
             {
