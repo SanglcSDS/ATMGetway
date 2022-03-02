@@ -50,7 +50,6 @@ namespace AgribankDigital
         {
             try
             {
-                Console.WriteLine(ImageToBase64String(e.Image));
                 //Lấy vân tay thành công, không cho phép nhận vân tay thêm
                 this._capDevice.Freeze(true);
 

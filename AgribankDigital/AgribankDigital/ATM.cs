@@ -57,10 +57,10 @@ namespace AgribankDigital
                 return false;
             }
         }
-        public void initFingerPrintCB10(Socket socketHost, Socket socketATM,string dataStr)
+        public void initFingerPrintCB100(Socket socketHost, Socket socketATM,string dataStr)
         {
             ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrintCB10 fingerPrint = new FingerPrintCB10(ws);
+            FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
             fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
         }
         public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
@@ -141,7 +141,7 @@ namespace AgribankDigital
                                 }
                                 if(Utils.HAS_CONTROLLER == false)
                                 {
-                                    initFingerPrintCB10(host.socketHost, socketATM, dataStr);
+                                    initFingerPrintCB100(host.socketHost, socketATM, dataStr);
 
                                 }
                                
