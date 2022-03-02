@@ -1,9 +1,0 @@
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\bin\x86\Debug\AgribankDigital.exe.config
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\bin\x86\Debug\AgribankDigital.exe
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\bin\x86\Debug\AgribankDigital.pdb
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.AssemblyReference.cache
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.ProjectInstaller.resources
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.GenerateResource.cache
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.CoreCompileInputs.cache
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.exe
-C:\Users\84936\source\repos\service\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.pdb

@@ -17,13 +17,22 @@ namespace BmpToBase64
         {
             try
             {
+
                 ConsoleFingerPrint consoleFingerPrint = new ConsoleFingerPrint();
+
                 consoleFingerPrint._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
                 consoleFingerPrint.InitializeDevice();
+
+                consoleFingerPrint._capDevice.Start();
+
 
                 bool showMenu = true;
                 while (showMenu)
                 {
+              
+                      
+                    
+                 
                     Console.WriteLine("Choose an option:");
                     Console.WriteLine("1) Start");
                     Console.WriteLine("2) Continue");
@@ -32,7 +41,9 @@ namespace BmpToBase64
                     switch (Console.ReadLine())
                     {
                         case "1":
-                            consoleFingerPrint._capDevice.Start();
+                            consoleFingerPrint._capDevice.Freeze(false);
+                         
+                           
                             break;
                         case "2":
                             consoleFingerPrint._capDevice.Freeze(false);
@@ -46,13 +57,14 @@ namespace BmpToBase64
                     }
                 }
 
-                Console.ReadLine();
+                
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            
+
+            Console.ReadLine();
         }
     }
 }
