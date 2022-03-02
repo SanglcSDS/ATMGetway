@@ -1,4 +1,6 @@
-﻿using Dermalog.Imaging.Capturing;
+﻿using AgribankDigital;
+using Dermalog.Imaging.Capturing;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -56,9 +58,12 @@ namespace BmpToBase64
 
                 string filePath = Path.Combine(_pathFolder, "FingerPrint" + DateTime.Now.ToString("yyyy-MM-dd--HH-mm-ss") + ".bmp");
                 e.Image.Save(filePath);
-                this._capDevice.Freeze(true);
-                
                 Console.WriteLine("Base64String: " + ImageToBase64String(filePath));
+
+                this._capDevice.Freeze(true);
+                FpData str = JsonConvert.DeserializeObject<TestModel>(ImageToBase64String(filePath)).FpData;
+                Model fingerData = WeeFinger(str.Finger1);
+                Console.WriteLine(fingerData.message);
             }
             catch (Exception ex)
             {
@@ -79,6 +84,16 @@ namespace BmpToBase64
             this._capDevice.Property[PropertyType.FG_FAKE_DETECT] = 1;
 
             this.BindEvents();
+        }
+        public Model WeeFinger(string fingerData)
+        {
+            Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
+            {
+                dpi = 508,
+                fingerData = fingerData,
+
+            });
+            return modelFinger;
         }
     }
 }

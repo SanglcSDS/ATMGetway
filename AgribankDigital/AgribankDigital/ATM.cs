@@ -15,6 +15,7 @@ namespace AgribankDigital
         //TcpClient tcpClient;
         TcpListener listener;
         public bool isResetting = false;
+        FingerPrinZF1 fingerPrinZF1;
 
         public ATM()
         {
@@ -62,15 +63,16 @@ namespace AgribankDigital
             FingerPrintCB10 fingerPrint = new FingerPrintCB10(ws);
             fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
         }
-        public void initFingerPrintZF1(Socket socketHost, Socket socketATM, string dataStr)
+        public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
         {
-            FingerPrinZF1 fingerPrinZF1 = new FingerPrinZF1();
+            fingerPrinZF1 = new FingerPrinZF1();
             fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
             fingerPrinZF1.socketATM = socketATM;
             fingerPrinZF1.socketHost = socketHost;
-            fingerPrinZF1.dataStr = dataStr;
             fingerPrinZF1.InitializeDevice();
-        
+
+            fingerPrinZF1._capDevice.Start();
+            this.fingerPrinZF1._capDevice.Freeze(true);
         }
         public void reset()
         {
@@ -106,7 +108,7 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(Host host)
         {
-           
+            initFingerPrintZF1(host.socketHost, this.socketATM);
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -124,7 +126,8 @@ namespace AgribankDigital
                             {
                                 if (Utils.HAS_CONTROLLER==true)
                                 {
-                                    initFingerPrintZF1(host.socketHost, socketATM, dataStr);
+                                    fingerPrinZF1.dataStr = dataStr;
+                                    this.fingerPrinZF1._capDevice.Freeze(false);
                                 }
                                 if(Utils.HAS_CONTROLLER == false)
                                 {

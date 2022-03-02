@@ -15,3 +15,14 @@ C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\B
 C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.csproj.CoreCompileInputs.cache
 C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.exe
 C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.pdb
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\bin\Debug\BmpToBase64.exe.config
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\bin\Debug\BmpToBase64.exe
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\bin\Debug\BmpToBase64.pdb
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\bin\Debug\Dermalog.Imaging.Capturing.dll
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.csproj.AssemblyReference.cache
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.csproj.CoreCompileInputs.cache
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.csproj.CopyComplete
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.exe
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\obj\Debug\BmpToBase64.pdb
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\bin\Debug\Newtonsoft.Json.dll
+D:\code\mitec\atmgetway\AgribankDigital\BmpToBase64\bin\Debug\Newtonsoft.Json.xml
