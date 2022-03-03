@@ -15,6 +15,7 @@ namespace AgribankDigital
         //TcpClient tcpClient;
         TcpListener listener;
         public bool isResetting = false;
+        FingerPrinZF1 fingerPrinZF1;
 
         public ATM()
         {
@@ -57,21 +58,27 @@ namespace AgribankDigital
                 return false;
             }
         }
-        public void initFingerPrintCB10(Socket socketHost, Socket socketATM,string dataStr)
+        public void initFingerPrintCB100(Socket socketHost, Socket socketATM,string dataStr)
         {
             ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrintCB10 fingerPrint = new FingerPrintCB10(ws);
+            FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
             fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
         }
-        public void initFingerPrintZF1(Socket socketHost, Socket socketATM, string dataStr)
+        public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
         {
-            FingerPrinZF1 fingerPrinZF1 = new FingerPrinZF1();
+            fingerPrinZF1 = new FingerPrinZF1();
             fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
             fingerPrinZF1.socketATM = socketATM;
             fingerPrinZF1.socketHost = socketHost;
-            fingerPrinZF1.dataStr = dataStr;
             fingerPrinZF1.InitializeDevice();
-        
+
+            fingerPrinZF1._capDevice.Start();
+
+            //Không cho phép nhận vân tay
+            this.fingerPrinZF1._capDevice.Freeze(true);
+
+            //Không nháy đèn xanh
+            fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
         }
         public void reset()
         {
@@ -114,7 +121,7 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(Host host)
         {
-           
+            initFingerPrintZF1(host.socketHost, this.socketATM);
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -134,11 +141,18 @@ namespace AgribankDigital
                                 Logger.Log("> " + dataStr);
                                 if (Utils.HAS_CONTROLLER)
                                 {
-                                    initFingerPrintZF1(host.socketHost, socketATM, dataStr);
+                                    fingerPrinZF1.dataStr = dataStr;
+
+                                    //Cho phép nhận vân tay
+                                    this.fingerPrinZF1._capDevice.Freeze(false);
+
+                                    //Đèn xanh bật
+                                    fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 1;
                                 }
                                 else
                                 {
-                                    initFingerPrintCB10(host.socketHost, socketATM, dataStr);
+                                    initFingerPrintCB100(host.socketHost, socketATM, dataStr);
+
                                 }
                             }
                             else
