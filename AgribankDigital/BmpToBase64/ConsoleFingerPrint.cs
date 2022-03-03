@@ -1,6 +1,6 @@
 ﻿using AgribankDigital;
 using Dermalog.Imaging.Capturing;
-using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
