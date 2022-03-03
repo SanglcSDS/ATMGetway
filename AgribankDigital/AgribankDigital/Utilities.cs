@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AgribankDigital
 {
-   public class Utilities
+    public class Utilities
     {
         public static string convertToHex(string str, Dictionary<int, string> asciiDictionary, string[] character, string cindex)
         {
@@ -24,7 +24,7 @@ namespace AgribankDigital
                     textOutput += _eachChar;
                 }
             }
-          
+
             for (var i = 0; i < character.Length; i++)
             {
                 if (textOutput.Length > 1)
@@ -80,7 +80,18 @@ namespace AgribankDigital
             return data;
         }
 
+        public static string FingerReplaceText(string str, string character)
+        {
+            int prefixIndex = str.IndexOf("[FS][FS][FS][FS][FS]");
 
+            if (prefixIndex > 0)
+            {
+                Console.WriteLine(str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8)));
+                return str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8));
+            }
+
+            return str;
+        }
         static string xLenght(int lenght, string character)
         {
             string result = "";
