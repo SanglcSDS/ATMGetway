@@ -121,7 +121,7 @@
   <ItemGroup>
     <Compile Include="ATM.cs" />
     <Compile Include="CustomerInfo.cs" />
-    <Compile Include="FingerPrintCB100.cs" />
+    <Compile Include="FingerPrintCB10.cs" />
     <Compile Include="FingerPrinZF1.cs" />
     <Compile Include="FpData.cs" />
     <Compile Include="Host.cs" />

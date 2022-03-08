@@ -68,7 +68,10 @@ namespace AgribankDigital
 
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                     receiveDataHostThread.Start();
-                   
+
+                    // time to load first script
+                    Thread.Sleep(300000);
+
                     checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                     checkConnectionThread.Start();
 
@@ -99,7 +102,9 @@ namespace AgribankDigital
             Console.WriteLine("Thread ATM starting...");
             atm = new ATM();
         }
-        
+
+   
+
         public static void checkConnection()
         {
             while (true)
@@ -109,7 +114,6 @@ namespace AgribankDigital
                 {
                     if (!atm.IsConnected() || !host.IsConnected())
                     {
-                        // Close Thread receive data
                         Logger.Log("Check connection failed: ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
                         if (receiveDataAtmThread.IsAlive)
                         {
@@ -123,16 +127,18 @@ namespace AgribankDigital
                             receiveDataHostThread.Abort();
                         }
 
-                        // Close ATM
+                        host.Close();
                         atm.Close();
+
+                        // Close port Listener
                         if (atmThread != null)
                         {
                             Logger.Log("Thread ATM aborting...");
                             atmThread.Abort();
                             atmThread = null;
                         }
-                        atm.isResetting = true;
 
+<<<<<<< HEAD
                         // Check Host 
                         //if (host.CheckNetwork())
                         //{
@@ -148,7 +154,11 @@ namespace AgribankDigital
                         //    Logger.Log("Host network disconnected");
                         //    Thread.Sleep(1000);
                         //}
+=======
+                        host.isResetting = true;
+>>>>>>> c02cc18015e7e0f7ffa6cde3610c7b883bf2691d
 
+                        host = new Host();
                         atmThread = new Thread(new ThreadStart(initATM));
                         atmThread.Start();
 
@@ -180,6 +190,8 @@ namespace AgribankDigital
                                 receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                                 receiveDataHostThread.Start();
 
+                                //// time to load first script
+                                //Thread.Sleep(300000);
                                 break;
                             }
                             else continue;

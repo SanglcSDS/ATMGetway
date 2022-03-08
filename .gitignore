@@ -1,8 +1,6 @@
-AgribankDigital/AgribankDigital/obj/Debug/
-AgribankDigital/AgribankDigital/bin/Debug/
-AgribankDigital/AgribankDigital/obj/Release/
-AgribankDigital/AgribankDigital/bin/Release/
-AgribankDigital/AgribankDigital/obj/X86/
-AgribankDigital/AgribankDigital/bin/X86/
+ AgribankDigital/AgribankDigital/obj/Debug/AgribankDigital.csproj.CoreCompileInputs.cache
+AgribankDigital/AgribankDigital/obj/Debug/DesignTimeResolveAssemblyReferences.cache
+AgribankDigital/AgribankDigital/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 AgribankDigital/.vs/
-AgribankDigital/BmpToBase64/obj/Release/BmpToBase64.csprojAssemblyReference.cache
+AgribankDigital/AgribankDigital/obj/Debug/AgribankDigital.csprojAssemblyReference.cache
+AgribankDigital/UpgradeLog.htm

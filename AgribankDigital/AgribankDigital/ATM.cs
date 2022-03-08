@@ -23,12 +23,11 @@ namespace AgribankDigital
             listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
             listener.Start();
 
+
             socketATM = listener.AcceptSocket();
 
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-            LingerOption lingerOption = new LingerOption(false, 3);
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 1000);
+            LingerOption lingerOption = new LingerOption(true, 5);
             socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
 
             listener.Stop();
@@ -74,7 +73,36 @@ namespace AgribankDigital
         }
         public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
         {
+<<<<<<< HEAD
             try
+=======
+            fingerPrinZF1 = new FingerPrinZF1();
+            fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
+            fingerPrinZF1.socketATM = socketATM;
+            fingerPrinZF1.socketHost = socketHost;
+            fingerPrinZF1.InitializeDevice();
+
+            fingerPrinZF1._capDevice.Start();
+
+            //Không cho phép nhận vân tay
+            this.fingerPrinZF1._capDevice.Freeze(true);
+
+            //Không nháy đèn xanh
+            fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
+        }
+        public void reset()
+        {
+            isResetting = true;
+
+            socketATM.Disconnect(true);
+
+            Logger.Log("Waiting connect from ATM ...");
+            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
+            listener.Start();
+            socketATM = listener.AcceptSocket();
+            listener.Stop();
+            if (socketATM.Connected)
+>>>>>>> c02cc18015e7e0f7ffa6cde3610c7b883bf2691d
             {
                 fingerPrinZF1 = new FingerPrinZF1();
                 fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
@@ -113,9 +141,7 @@ namespace AgribankDigital
                          
                             if (dataStr.Contains("HBCI"))
                             {
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to Finger:");
-                                Logger.Log("> " + dataStr);
-                                if (Utils.HAS_CONTROLLER)
+                                if (Utils.HAS_CONTROLLER==true)
                                 {
                                     fingerPrinZF1.dataStr = dataStr;
 
@@ -125,11 +151,12 @@ namespace AgribankDigital
                                     //Đèn xanh bật
                                     fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 1;
                                 }
-                                else
+                                if(Utils.HAS_CONTROLLER == false)
                                 {
                                     initFingerPrintCB100(host.socketHost, socketATM, dataStr);
 
                                 }
+                               
                             }
                             else
                             {
@@ -139,6 +166,10 @@ namespace AgribankDigital
                                 if (host.IsConnected())
                                 {
                                     host.socketHost.Send(data);
+<<<<<<< HEAD
+=======
+                                   
+>>>>>>> c02cc18015e7e0f7ffa6cde3610c7b883bf2691d
 
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                                     Logger.Log("> " + dataStr);
