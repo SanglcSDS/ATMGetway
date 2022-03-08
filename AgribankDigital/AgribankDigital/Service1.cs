@@ -72,6 +72,21 @@ namespace AgribankDigital
                     checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                     checkConnectionThread.Start();
 
+
+                    // start ZF1
+                    try
+                    {
+                        if (Utils.HAS_CONTROLLER)
+                        {
+                            Logger.Log("ZF1 is starting...");
+                            atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log("err: " + e.ToString());
+                    }
+
                     break;
                 }
                 else continue; 
@@ -119,27 +134,40 @@ namespace AgribankDigital
                         atm.isResetting = true;
 
                         // Check Host 
-                        if (host.CheckNetwork())
-                        {
+                        //if (host.CheckNetwork())
+                        //{
                             host.Close();
 
                             // reconnect Host
                             host.isResetting = true;
                             host = new Host();
-                        }
-                        else
-                        {
-                            while (!host.CheckNetwork())
-                            {
-                                Thread.Sleep(1000);
-                            }
-                        }
+                        //}
+
+                        //while (!host.CheckNetwork() && host.IsConnected())
+                        //{
+                        //    Logger.Log("Host network disconnected");
+                        //    Thread.Sleep(1000);
+                        //}
 
                         atmThread = new Thread(new ThreadStart(initATM));
                         atmThread.Start();
 
                         host.isResetting = false;
                         atm.isResetting = false;
+
+                        // restart ZF1
+                        try
+                        {
+                            if (Utils.HAS_CONTROLLER)
+                            {
+                                Logger.Log("ZF1 is starting...");
+                                atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Log("err: " + e.ToString());
+                        }
 
                         // wait ATM connected
                         while (true)

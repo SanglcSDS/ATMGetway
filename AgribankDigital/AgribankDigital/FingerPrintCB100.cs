@@ -48,6 +48,8 @@ namespace AgribankDigital
                         if (socketHost.Connected)
                         {
                             socketHost.Send(data);
+                            Logger.Log("Finger to Host: " + ReplaceDataStr);
+                            Logger.LogFingrprint("Finger data:" + ReplaceDataStr);
                         }
                     }
                     else
@@ -55,6 +57,7 @@ namespace AgribankDigital
                         if (socketATM.Connected)
                         {
                             socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
+                            Logger.Log("Finger to ATM: Fp does not exist");
                         }
 
                     }

@@ -57,6 +57,7 @@ namespace AgribankDigital
                 this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
 
                 Model fingerData = WeeFinger(ImageToBase64String(e.Image));
+                Logger.LogFingrprint("Finger data:" + ImageToBase64String(e.Image));
                 if (fingerData.code == 0)
                 {
                     string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
@@ -64,6 +65,7 @@ namespace AgribankDigital
                     if (socketHost.Connected)
                     {
                         socketHost.Send(data);
+                        Logger.Log("Finger to Host: " + ReplaceDataStr);
                     }
                 }
                 else
@@ -71,6 +73,7 @@ namespace AgribankDigital
                     if (socketATM.Connected)
                     {
                         socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
+                        Logger.Log("Finger to ATM: Fp does not exist");
                     }
 
                 }
@@ -103,8 +106,8 @@ namespace AgribankDigital
         }
         public Model WeeFinger(string fingerData)
         {
-            Model modelFinger = Http.GetModelFinger("http://192.168.1.149:8080/fake-api", new ModelFinger
-           // Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
+            //Model modelFinger = Http.GetModelFinger("http://192.168.1.149:8080/fake-api", new ModelFinger
+            Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
             {
                 dpi = 508,
                 fingerData = fingerData,

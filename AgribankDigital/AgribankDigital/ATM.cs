@@ -60,68 +60,44 @@ namespace AgribankDigital
         }
         public void initFingerPrintCB100(Socket socketHost, Socket socketATM,string dataStr)
         {
-            ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
-            fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
+            try
+            {
+                ws = new WebSocket("ws://192.168.42.129:8887");
+                FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
+                fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
+            }
+            catch (Exception e)
+            {
+                Logger.Log("Err: " + e.ToString());
+                Logger.Log("CB100 start failed!");
+            }
         }
         public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
         {
-            fingerPrinZF1 = new FingerPrinZF1();
-            fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
-            fingerPrinZF1.socketATM = socketATM;
-            fingerPrinZF1.socketHost = socketHost;
-            fingerPrinZF1.InitializeDevice();
-
-            fingerPrinZF1._capDevice.Start();
-
-            //Không cho phép nhận vân tay
-            this.fingerPrinZF1._capDevice.Freeze(true);
-
-            //Không nháy đèn xanh
-            fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
-        }
-        public void reset()
-        {
-            isResetting = true;
-
-            socketATM.Disconnect(true);
-
-            Logger.Log("Waiting connect from ATM ...");
-            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-            listener.Start();
-
-            socketATM = listener.AcceptSocket();
-
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-            LingerOption lingerOption = new LingerOption(false, 3);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
-
-            listener.Stop();
-            if (socketATM.Connected)
+            try
             {
-                Logger.Log("Connected to ATM : " + socketATM.Connected);
-            }
-        }
+                fingerPrinZF1 = new FingerPrinZF1();
+                fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
+                fingerPrinZF1.socketATM = socketATM;
+                fingerPrinZF1.socketHost = socketHost;
+                fingerPrinZF1.InitializeDevice();
 
-        public Socket createListener()
-        {
-            Logger.Log("Waiting connect from ATM ...");
+                fingerPrinZF1._capDevice.Start();
 
-            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-            listener.Start();
-            var socketATM = listener.AcceptSocket();
-            listener.Stop();
-            if (socketATM.Connected)
+                //Không cho phép nhận vân tay
+                this.fingerPrinZF1._capDevice.Freeze(true);
+
+                //Không nháy đèn xanh
+                fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
+            }catch (Exception e)
             {
-                Logger.Log("Connected to ATM : " + socketATM.Connected);
+                Logger.Log("Err: " + e.ToString());
+                Logger.Log("ZF1 start failed!");
             }
-            return socketATM;
         }
 
         public void ReceiveDataFromATM(Host host)
         {
-            initFingerPrintZF1(host.socketHost, this.socketATM);
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
@@ -163,7 +139,7 @@ namespace AgribankDigital
                                 if (host.IsConnected())
                                 {
                                     host.socketHost.Send(data);
-                                   
+
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                                     Logger.Log("> " + dataStr);
                                 }
