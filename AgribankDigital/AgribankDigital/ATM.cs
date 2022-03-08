@@ -1,24 +1,36 @@
-﻿using System;
+﻿using Dermalog.Imaging.Capturing;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using WebSocketSharp;
 
 namespace AgribankDigital
 {
     class ATM
     {
+        WebSocket ws = null;
         public Socket socketATM;
         //Socket socketHost;
         //TcpClient tcpClient;
         TcpListener listener;
         public bool isResetting = false;
+        FingerPrinZF1 fingerPrinZF1;
 
         public ATM()
         {
             Logger.Log("Waiting connect from ATM ...");
             listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
             listener.Start();
+
             socketATM = listener.AcceptSocket();
+
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+            LingerOption lingerOption = new LingerOption(false, 3);
+            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
+
             listener.Stop();
             if (socketATM.Connected)
             {
@@ -31,50 +43,57 @@ namespace AgribankDigital
             try
             {
                 bool check = !(socketATM.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketATM.Available == 0);
-                if (!check)
-                    Logger.Log("ATM not responding");
+                //if (!check)
+                //    Logger.Log("ATM not responding");
                 return check;
             }
-            catch (SocketException) {
-                Logger.Log("ATM not responding");
+            catch (SocketException)
+            {
+                //Logger.Log("ATM not responding");
                 return false;
             }
-            catch (ObjectDisposedException) {
-                Logger.Log("ATM not responding");
+            catch (ObjectDisposedException)
+            {
+                //Logger.Log("ATM not responding");
                 return false;
             }
         }
-
-        public void reset()
+        public void initFingerPrintCB100(Socket socketHost, Socket socketATM,string dataStr)
         {
-            isResetting = true;
-
-            socketATM.Disconnect(true);
-
-            Logger.Log("Waiting connect from ATM ...");
-            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-            listener.Start();
-            socketATM = listener.AcceptSocket();
-            listener.Stop();
-            if (socketATM.Connected)
+            try
             {
-                Logger.Log("Connected to ATM : " + socketATM.Connected);
+                ws = new WebSocket("ws://192.168.42.129:8887");
+                FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
+                fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
+            }
+            catch (Exception e)
+            {
+                Logger.Log("Err: " + e.ToString());
+                Logger.Log("CB100 start failed!");
             }
         }
-
-        public Socket createListener()
+        public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
         {
-            Logger.Log("Waiting connect from ATM ...");
-           
-            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-            listener.Start();
-            var socketATM = listener.AcceptSocket();
-            listener.Stop();
-            if (socketATM.Connected)
+            try
             {
-                Logger.Log("Connected to ATM : " + socketATM.Connected);
+                fingerPrinZF1 = new FingerPrinZF1();
+                fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
+                fingerPrinZF1.socketATM = socketATM;
+                fingerPrinZF1.socketHost = socketHost;
+                fingerPrinZF1.InitializeDevice();
+
+                fingerPrinZF1._capDevice.Start();
+
+                //Không cho phép nhận vân tay
+                this.fingerPrinZF1._capDevice.Freeze(true);
+
+                //Không nháy đèn xanh
+                fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
+            }catch (Exception e)
+            {
+                Logger.Log("Err: " + e.ToString());
+                Logger.Log("ZF1 start failed!");
             }
-            return socketATM;
         }
 
         public void ReceiveDataFromATM(Host host)
@@ -88,20 +107,45 @@ namespace AgribankDigital
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
                         {
-                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                           
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
-
-                            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
-                            Logger.Log("> " + dataStr);
-
-                            if (host.IsConnected())
+                         
+                            if (dataStr.Contains("HBCI"))
                             {
-                                host.socketHost.Send(data);
-
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to Finger:");
                                 Logger.Log("> " + dataStr);
+                                if (Utils.HAS_CONTROLLER)
+                                {
+                                    fingerPrinZF1.dataStr = dataStr;
+
+                                    //Cho phép nhận vân tay
+                                    this.fingerPrinZF1._capDevice.Freeze(false);
+
+                                    //Đèn xanh bật
+                                    fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 1;
+                                }
+                                else
+                                {
+                                    initFingerPrintCB100(host.socketHost, socketATM, dataStr);
+
+                                }
                             }
+                            else
+                            {
+                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
+                                Logger.Log("> " + dataStr);
+
+                                if (host.IsConnected())
+                                {
+                                    host.socketHost.Send(data);
+
+                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                                    Logger.Log("> " + dataStr);
+                                }
+                            }
+
+
                         }
                     }
                 }
@@ -111,14 +155,14 @@ namespace AgribankDigital
         public void Close()
         {
             if (socketATM.Connected)
-                socketATM.Disconnect(false);
+                socketATM.Close();
             listener.Stop();
         }
 
         public void Terminate()
         {
             if (socketATM.Connected)
-                socketATM.Disconnect(false);
+                socketATM.Close();
             listener.Stop();
         }
     }

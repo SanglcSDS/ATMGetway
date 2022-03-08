@@ -16,14 +16,18 @@ namespace AgribankDigital
         static int _processId;
         static Thread mainThread = null;
         static Thread atmThread = null;
-        static Thread hostThread = null;
+        static Thread receiveDataAtmThread = null;
+        static Thread receiveDataHostThread = null;
         static Thread checkConnectionThread = null;
         static Thread fingerPrintThread = null;
         static ATM atm = null;
         static Host host = null;
-
         WebSocket ws = null;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8a057ed845ea9970cc8d91ad19bfd4545d939fbd
         public Service1()
         {
             InitializeComponent();
@@ -40,9 +44,15 @@ namespace AgribankDigital
             mainThread = new Thread(new ThreadStart(main));
             mainThread.Start();
         }
-
+     /*   public void initFingerPrint()
+        {
+            ws = new WebSocket("ws://192.168.42.129:8887");
+            FingerPrint fingerPrint = new FingerPrint(ws);
+            fingerPrint.FingerPrintWorking(null);
+        }*/
         public void main()
         {
+<<<<<<< HEAD
             ProcessId();
             Logger.ProcessById(_processId.ToString());
          /*   var ProcessName = Process.GetProcessById(_processId).ProcessName;
@@ -60,28 +70,61 @@ namespace AgribankDigital
 
             fingerPrintThread = new Thread(new ThreadStart(initFingerPrint));
             fingerPrintThread.Start();
+=======
+           /* fingerPrintThread = new Thread(new ThreadStart(initFingerPrint)); ;
+            fingerPrintThread.Start();*/
+>>>>>>> 8a057ed845ea9970cc8d91ad19bfd4545d939fbd
 
             Logger.Log("Service is started");
-            atm = new ATM();
-            host = new Host();
 
-            atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+            host = new Host();
+            // Create new Thread for ATM
+            atmThread = new Thread(new ThreadStart(initATM));
             atmThread.Start();
 
-            hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
-            hostThread.Start();
+            // wait ATM connected
+            while (true)
+            {
+                if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
+                {
+                    Logger.Log("Another Thread starting....");
+                    receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                    receiveDataAtmThread.Start();
 
-            checkConnectionThread = new Thread(new ThreadStart(checkConnection));
-            checkConnectionThread.Start();
+                    receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                    receiveDataHostThread.Start();
+                   
+                    checkConnectionThread = new Thread(new ThreadStart(checkConnection));
+                    checkConnectionThread.Start();
+
+
+                    // start ZF1
+                    try
+                    {
+                        if (Utils.HAS_CONTROLLER)
+                        {
+                            Logger.Log("ZF1 is starting...");
+                            atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log("err: " + e.ToString());
+                    }
+
+                    break;
+                }
+                else continue; 
+            }
+            
         }
 
-        public void initFingerPrint()
+        public static void initATM()
         {
-            ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrint fingerPrint = new FingerPrint(ws);
-            fingerPrint.FingerPrintWorking(null);
+            Console.WriteLine("Thread ATM starting...");
+            atm = new ATM();
         }
-
+        
         public static void checkConnection()
         {
             while (true)
@@ -91,18 +134,25 @@ namespace AgribankDigital
                 {
                     if (!atm.IsConnected() || !host.IsConnected())
                     {
-                        if (atmThread.IsAlive)
+                        // Close Thread receive data
+                        Logger.Log("Check connection failed: ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
+                        if (receiveDataAtmThread.IsAlive)
                         {
-                            atmThread.Abort();
+                            Logger.Log("Receive data ATM aborting...");
+                            receiveDataAtmThread.Abort();
                         }
 
-                        if (hostThread.IsAlive)
+                        if (receiveDataHostThread.IsAlive)
                         {
-                            hostThread.Abort();
+                            Logger.Log("Receive data Host aborting...");
+                            receiveDataHostThread.Abort();
                         }
 
-                        if (!host.IsConnected())
+                        // Close ATM
+                        atm.Close();
+                        if (atmThread != null)
                         {
+<<<<<<< HEAD
                             atm.Close();
                             host.reset();
 
@@ -112,30 +162,68 @@ namespace AgribankDigital
 
                             host.isResetting = false;
                             atm.isResetting = false;
+=======
+                            Logger.Log("Thread ATM aborting...");
+                            atmThread.Abort();
+                            atmThread = null;
+>>>>>>> 8a057ed845ea9970cc8d91ad19bfd4545d939fbd
                         }
-                        if (!atm.IsConnected())
-                        {
-                            host.Close();
-                            atm.reset();
+                        atm.isResetting = true;
 
-                            // Reconnect Host
+                        // Check Host 
+                        //if (host.CheckNetwork())
+                        //{
+                            host.Close();
+
+                            // reconnect Host
                             host.isResetting = true;
                             host = new Host();
+                        //}
 
-                            atm.isResetting = false;
-                            host.isResetting = false;
-                        }
+                        //while (!host.CheckNetwork() && host.IsConnected())
+                        //{
+                        //    Logger.Log("Host network disconnected");
+                        //    Thread.Sleep(1000);
+                        //}
 
-                        if (atm.IsConnected() && host.IsConnected())
+                        atmThread = new Thread(new ThreadStart(initATM));
+                        atmThread.Start();
+
+                        host.isResetting = false;
+                        atm.isResetting = false;
+
+                        // restart ZF1
+                        try
                         {
-                            atmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
-                            atmThread.Start();
-                            hostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
-                            hostThread.Start();
+                            if (Utils.HAS_CONTROLLER)
+                            {
+                                Logger.Log("ZF1 is starting...");
+                                atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
+                            }
                         }
-                        Thread.Sleep(Utils.CHECK_CONNECTION_DELAY);
+                        catch (Exception e)
+                        {
+                            Logger.Log("err: " + e.ToString());
+                        }
+
+                        // wait ATM connected
+                        while (true)
+                        {
+                            if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
+                            {
+                                Logger.Log("Reconnect = true");
+                                receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                                receiveDataAtmThread.Start();
+                                receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                                receiveDataHostThread.Start();
+
+                                break;
+                            }
+                            else continue;
+                        }
                     }
                 }
+                Thread.Sleep(Utils.CHECK_CONNECTION_DELAY);
             }
         }
 
@@ -143,22 +231,25 @@ namespace AgribankDigital
         {
             if (checkConnectionThread != null)
                 checkConnectionThread.Abort();
-            if (atmThread != null)
-                atmThread.Abort();
-            if (hostThread != null)
-                hostThread.Abort();
+            if (receiveDataAtmThread != null)
+                receiveDataAtmThread.Abort();
+            if (receiveDataHostThread != null)
+                receiveDataHostThread.Abort();
 
             if (atm != null)
                 atm.Terminate();
             if (host != null)
                 host.Terminate();
 
+            if (atmThread != null)
+                atmThread.Abort();
+
             if (ws != null)
                 ws.Close();
             if (fingerPrintThread != null)
                 fingerPrintThread.Abort();
-            if (mainThread != null)
-                mainThread.Abort();
+
+            mainThread.Abort();
         }
         public static int ProcessId()
         {
