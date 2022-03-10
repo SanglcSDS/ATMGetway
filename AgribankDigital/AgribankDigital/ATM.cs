@@ -77,9 +77,16 @@ namespace AgribankDigital
             try
             {
 
-                fingerPrinZF1 = new FingerPrinZF1();
+                if (fingerPrinZF1 != null)
+                {
+                    fingerPrinZF1.CloseDevice();
+                }
+               
 
+                  fingerPrinZF1 = new FingerPrinZF1();
+               
                 fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
+
 
                 fingerPrinZF1.socketATM = socketATM;
                 fingerPrinZF1.socketHost = socketHost;
