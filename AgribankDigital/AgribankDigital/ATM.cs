@@ -69,48 +69,34 @@ namespace AgribankDigital
             {
 
                 Logger.Log("Err: " + e.ToString());
-                Logger.Log("CB100 start failed!");
+                Logger.Log("CB100 start Success!");
             }
         }
         public void initFingerPrintZF1(Socket socketHost, Socket socketATM)
         {
             try
             {
-
                 if (fingerPrinZF1 != null)
                 {
                     fingerPrinZF1.CloseDevice();
                 }
-               
-
-                  fingerPrinZF1 = new FingerPrinZF1();
-               
+                fingerPrinZF1 = new FingerPrinZF1();
                 fingerPrinZF1._capDevice = DeviceManager.GetDevice(DeviceIdentity.FG_ZF1);
-
-
                 fingerPrinZF1.socketATM = socketATM;
                 fingerPrinZF1.socketHost = socketHost;
                 fingerPrinZF1.InitializeDevice();
-
+                Logger.Log("ZF1 start Success!");
                 fingerPrinZF1._capDevice.Start();
 
                 //Không cho phép nhận vân tay
                 this.fingerPrinZF1._capDevice.Freeze(true);
-
-                //Không nháy đèn xanh
-
-
-
-
             }
             catch (Exception e)
             {
                 Logger.Log("Err: " + e.ToString());
                 Logger.Log("ZF1 start failed!");
-
-
                 initFingerPrintZF1(socketHost, socketATM);
-                Thread.Sleep(5000);
+
             }
         }
 
@@ -123,21 +109,22 @@ namespace AgribankDigital
                     fingerPrinZF1.dataStr = dataStr;
                     //Cho phép nhận vân tay
                     this.fingerPrinZF1._capDevice.Freeze(false);
-
-
                     fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 1;
 
                 }
                 else
                 {
-                    Console.WriteLine("The scanner is disconnected from the host");
+                    Logger.Log("Err: The scanner is disconnected from the host");
+                    Logger.Log("ZF1 start failed!");
+
                     initFingerPrintZF1(socketHost, socketATM);
                 }
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Logger.Log("Err: " + ex.Message.ToString());
+                Logger.Log("ZF1 start failed!");
                 initFingerPrintZF1(socketHost, socketATM);
 
 
@@ -171,14 +158,11 @@ namespace AgribankDigital
                                 }
                                 else
                                 {
-
                                     initFingerPrintCB100(host.socketHost, socketATM, dataStr);
                                     if (ws.ReadyState == WebSocketState.Closed)
                                     {
                                         Logger.LogFingrprint("The scanner is disconnected from the host");
                                     }
-
-
                                 }
                             }
                             else
