@@ -58,31 +58,53 @@ namespace AgribankDigital
 
                 Model fingerData = WeeFinger(ImageToBase64String(e.Image));
                 Logger.LogFingrprint("Finger data:" + ImageToBase64String(e.Image));
-                if (fingerData.code == 0)
+                if (fingerData != null)
                 {
-                    string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
-                    Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
-                    if (socketHost.Connected)
+
+                    if (fingerData.code == 0)
                     {
-                        socketHost.Send(data);
-                        Logger.Log("Finger to Host: " + ReplaceDataStr);
+                        string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
+                        Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
+                        if (socketHost.Connected)
+                        {
+                            socketHost.Send(data);
+                            Logger.Log("Finger to Host: " + ReplaceDataStr);
+                        }
+                    }
+                    else
+                    {
+                        if (socketATM.Connected)
+                        {
+                            socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
+                            Logger.Log("Finger to ATM: Fp does not exist");
+                        }
+
                     }
                 }
                 else
                 {
-                    if (socketATM.Connected)
-                    {
-                        socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
-                        Logger.Log("Finger to ATM: Fp does not exist");
-                    }
-
+                    Logger.Log("Finger to ATM: API does not exist ");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message.ToString());
             }
 
+        }
+
+        public void CloseDevice()
+        {
+            if (this._capDevice != null)
+            {
+                if (this._capDevice.IsCapturing)
+                {
+                    this._capDevice.Stop();
+                }
+                this.UnbindEvents();
+                this._capDevice.Dispose();
+                _capDevice = null;
+            }
         }
 
         private void BindEvents()
@@ -106,7 +128,8 @@ namespace AgribankDigital
         }
         public Model WeeFinger(string fingerData)
         {
-            //Model modelFinger = Http.GetModelFinger("http://192.168.1.149:8080/fake-api", new ModelFinger
+
+
             Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
             {
                 dpi = 508,

@@ -86,7 +86,6 @@ namespace AgribankDigital
 
             if (prefixIndex > 0)
             {
-                Console.WriteLine(str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8)));
                 return str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8));
             }
 
