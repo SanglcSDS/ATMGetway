@@ -1,0 +1,2 @@
+D:\code\mitec\code1\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.AssemblyReference.cache
+D:\code\mitec\code1\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.CoreCompileInputs.cache
