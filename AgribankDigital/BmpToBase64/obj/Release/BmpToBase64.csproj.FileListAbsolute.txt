@@ -1,9 +1,0 @@
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Release\BmpToBase64.exe.config
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Release\BmpToBase64.exe
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Release\BmpToBase64.pdb
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\bin\Release\Dermalog.Imaging.Capturing.dll
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.AssemblyReference.cache
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.CoreCompileInputs.cache
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.CopyComplete
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.exe
-C:\Users\84936\source\repos\service\code\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.pdb

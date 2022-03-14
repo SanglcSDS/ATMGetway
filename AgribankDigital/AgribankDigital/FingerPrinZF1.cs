@@ -16,9 +16,15 @@ namespace AgribankDigital
         public Socket socketHost { get; set; }
         public Socket socketATM { get; set; }
         public string dataStr { get; set; }
-        public static string ImageToBase64String(string file)
+
+        /// <summary>
+        /// Chuyển từ image sang base64String
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static string ImageToBase64String(Image image)
         {
-            Bitmap bitmap = new Bitmap(file);
+            Bitmap bitmap = new Bitmap(image);
 
             MemoryStream ms = new MemoryStream();
 
@@ -35,25 +41,23 @@ namespace AgribankDigital
             return strBase64;
         }
 
+        /// <summary>
+        /// Bắt sự kiện chạm tay vào thiết bị lấy mẫu vân tay
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void _capDevice_OnDetect(object sender, DetectEventArgs e)
         {
             try
             {
-                DirectoryInfo directoryInfo = new DirectoryInfo(Environment.CurrentDirectory);
+                //Lấy vân tay thành công, không cho phép nhận vân tay thêm
+                this._capDevice.Freeze(true);
 
-                string _pathFolder = Path.Combine(directoryInfo.FullName, "FingerPrintImage");
+                //Đèn xanh tắt
+                this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
 
-                if (!Directory.Exists(_pathFolder))
-                {
-                    Directory.CreateDirectory(_pathFolder);
-                }
-
-                string filePath = Path.Combine(_pathFolder, "FingerPrint" + DateTime.Now.ToString("yyyy-MM-dd--HH-mm-ss") + ".bmp");
-                e.Image.Save(filePath);
-                this._capDevice.Stop();
-
-                FpData str = JsonConvert.DeserializeObject<TestModel>(ImageToBase64String(filePath)).FpData;
-                Model fingerData = WeeFinger(str.Finger1);
+                Model fingerData = WeeFinger(ImageToBase64String(e.Image));
+                Logger.LogFingrprint("Finger data:" + ImageToBase64String(e.Image));
                 if (fingerData.code == 0)
                 {
                     string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
@@ -61,6 +65,7 @@ namespace AgribankDigital
                     if (socketHost.Connected)
                     {
                         socketHost.Send(data);
+                        Logger.Log("Finger to Host: " + ReplaceDataStr);
                     }
                 }
                 else
@@ -68,12 +73,10 @@ namespace AgribankDigital
                     if (socketATM.Connected)
                     {
                         socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
+                        Logger.Log("Finger to ATM: Fp does not exist");
                     }
 
                 }
-              //  Console.WriteLine("Base64String: " + ImageToBase64String(filePath));
-
-
             }
             catch (Exception ex)
             {
@@ -103,6 +106,7 @@ namespace AgribankDigital
         }
         public Model WeeFinger(string fingerData)
         {
+            //Model modelFinger = Http.GetModelFinger("http://192.168.1.149:8080/fake-api", new ModelFinger
             Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
             {
                 dpi = 508,
