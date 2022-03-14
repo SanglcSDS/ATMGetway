@@ -33,7 +33,7 @@ namespace AgribankDigital
             if (socketATM.Connected)
             {
                 Logger.Log("Connected to ATM : " + socketATM.Connected);
-            }
+            } 
         }
 
         public bool IsConnected()
