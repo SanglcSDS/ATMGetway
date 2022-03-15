@@ -82,14 +82,30 @@ namespace AgribankDigital
 
         public static string FingerReplaceText(string str, string character)
         {
-            int prefixIndex = str.IndexOf("[FS][FS][FS][FS][FS]");
+            int prefixIndex = str.IndexOf(@"\1c\1c\1c\1c\1c");
 
             if (prefixIndex > 0)
             {
-                return str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8));
+                return str.Substring(0, prefixIndex + 6) + character + str.Substring(prefixIndex + 6, str.Length - (prefixIndex + 6));
             }
 
             return str;
+        }
+        public static string FingerReplaceTextErr(string str)
+        {
+            int prefixIndex = str.IndexOf(@"\1c;");
+
+            if (prefixIndex > 0)
+            {
+                return @"4\\1c000\\1c\\1c158\\1c00000000\\1c00005000158\\0fKHONG XAC DINH DUOC FACE\\1c" + str.Substring(prefixIndex - 1, 1) + @"00\\1c";
+            }
+            else
+            {
+                return @"4\\1c000\\1c\\1c158\\1c00000000\\1c00005000158\\0fKHONG XAC DINH DUOC FACE\\1c00\\1c";
+
+            }
+
+     
         }
         static string xLenght(int lenght, string character)
         {

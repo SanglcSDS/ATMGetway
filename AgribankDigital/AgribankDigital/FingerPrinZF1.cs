@@ -63,32 +63,45 @@ namespace AgribankDigital
 
                     if (fingerData.code == 0)
                     {
-                        string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
+                        string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerMobile);
                         Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
                         if (socketHost.Connected)
                         {
                             socketHost.Send(data);
+                            Logger.Log("Customer Number: " + fingerData.customerInfos.customerNumber);
                             Logger.Log("Finger to Host: " + ReplaceDataStr);
+
                         }
                     }
                     else
                     {
                         if (socketATM.Connected)
                         {
-                            socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
-                            Logger.Log("Finger to ATM: Fp does not exist");
+
+                            socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
+
+                            Logger.Log("Finger to ATM:" + Utilities.FingerReplaceTextErr(dataStr));
+                          
                         }
 
                     }
                 }
                 else
                 {
-                    Logger.Log("Finger to ATM: API does not exist ");
+                    if (socketATM.Connected)
+                    {
+                        socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
+                        Logger.Log("Finger to ATM:" + Utilities.FingerReplaceTextErr(dataStr));
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.Message.ToString());
+                if (socketATM.Connected)
+                {
+                    Logger.Log("Finger to ATM:" + ex.Message.ToString());
+                    socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
+                }
             }
 
         }
