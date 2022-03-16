@@ -97,16 +97,50 @@ namespace AgribankDigital
 
             if (prefixIndex > 0)
             {
-                return @"4[FS]000[FS][FS]158[FS]00000000[FS]00005000158[SI]KHONG XAC DINH DUOC FACE[FS]" + str.Substring(prefixIndex - 1, 1) + @"00[FS]";
+                return formarHEX2ASCII(@"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC FACE\1c" + str.Substring(prefixIndex - 1, 1) + @"00\1c", new string[] { "\\1c", "\\1d", "\\0f" });
             }
             else
             {
-                return @"4[FS]000[FS][FS]158[FS]00000000[FS]00005000158[SI]KHONG XAC DINH DUOC FACE[FS]00[FS]";
+                return formarHEX2ASCII(@"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC FACE\1c00\1c", new string[] { "\\1c", "\\1d", "\\0f" });
 
             }
 
      
         }
+        public static string formarHEX2ASCII(string str, string[] character)
+        {
+            foreach (string eachChar in character)
+            {
+                str = str.Replace(eachChar, HEX2ASCII(eachChar));
+
+            }
+            return str;
+
+        }
+
+        public static string HEX2ASCII(string hex)
+
+        {
+            hex = hex.Replace("\\", "");
+            string res = String.Empty;
+
+            for (int a = 0; a < hex.Length; a = a + 2)
+
+            {
+                string Char2Convert = hex.Substring(a, 2);
+
+                int n = Convert.ToInt32(Char2Convert, 16);
+
+                char c = (char)n;
+
+                res += c.ToString();
+
+            }
+
+            return res;
+
+        }
+
         static string xLenght(int lenght, string character)
         {
             string result = "";

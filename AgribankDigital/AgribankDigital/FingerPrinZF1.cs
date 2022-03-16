@@ -64,7 +64,7 @@ namespace AgribankDigital
                     if (fingerData.code == 0)
                     {
                         string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerMobile);
-                        Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
+                        Byte[] data = Encoding.ASCII.GetBytes(Utilities.formarHEX2ASCII(ReplaceDataStr, new string[] { "\\1c", "\\1d" , "\\0f" }));
                         if (socketHost.Connected)
                         {
                             socketHost.Send(data);
