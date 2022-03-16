@@ -82,11 +82,11 @@ namespace AgribankDigital
 
         public static string FingerReplaceText(string str, string character)
         {
-            int prefixIndex = str.IndexOf(@"\1c\1c\1c\1c\1c");
+            int prefixIndex = str.IndexOf("");
 
             if (prefixIndex > 0)
             {
-                return str.Substring(0, prefixIndex + 6) + character + str.Substring(prefixIndex + 6, str.Length - (prefixIndex + 6));
+                return str.Substring(0, prefixIndex + 2) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
             }
 
             return str;
