@@ -145,15 +145,12 @@ namespace AgribankDigital
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
                         {
+                            Logger.LogRaw("Raw ATM to FW> " + System.Text.Encoding.ASCII.GetString(data));
 
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
 
-                          /*  if (dataStr.Contains("12[FS]000[FS][FS]P20"))
-                            {
-                                Logger.Log("Finger to ATM: 1[FS]000[FS][FS]21");
-                                socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr("1[FS]000[FS][FS]21")));
-                            } */
+                         
                             if (dataStr.Contains("HBCI"))
                             {
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to Finger:");

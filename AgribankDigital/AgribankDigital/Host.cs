@@ -182,7 +182,8 @@ namespace AgribankDigital
 
                         if (data.Length > 0)
                         {
-                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                            Logger.LogRaw("Raw Host to FW > " + System.Text.Encoding.ASCII.GetString(data));
+
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
