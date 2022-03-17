@@ -153,7 +153,7 @@ namespace AgribankDigital
                          
                             if (dataFinger.Contains("HBCI"))
                             {
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to Finger:");
+                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                                 Logger.Log("> " + dataStr);
                                 if (Utils.HAS_CONTROLLER)
                                 {

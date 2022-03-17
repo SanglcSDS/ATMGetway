@@ -93,15 +93,15 @@ namespace AgribankDigital
         }
         public static string FingerReplaceTextErr(string str)
         {
-            int prefixIndex = str.IndexOf(@"\1c;");
+            int prefixIndex = str.IndexOf(";");
 
             if (prefixIndex > 0)
             {
-                return formarHEX2ASCII(@"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC FACE\1c" + str.Substring(prefixIndex - 1, 1) + @"00\1c", new string[] { "\\1c", "\\1d", "\\0f" });
+                return HEX2ASCII("0")+ "V40000740000000008505074075DJ(01015396563.35VND(1GJ(010004546283.50VND(1" + str.Substring(prefixIndex - 1, 1) + "00";
             }
             else
             {
-                return formarHEX2ASCII(@"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC FACE\1c00\1c", new string[] { "\\1c", "\\1d", "\\0f" });
+                return HEX2ASCII("0") + "V40000740000000008505074075DJ(01015396563.35VND(1GJ(010004546283.50VND(1";
 
             }
 
@@ -121,13 +121,12 @@ namespace AgribankDigital
         public static string HEX2ASCII(string hex)
 
         {
-            hex = hex.Replace("\\", "");
             string res = String.Empty;
 
             for (int a = 0; a < hex.Length; a = a + 2)
 
             {
-                string Char2Convert = hex.Substring(a, 2);
+                string Char2Convert = hex.Substring(a, 1);
 
                 int n = Convert.ToInt32(Char2Convert, 16);
 

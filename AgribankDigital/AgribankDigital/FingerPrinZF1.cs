@@ -67,9 +67,10 @@ namespace AgribankDigital
                         Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
                         if (socketHost.Connected)
                         {
+                            Logger.LogRaw("Raw finger to Host  > " + System.Text.Encoding.ASCII.GetString(data));
                             socketHost.Send(data);
-                            Logger.Log("Customer Number: " + fingerData.customerInfos.customerMobile);
-                            Logger.Log("Finger to Host: " + ReplaceDataStr);
+                            string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                            Logger.Log("FW to Host: " + dataStr);
 
                         }
                     }
@@ -79,8 +80,8 @@ namespace AgribankDigital
                         {
 
                             socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
-
-                            Logger.Log("Finger to ATM:" + Utilities.FingerReplaceTextErr(dataStr));
+                           
+                            Logger.Log("FW to ATM:" + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
                           
                         }
 
@@ -91,7 +92,8 @@ namespace AgribankDigital
                     if (socketATM.Connected)
                     {
                         socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
-                        Logger.Log("Finger to ATM:" + Utilities.FingerReplaceTextErr(dataStr));
+                        Logger.Log("FW to ATM:" + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
+
                     }
                 }
             }
@@ -99,7 +101,7 @@ namespace AgribankDigital
             {
                 if (socketATM.Connected)
                 {
-                    Logger.Log("Finger to ATM:" + ex.Message.ToString());
+                    Logger.Log("FW to ATM:" + ex.Message.ToString());
                     socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
                 }
             }
