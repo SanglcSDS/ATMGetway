@@ -15,13 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_130C2E39963DC19DD6F40B5162124EE2"
-        "OwnerKey" = "8:_B5D463FDF9EA4AE59E281715B34B0962"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_772CB24920A90B1624FE55E145437493"
+        "MsmKey" = "8:_87B3C60D65226A05C21F7EC03675C81C"
         "OwnerKey" = "8:_B5D463FDF9EA4AE59E281715B34B0962"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -33,7 +27,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FABF5A6E924D4319AB18BB9DF62E39F5"
+        "MsmKey" = "8:_C5CBC54C130B4DD10CAF696EA4813B20"
+        "OwnerKey" = "8:_B5D463FDF9EA4AE59E281715B34B0962"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F3F1B8FD77139341BD7D38E206BBB656"
         "OwnerKey" = "8:_B5D463FDF9EA4AE59E281715B34B0962"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -46,19 +46,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_772CB24920A90B1624FE55E145437493"
+        "OwnerKey" = "8:_F3F1B8FD77139341BD7D38E206BBB656"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_130C2E39963DC19DD6F40B5162124EE2"
+        "OwnerKey" = "8:_87B3C60D65226A05C21F7EC03675C81C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FABF5A6E924D4319AB18BB9DF62E39F5"
+        "OwnerKey" = "8:_C5CBC54C130B4DD10CAF696EA4813B20"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -86,6 +86,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -171,14 +179,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_130C2E39963DC19DD6F40B5162124EE2"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_87B3C60D65226A05C21F7EC03675C81C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_130C2E39963DC19DD6F40B5162124EE2"
+                    "_87B3C60D65226A05C21F7EC03675C81C"
                     {
                     "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
@@ -202,20 +210,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_772CB24920A90B1624FE55E145437493"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C5CBC54C130B4DD10CAF696EA4813B20"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Dermalog.Imaging.Capturing, Version=3.3.0.1707, Culture=neutral, PublicKeyToken=d215f80b62562526, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_772CB24920A90B1624FE55E145437493"
+                    "_C5CBC54C130B4DD10CAF696EA4813B20"
                     {
-                    "Name" = "8:websocket-sharp.dll"
+                    "Name" = "8:Dermalog.Imaging.Capturing.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:websocket-sharp.dll"
+            "SourcePath" = "8:Dermalog.Imaging.Capturing.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_44FCB39573534C5086C1787D8F9685B3"
@@ -233,20 +241,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FABF5A6E924D4319AB18BB9DF62E39F5"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F3F1B8FD77139341BD7D38E206BBB656"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Dermalog.Imaging.Capturing, Version=3.3.0.1707, Culture=neutral, PublicKeyToken=d215f80b62562526, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_FABF5A6E924D4319AB18BB9DF62E39F5"
+                    "_F3F1B8FD77139341BD7D38E206BBB656"
                     {
-                    "Name" = "8:Dermalog.Imaging.Capturing.dll"
+                    "Name" = "8:websocket-sharp.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Dermalog.Imaging.Capturing.dll"
+            "SourcePath" = "8:websocket-sharp.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_44FCB39573534C5086C1787D8F9685B3"
@@ -321,7 +329,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SetupAgribankDigital"
         "ProductCode" = "8:{ED0B9511-CF5A-4382-8DA5-F7E9B88E450F}"
-        "PackageCode" = "8:{6962B4E0-DC3C-4223-A142-35483E34252F}"
+        "PackageCode" = "8:{CB898B00-98C1-4D73-9687-59C3DA25C77D}"
         "UpgradeCode" = "8:{11C5DE51-0FDD-41D4-A442-FDA6B5458E58}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -842,7 +850,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B5D463FDF9EA4AE59E281715B34B0962"
             {
-            "SourcePath" = "8:..\\AgribankDigital\\obj\\x86\\Debug\\AgribankDigital.exe"
+            "SourcePath" = "8:..\\AgribankDigital\\obj\\x86\\Release\\AgribankDigital.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_44FCB39573534C5086C1787D8F9685B3"
