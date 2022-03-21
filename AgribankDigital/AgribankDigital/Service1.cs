@@ -39,16 +39,9 @@ namespace AgribankDigital
             mainThread = new Thread(new ThreadStart(main));
             mainThread.Start();
         }
-     /*   public void initFingerPrint()
-        {
-            ws = new WebSocket("ws://192.168.42.129:8887");
-            FingerPrint fingerPrint = new FingerPrint(ws);
-            fingerPrint.FingerPrintWorking(null);
-        }*/
         public void main()
         {
-           /* fingerPrintThread = new Thread(new ThreadStart(initFingerPrint)); ;
-            fingerPrintThread.Start();*/
+
 
             Logger.Log("Service is started");
 
@@ -68,7 +61,7 @@ namespace AgribankDigital
 
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                     receiveDataHostThread.Start();
-                   
+
                     checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                     checkConnectionThread.Start();
 
@@ -89,9 +82,9 @@ namespace AgribankDigital
 
                     break;
                 }
-                else continue; 
+                else continue;
             }
-            
+
         }
 
         public static void initATM()
@@ -99,7 +92,7 @@ namespace AgribankDigital
             Console.WriteLine("Thread ATM starting...");
             atm = new ATM();
         }
-        
+
         public static void checkConnection()
         {
             while (true)
@@ -136,11 +129,11 @@ namespace AgribankDigital
                         // Check Host 
                         //if (host.CheckNetwork())
                         //{
-                            host.Close();
+                        host.Close();
 
-                            // reconnect Host
-                            host.isResetting = true;
-                            host = new Host();
+                        // reconnect Host
+                        host.isResetting = true;
+                        host = new Host();
                         //}
 
                         //while (!host.CheckNetwork() && host.IsConnected())
@@ -189,7 +182,7 @@ namespace AgribankDigital
                 Thread.Sleep(Utils.CHECK_CONNECTION_DELAY);
             }
         }
-        
+
         protected override void OnStop()
         {
             if (checkConnectionThread != null)

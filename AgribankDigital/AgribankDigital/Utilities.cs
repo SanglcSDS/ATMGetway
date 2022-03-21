@@ -82,16 +82,64 @@ namespace AgribankDigital
 
         public static string FingerReplaceText(string str, string character)
         {
-            int prefixIndex = str.IndexOf("[FS][FS][FS][FS][FS]");
+            int prefixIndex = str.IndexOf("");
 
             if (prefixIndex > 0)
             {
-                Console.WriteLine(str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8)));
-                return str.Substring(0, prefixIndex + 8) + character + str.Substring(prefixIndex + 8, str.Length - (prefixIndex + 8));
+                return str.Substring(0, prefixIndex + 2) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
             }
 
             return str;
         }
+        public static string FingerReplaceTextErr(string str)
+        {
+            int prefixIndex = str.IndexOf(";");
+
+            if (prefixIndex > 0)
+            {
+                return HEX2ASCII("0")+ "V40000740000000008505074075DJ(01015396563.35VND(1GJ(010004546283.50VND(1" + str.Substring(prefixIndex - 1, 1) + "00";
+            }
+            else
+            {
+                return HEX2ASCII("0") + "V40000740000000008505074075DJ(01015396563.35VND(1GJ(010004546283.50VND(1";
+
+            }
+
+     
+        }
+        public static string formarHEX2ASCII(string str, string[] character)
+        {
+            foreach (string eachChar in character)
+            {
+                str = str.Replace(eachChar, HEX2ASCII(eachChar));
+
+            }
+            return str;
+
+        }
+
+        public static string HEX2ASCII(string hex)
+
+        {
+            string res = String.Empty;
+
+            for (int a = 0; a < hex.Length; a = a + 2)
+
+            {
+                string Char2Convert = hex.Substring(a, 1);
+
+                int n = Convert.ToInt32(Char2Convert, 16);
+
+                char c = (char)n;
+
+                res += c.ToString();
+
+            }
+
+            return res;
+
+        }
+
         static string xLenght(int lenght, string character)
         {
             string result = "";

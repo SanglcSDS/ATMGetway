@@ -25,7 +25,7 @@ namespace AgribankDigital
     
         public void FingerPrintWorking(Socket socketHost, Socket socketATM, string dataStr)
         {
-            while (!ws.IsAlive)
+            if (!ws.IsAlive)
             {
 
                 ws.Connect();
@@ -41,32 +41,41 @@ namespace AgribankDigital
 
                     FpData str = JsonConvert.DeserializeObject<TestModel>(e.Data).FpData;
                     Model fingerData = WeeFinger(str.Finger1);
-                    if (fingerData.code == 0)
+                    if (fingerData != null)
                     {
-                        string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerNumber);
-                        Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
-                        if (socketHost.Connected)
+                        if (fingerData.code == 0)
                         {
-                            socketHost.Send(data);
-                            Logger.Log("Finger to Host: " + ReplaceDataStr);
-                            Logger.LogFingrprint("Finger data:" + ReplaceDataStr);
+                            string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerMobile);
+                            Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
+                            if (socketHost.Connected)
+                            {
+                                socketHost.Send(data);
+                                Logger.Log("Finger to Host: " + ReplaceDataStr);
+                                Logger.LogFingrprint("Finger data:" + ReplaceDataStr);
+                            }
+                        }
+                        else
+                        {
+                            if (socketATM.Connected)
+                            {
+                                socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
+                                Logger.Log("Finger to ATM: Fp does not exist");
+                            }
+
                         }
                     }
                     else
                     {
-                        if (socketATM.Connected)
-                        {
-                            socketATM.Send(Encoding.ASCII.GetBytes("Fp does not exist"));
-                            Logger.Log("Finger to ATM: Fp does not exist");
-                        }
-
+                        Logger.Log("Finger to ATM: API does not exist ");
                     }
+                  
                 }
-                if (e.Data.Contains("\"Status\":\"STOP\""))
+             /*   if (e.Data.Contains("\"Status\":\"STOP\""))
                 {
                     Thread.Sleep(Utils.FINGER_PRINT_DELAY);
+
                     ws.Send("FINGERPRINT");
-                }
+                }*/
             };
 
             ws.OnError += (sender, e) =>
