@@ -100,6 +100,14 @@ namespace AgribankDigital
 
             }
         }
+        
+        public void closeFingerPrintZF1()
+        {
+            if (fingerPrinZF1 != null)
+            {
+                fingerPrinZF1.CloseDevice();
+            }
+        }
 
         public void checkconnetedZF1(Socket socketHost, Socket socketATM, string dataStr)
         {
@@ -155,6 +163,7 @@ namespace AgribankDigital
                             {
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                                 Logger.Log("> " + dataStr);
+
                                 if (Utils.HAS_CONTROLLER)
                                 {
                                     checkconnetedZF1(host.socketHost, socketATM, dataFinger);

@@ -116,6 +116,8 @@ namespace AgribankDigital
                             receiveDataHostThread.Abort();
                         }
 
+                        atm.closeFingerPrintZF1();
+
                         // Close ATM
                         atm.Close();
                         if (atmThread != null)

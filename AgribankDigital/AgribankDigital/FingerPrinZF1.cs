@@ -56,46 +56,84 @@ namespace AgribankDigital
                 //Đèn xanh tắt
                 this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
 
-                Model fingerData = WeeFinger(ImageToBase64String(e.Image));
-                Logger.LogFingrprint("Finger data:" + ImageToBase64String(e.Image));
-                if (fingerData != null)
+                // fake success message
+                string fakeAcc = "1600282002291";
+                string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fakeAcc);
+                ReplaceDataStr = ReplaceDataStr.Remove(0, 2);
+                ReplaceDataStr = Utilities.resizeMess(ReplaceDataStr);
+
+                Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
+                if (socketHost.Connected)
                 {
-
-                    if (fingerData.code == 0)
-                    {
-                        string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.customerMobile);
-                        Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
-                        if (socketHost.Connected)
-                        {
-                            Logger.LogRaw("Raw finger to Host  > " + System.Text.Encoding.ASCII.GetString(data));
-                            socketHost.Send(data);
-                            string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
-                            Logger.Log("FW to Host: " + dataStr);
-
-                        }
-                    }
-                    else
-                    {
-                        if (socketATM.Connected)
-                        {
-
-                            socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
-                           
-                            Logger.Log("FW to ATM:" + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
-                          
-                        }
-
-                    }
+                    socketHost.Send(data);
+                    string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                    Logger.Log("> " + dataStr);
                 }
-                else
-                {
-                    if (socketATM.Connected)
-                    {
-                        socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
-                        Logger.Log("FW to ATM:" + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
 
-                    }
-                }
+                //Model fingerData = WeeFinger(ImageToBase64String(e.Image));
+                //Logger.LogFingrprint("Finger data:" + ImageToBase64String(e.Image));
+                //if (fingerData != null)
+                //{
+                //if (fingerData.code == 0)
+                //{
+                //    string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.listAccount[0].accountNumber);
+                //    ReplaceDataStr = ReplaceDataStr.Remove(0, 2);
+                //    ReplaceDataStr = Utilities.resizeMess(ReplaceDataStr);
+
+                //    Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
+                //    if (socketHost.Connected)
+                //    {
+                //        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Finger to Host:");
+                //        Logger.LogRaw("> " + ReplaceDataStr);
+                //        Logger.LogRaw("> " + System.Text.Encoding.ASCII.GetString(data));
+
+                //        socketHost.Send(data);
+                //        string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                //        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                //        Logger.Log("> " + dataStr);
+
+                //    }
+                //}
+                //else
+                //{
+                //    if (socketATM.Connected)
+                //    {
+                //        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Finger to ATM:");
+                //        Logger.LogRaw("> " + dataStr);
+
+                //        //socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
+
+                //        string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
+                //        string coordination = Utilities.getCoordination(dataStr, condition);
+                //        string errData = Utilities.fingerErr(coordination);
+
+                //        socketATM.Send(Encoding.ASCII.GetBytes(errData));
+
+                //        // Logger.Log("FW to ATM:" + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
+                //        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                //        Logger.Log("> " + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
+                //    }
+
+                //}
+                //    }
+                //    else
+                //    {
+                //        if (socketATM.Connected)
+                //        {
+                //            //socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
+                //            //Logger.Log("FW to ATM:" + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
+
+                //            string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
+                //            string coordination = Utilities.getCoordination(dataStr, condition);
+                //            string errData = Utilities.fingerErr(coordination);
+
+                //            socketATM.Send(Encoding.ASCII.GetBytes(errData));
+
+                //            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                //            Logger.Log("> " + Utilities.convertToHex(Utilities.FingerReplaceTextErr(dataStr), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c"));
+                //        }
+                //    }
             }
             catch (Exception ex)
             {

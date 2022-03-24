@@ -13,10 +13,8 @@ namespace AgribankDigital
     {
         public static Model GetModelFinger(string url, ModelFinger modelFinger)
         {
-           
             try
             {
-
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.Timeout = Utils.TIMEOUT_API;
                 httpWebRequest.Method = "POST";
@@ -30,6 +28,10 @@ namespace AgribankDigital
                 using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
                 {
                     string value = streamReader.ReadToEnd();
+
+                    Logger.Log("API > " + value);
+
+                    Console.WriteLine("API > " + value); 
 
                     Console.WriteLine(JsonConvert.DeserializeObject<Model>(value).code);
                     return JsonConvert.DeserializeObject<Model>(value);
