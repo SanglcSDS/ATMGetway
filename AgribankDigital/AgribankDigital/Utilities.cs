@@ -119,14 +119,13 @@ namespace AgribankDigital
         }
 
         public static string HEX2ASCII(string hex)
-
         {
             string res = String.Empty;
 
             for (int a = 0; a < hex.Length; a = a + 2)
 
             {
-                string Char2Convert = hex.Substring(a, 1);
+                string Char2Convert = hex.Substring(a, 2);
 
                 int n = Convert.ToInt32(Char2Convert, 16);
 
@@ -150,5 +149,43 @@ namespace AgribankDigital
             return result;
         }
 
+        public static string INT2HEX(int intValue)
+        {
+            return intValue.ToString("X");
+        }
+
+        public static string resizeMess(string mess)
+        {
+            int rawLen = mess.Length;
+
+            string hexStr = rawLen.ToString("X");
+
+            while (hexStr.Length < 4)
+            {
+                hexStr = hexStr.Insert(0, "0");
+            }
+
+            string replaceLen = HEX2ASCII(hexStr);
+
+            return mess.Insert(0, HEX2ASCII(hexStr));
+        }
+
+        public static string fingerErr(string coordination)
+        {
+            string baseMess = @"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC VAN TAY\1c$00\1c";
+
+            string ascii = baseMess.Replace("$", coordination);
+            ascii = ascii.Replace(@"\1c", HEX2ASCII("1c"));
+            ascii = ascii.Replace(@"\0f", HEX2ASCII("0f"));
+
+            return resizeMess(ascii);
+        }
+
+        public static string getCoordination(string mess, string condition)
+        {
+            int index = mess.IndexOf(condition) + condition.Length;
+
+            return mess.Substring(index, 1);
+        }
     }
 }

@@ -188,13 +188,26 @@ namespace AgribankDigital
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
 
-                            if (atm.IsConnected())
+                            // test
+                            if (AfterScanFinger.IsCorrectNews(System.Text.Encoding.ASCII.GetString(data)))
                             {
-                                atm.socketATM.Send(data);
-
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
-                                Logger.Log("< " + dataStr);
+                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
+                                Logger.Log("< Ban tin 4 - code 795");
+                                string list = AfterScanFinger.GetListCardNumber(dataStr);
+                                AfterScanFinger.DecodeCardNumber(list);
                             }
+                            else
+                            {
+                                if (atm.IsConnected())
+                                {
+                                    atm.socketATM.Send(data);
+
+                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                    Logger.Log("< " + dataStr);
+                                }
+                            }
+
+                            
                         }
                     }
                 }
