@@ -91,22 +91,6 @@ namespace AgribankDigital
 
             return str;
         }
-        public static string FingerReplaceTextErr(string str)
-        {
-            int prefixIndex = str.IndexOf(";");
-
-            if (prefixIndex > 0)
-            {
-                return HEX2ASCII("0")+ "V40000740000000008505074075DJ(01015396563.35VND(1GJ(010004546283.50VND(1" + str.Substring(prefixIndex - 1, 1) + "00";
-            }
-            else
-            {
-                return HEX2ASCII("0") + "V40000740000000008505074075DJ(01015396563.35VND(1GJ(010004546283.50VND(1";
-
-            }
-
-     
-        }
         public static string formarHEX2ASCII(string str, string[] character)
         {
             foreach (string eachChar in character)
@@ -165,7 +149,7 @@ namespace AgribankDigital
                 hexStr = hexStr.Insert(0, "0");
             }
 
-            string replaceLen = HEX2ASCII(hexStr);
+         //   string replaceLen = HEX2ASCII(hexStr);
 
             return mess.Insert(0, HEX2ASCII(hexStr));
         }
@@ -184,7 +168,7 @@ namespace AgribankDigital
         public static string getCoordination(string mess, string condition)
         {
             int index = mess.IndexOf(condition) + condition.Length;
-
+            
             return mess.Substring(index, 1);
         }
     }

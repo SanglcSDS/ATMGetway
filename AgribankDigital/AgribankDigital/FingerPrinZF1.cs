@@ -140,7 +140,7 @@ namespace AgribankDigital
                 if (socketATM.Connected)
                 {
                     Logger.Log("FW to ATM:" + ex.Message.ToString());
-                    socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
+                  //  socketATM.Send(Encoding.ASCII.GetBytes(Utilities.FingerReplaceTextErr(dataStr)));
                 }
             }
 

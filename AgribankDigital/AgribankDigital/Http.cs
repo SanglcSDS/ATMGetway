@@ -40,7 +40,7 @@ namespace AgribankDigital
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Logger.Log(ex.Message.ToString());
 
 
             }

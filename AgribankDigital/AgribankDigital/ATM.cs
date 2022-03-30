@@ -34,7 +34,7 @@ namespace AgribankDigital
             if (socketATM.Connected)
             {
                 Logger.Log("Connected to ATM : " + socketATM.Connected);
-            } 
+            }
         }
 
         public bool IsConnected()
@@ -94,13 +94,14 @@ namespace AgribankDigital
             }
             catch (Exception e)
             {
+                
                 Logger.Log("Err: " + e.ToString());
                 Logger.Log("ZF1 start failed!");
                 initFingerPrintZF1(socketHost, socketATM);
 
             }
         }
-        
+
         public void closeFingerPrintZF1()
         {
             if (fingerPrinZF1 != null)
@@ -125,18 +126,16 @@ namespace AgribankDigital
                 {
                     Logger.Log("Err: The scanner is disconnected from the host");
                     Logger.Log("ZF1 start failed!");
-
                     initFingerPrintZF1(socketHost, socketATM);
                 }
 
             }
             catch (Exception ex)
             {
+                
                 Logger.Log("Err: " + ex.Message.ToString());
                 Logger.Log("ZF1 start failed!");
                 initFingerPrintZF1(socketHost, socketATM);
-
-
             }
 
 
@@ -157,8 +156,6 @@ namespace AgribankDigital
                             string dataFinger = System.Text.Encoding.ASCII.GetString(data);
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
-
-                         
                             if (dataFinger.Contains("HBCI"))
                             {
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
@@ -175,23 +172,23 @@ namespace AgribankDigital
                                     {
                                         Logger.LogFingrprint("The scanner is disconnected from the host");
                                     }
+                                    else
+                                    {
+                                        checkconnetedZF1(host.socketHost, socketATM, dataFinger);
+                                    }
                                 }
                             }
                             else
                             {
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                                 Logger.Log("> " + dataStr);
-
                                 if (host.IsConnected())
                                 {
                                     host.socketHost.Send(data);
-
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                                     Logger.Log("> " + dataStr);
                                 }
                             }
-
-
                         }
                     }
                 }
