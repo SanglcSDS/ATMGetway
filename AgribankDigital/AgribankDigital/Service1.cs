@@ -187,6 +187,10 @@ namespace AgribankDigital
 
         protected override void OnStop()
         {
+            if (Utils.HAS_CONTROLLER)
+            {
+                atm.closeFingerPrintZF1();
+            }
             if (checkConnectionThread != null)
                 checkConnectionThread.Abort();
             if (receiveDataAtmThread != null)

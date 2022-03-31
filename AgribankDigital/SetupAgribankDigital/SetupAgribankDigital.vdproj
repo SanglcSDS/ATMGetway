@@ -329,7 +329,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SetupAgribankDigital"
         "ProductCode" = "8:{ED0B9511-CF5A-4382-8DA5-F7E9B88E450F}"
-        "PackageCode" = "8:{CB898B00-98C1-4D73-9687-59C3DA25C77D}"
+        "PackageCode" = "8:{B7241522-F254-4F45-86FF-F9F927D34415}"
         "UpgradeCode" = "8:{11C5DE51-0FDD-41D4-A442-FDA6B5458E58}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

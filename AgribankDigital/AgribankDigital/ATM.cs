@@ -62,7 +62,7 @@ namespace AgribankDigital
             try
             {
                 ws = new WebSocket("ws://192.168.42.129:8887");
-
+               
                 FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
                 fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
             }
@@ -170,11 +170,8 @@ namespace AgribankDigital
                                     initFingerPrintCB100(host.socketHost, socketATM, dataFinger);
                                     if (ws.ReadyState == WebSocketState.Closed)
                                     {
-                                        Logger.LogFingrprint("The scanner is disconnected from the host");
-                                    }
-                                    else
-                                    {
-                                        checkconnetedZF1(host.socketHost, socketATM, dataFinger);
+                                        Logger.LogFingrprint(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " The scanner is disconnected from the host");
+                                       
                                     }
                                 }
                             }

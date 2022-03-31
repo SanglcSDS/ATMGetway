@@ -15,6 +15,7 @@ namespace AgribankDigital
         public static string[] RECEIVE_CHARACTER = ConfigurationManager.AppSettings["receive_character"].Split(new char[] { ',' });
 
         public static bool HAS_CONTROLLER = Boolean.Parse(ConfigurationManager.AppSettings["hasController"]);
+        public static bool Test = Boolean.Parse(ConfigurationManager.AppSettings["Test"]);
         public static int CHECK_CONNECTION_TIMEOUT = Int32.Parse(ConfigurationManager.AppSettings["check_connection_timeout"]);
         public static int CHECK_CONNECTION_DELAY = Int32.Parse(ConfigurationManager.AppSettings["check_connection_delay"]);
         public static int RESET_ERR_DELAY = Int32.Parse(ConfigurationManager.AppSettings["reset_err_delay"]);
