@@ -132,7 +132,6 @@ namespace AgribankDigital
                         //if (host.CheckNetwork())
                         //{
                         host.Close();
-
                         // reconnect Host
                         host.isResetting = true;
                         host = new Host();
@@ -146,10 +145,8 @@ namespace AgribankDigital
 
                         atmThread = new Thread(new ThreadStart(initATM));
                         atmThread.Start();
-
                         host.isResetting = false;
                         atm.isResetting = false;
-
                         // restart ZF1
                         try
                         {
@@ -187,10 +184,7 @@ namespace AgribankDigital
 
         protected override void OnStop()
         {
-            if (Utils.HAS_CONTROLLER)
-            {
-                atm.closeFingerPrintZF1();
-            }
+            atm.closeFingerPrintZF1();
             if (checkConnectionThread != null)
                 checkConnectionThread.Abort();
             if (receiveDataAtmThread != null)
@@ -202,7 +196,6 @@ namespace AgribankDigital
                 atm.Terminate();
             if (host != null)
                 host.Terminate();
-
             if (atmThread != null)
                 atmThread.Abort();
 
