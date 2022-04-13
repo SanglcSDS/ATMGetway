@@ -44,8 +44,10 @@ namespace AgribankDigital
 
         public void setupRoute()
         {
+            string abc = "172.18.26.0";
             string strCmdText;
-            strCmdText = @"/C ""route add 172.18.26.0 mask 255.255.255.0 172.18.5.5 metric 1 -p & route add 172.18.26.0 mask 255.255.255.0 172.18.5.6 metric 1 -p""";
+            //  strCmdText = @"/C ""route add 172.18.26.0 mask 255.255.255.0 172.18.5.5 metric 1 -p & route add 172.18.26.0 mask 255.255.255.0 172.18.5.6 metric 1 -p""";
+            strCmdText = "/C \" route add 10.0.0.0 mask 255.0.0.0 " + abc + " metric 1 -p & route add 192.168.42.129 mask 255.255.255.0 " + abc + " metric 1 -p \"";
             Process p = new Process();
             p.StartInfo.FileName = "CMD.exe";
             p.StartInfo.Arguments = strCmdText;
