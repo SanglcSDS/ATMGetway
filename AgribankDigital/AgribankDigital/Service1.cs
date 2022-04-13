@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceProcess;
+using System.Diagnostics;
 using System.Threading;
 using WebSocketSharp;
 
@@ -36,8 +37,20 @@ namespace AgribankDigital
 
         protected override void OnStart(string[] args)
         {
+            setupRoute();
             mainThread = new Thread(new ThreadStart(main));
             mainThread.Start();
+        }
+
+        public void setupRoute()
+        {
+            string strCmdText;
+            strCmdText = @"/C ""route add 172.18.26.0 mask 255.255.255.0 172.18.5.5 metric 1 -p & route add 172.18.26.0 mask 255.255.255.0 172.18.5.6 metric 1 -p""";
+            Process p = new Process();
+            p.StartInfo.FileName = "CMD.exe";
+            p.StartInfo.Arguments = strCmdText;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.Start();
         }
         public void main()
         {
