@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -171,5 +172,72 @@ namespace AgribankDigital
             
             return mess.Substring(index, 1);
         }
+        /*------------------------registry Editor-----------------------------*/
+
+        public static void Show(string part)
+        {
+            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(part);
+            foreach (string keys in versie1.GetValueNames())
+            {
+                Console.WriteLine("key: " + keys + " ; value: " + versie1.GetValue(keys));
+            }
+            versie1.Close();
+        }
+
+        public static void DeleteSubKeyLocalMachine(string part, string name)
+        {
+            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(part);
+            versie1.DeleteSubKeyTree(name);
+            versie1.Close();
+        }
+        public static void DeleteSubKeyCurrentUser(string part, string name)
+        {
+            RegistryKey versie1 = Registry.CurrentUser.CreateSubKey(part);
+            versie1.DeleteSubKeyTree(name);
+            versie1.Close();
+        }
+        public static void addSubKeyLocalMachine(string part,List<string> listkey)
+        {
+
+            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(part);
+            for (int i = 0; i < listkey.Count; i++)
+            {
+                if (listkey[i].IndexOf("|") > 0)
+                {
+                    string[] tr = listkey[i].Split('|');
+                    if (tr.Length == 3)
+                    {
+                        string key = tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
+                        versie1.SetValue("Card_" + (i + 1), key);
+
+                    }
+                }
+
+            }
+            versie1.Close();
+        }
+        public static void addSubKeyCurrentUser(string part, List<string> listkey)
+        {
+
+            RegistryKey versie1 = Registry.CurrentUser.CreateSubKey(part);
+            for (int i = 0; i < listkey.Count; i++)
+            {
+                if (listkey[i].IndexOf("|") > 0)
+                {
+                    string[] tr = listkey[i].Split('|');
+                    if (tr.Length == 3)
+                    {
+                        string key = tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
+                        versie1.SetValue("Card_" + (i + 1), key);
+
+                    }
+                }
+
+            }
+            versie1.Close();
+        }
+        /* ------------------------registry Editor-----------------------------*/
+
+
     }
 }

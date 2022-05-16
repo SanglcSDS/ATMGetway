@@ -21,20 +21,43 @@ namespace AgribankDigital
 
         public ATM()
         {
-            Logger.Log("Waiting connect from ATM ...");
-            listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-            listener.Start();
-            socketATM = listener.AcceptSocket();
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-            LingerOption lingerOption = new LingerOption(false, 3);
-            socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
-            listener.Stop();
-            if (socketATM.Connected)
+
+
+            try
             {
-                Logger.Log("Connected to ATM : " + socketATM.Connected);
+
+                Logger.Log("Waiting connect from ATM ...");
+                listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
+                listener.Start();
+
+                Logger.Log("Start listener ");
+                socketATM = listener.AcceptSocket();
+                Logger.Log("socketATM Accept ");
+                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                LingerOption lingerOption = new LingerOption(false, 3);
+                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
+                listener.Stop();
+                if (socketATM.Connected)
+                {
+                    Logger.Log("Connected to ATM : " + socketATM.Connected);
+                    return;
+                }
+                else
+                {
+                    Logger.Log("Trying to reconnect connect from ATM ...");
+                    socketATM.Close();
+                    listener.Stop();
+
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Log("Exception while connecting to Host: " + ex.Message);
+                Logger.Log("Cannot connect to Host, trying to reconnect ...");
+            }
+
         }
 
         public bool IsConnected()
@@ -62,7 +85,7 @@ namespace AgribankDigital
             try
             {
                 ws = new WebSocket("ws://192.168.42.129:8887");
-               
+
                 FingerPrintCB100 fingerPrint = new FingerPrintCB100(ws);
                 fingerPrint.FingerPrintWorking(socketHost, socketATM, dataStr);
             }
@@ -94,7 +117,7 @@ namespace AgribankDigital
             }
             catch (Exception e)
             {
-                
+
                 Logger.Log("Err: " + e.ToString());
                 Logger.Log("ZF1 start failed!");
                 initFingerPrintZF1(socketHost, socketATM);
@@ -132,7 +155,7 @@ namespace AgribankDigital
             }
             catch (Exception ex)
             {
-                
+
                 Logger.Log("Err: " + ex.Message.ToString());
                 Logger.Log("ZF1 start failed!");
                 initFingerPrintZF1(socketHost, socketATM);
@@ -143,12 +166,15 @@ namespace AgribankDigital
 
         public void ReceiveDataFromATM(Host host)
         {
+
+
             while (true)
             {
                 if (!this.isResetting && !host.isResetting)
                 {
                     if (this.IsConnected())
                     {
+
                         Byte[] data = Utils.ReceiveAll(socketATM);
                         if (data.Length > 0)
                         {
@@ -157,6 +183,7 @@ namespace AgribankDigital
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             dataStr = Utilities.formatCardNumber(dataStr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
                             if (dataFinger.Contains("HBCI"))
+                            //  if (dataFinger.Contains("CD   C A"))
                             {
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                                 Logger.Log("> " + dataStr);
@@ -171,7 +198,7 @@ namespace AgribankDigital
                                     if (ws.ReadyState == WebSocketState.Closed)
                                     {
                                         Logger.LogFingrprint(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " The scanner is disconnected from the host");
-                                       
+
                                     }
                                 }
                             }

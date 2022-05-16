@@ -9,7 +9,7 @@ namespace AgribankDigital
     {
         //Socket socketATM;
         public Socket socketHost;
-        TcpClient tcpClient;
+       TcpClient tcpClient;
         //TcpListener listener;
         public bool isResetting = false;
         public bool isClosed = false;
@@ -20,8 +20,9 @@ namespace AgribankDigital
             {
                 try
                 {
-                    TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                    socketHost = newTcpClient.Client;
+                     tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                   
+                    socketHost = tcpClient.Client;
 
                     //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                     //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
@@ -58,8 +59,8 @@ namespace AgribankDigital
             {
                 try
                 {
-                    TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                    socketHost = newTcpClient.Client;
+                     tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                    socketHost = tcpClient.Client;
 
                     //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                     //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
@@ -77,7 +78,7 @@ namespace AgribankDigital
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
                         Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
-                        tcpClient.Close();
+                       tcpClient.Close();
                     }
                 }
                 catch (Exception ex)
@@ -94,8 +95,8 @@ namespace AgribankDigital
             {
                 try
                 {
-                    TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                    var socketHost = newTcpClient.Client;
+                    tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                    socketHost = tcpClient.Client;
 
                     if (socketHost.Connected)
                     {
@@ -126,8 +127,8 @@ namespace AgribankDigital
             }
             while (true)
             {
-                TcpClient newTcpClient = new TcpClient(ipHost, portHost);
-                socketHost = newTcpClient.Client;
+                 tcpClient = new TcpClient(ipHost, portHost);
+                socketHost = tcpClient.Client;
 
                 if (socketHost.Connected)
                 {
@@ -143,14 +144,18 @@ namespace AgribankDigital
             {
                 bool check = !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
                 //if (!check)
-                //    Logger.Log("Host not responding");
+         
                 return check;
             }
-            catch (SocketException) {
-                //Logger.Log("Host not responding");
+            catch (SocketException e)
+            {
+                Logger.Log("Host not responding1:" + e.Message.ToString());
                 return false;
             }
-            catch (ObjectDisposedException) {
+            catch (ObjectDisposedException e)
+            {
+                Logger.Log("Host not responding2:" + e.Message.ToString());
+
                 //Logger.Log("Host not responding");
                 return false;
             }
@@ -182,13 +187,10 @@ namespace AgribankDigital
 
                         if (data.Length > 0)
                         {
-                            Logger.LogRaw("Raw Host to FW > " + System.Text.Encoding.ASCII.GetString(data));
-
+                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
-
-                            // test
                             if (AfterScanFinger.IsCorrectNews(System.Text.Encoding.ASCII.GetString(data)))
                             {
                                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
@@ -196,18 +198,14 @@ namespace AgribankDigital
                                 string list = AfterScanFinger.GetListCardNumber(dataStr);
                                 AfterScanFinger.DecodeCardNumber(list);
                             }
-                            else
+
+                            if (atm.IsConnected())
                             {
-                                if (atm.IsConnected())
-                                {
-                                    atm.socketATM.Send(data);
+                                atm.socketATM.Send(data);
 
-                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
-                                    Logger.Log("< " + dataStr);
-                                }
+                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                Logger.Log("< " + dataStr);
                             }
-
-                            
                         }
                     }
                 }
@@ -218,8 +216,8 @@ namespace AgribankDigital
         {
             if (socketHost.Connected)
                 socketHost.Disconnect(true);
-            //if (tcpClient.Connected)
-            //    tcpClient.Close();
+            if (tcpClient.Connected)
+                tcpClient.Close();
 
             this.isClosed = true;
         }

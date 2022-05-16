@@ -33,6 +33,26 @@ namespace AgribankDigital
                 Logger.Log(string.Format("The process failed: {0}", ex.ToString()));
             }
         }
+        public static void LogCardNumber(string message)
+        {
+            try
+            {
+                lock (_locked)
+                {
+                    string fileLog = PathLocation(FILE_LOG) + DateTime.Now.ToString("cardNumber") + ".txt";
+
+                    string _message = string.Format("{0}{1}", message, Environment.NewLine);
+                    File.AppendAllText(fileLog, _message);
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(string.Format("The process failed: {0}", ex.ToString()));
+            }
+        }
         public static void LogFingrprint(string message)
         {
             try

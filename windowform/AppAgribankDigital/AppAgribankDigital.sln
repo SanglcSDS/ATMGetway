@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppAgribankDigital", "AppAgribankDigital\AppAgribankDigital.csproj", "{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Debug|x86.ActiveCfg = Debug|x86
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Debug|x86.Build.0 = Debug|x86
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Release|x86.ActiveCfg = Release|x86
+		{6A3FD76A-7B4D-4395-9995-75B51C80D8DC}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C867B51-C21A-4C31-955B-EE9018D8A7CF}
+	EndGlobalSection
+EndGlobal

@@ -37,7 +37,11 @@ namespace AgribankDigital
 
         protected override void OnStart(string[] args)
         {
-            setupRoute();
+            if (Utils.HAS_CONTROLLER==false)
+            {
+                setupRoute();
+            }
+               
             mainThread = new Thread(new ThreadStart(main));
             mainThread.Start();
         }
@@ -49,6 +53,7 @@ namespace AgribankDigital
             //  strCmdText = @"/C ""route add 172.18.26.0 mask 255.255.255.0 172.18.5.5 metric 1 -p & route add 172.18.26.0 mask 255.255.255.0 172.18.5.6 metric 1 -p""";
             strCmdText = "/C \" route add 10.0.0.0 mask 255.0.0.0 " + Utils.IP_ATM + " metric 1  & route add 192.168.42.129 mask 255.255.255.0 " + Utils.IP_ATM + " metric 1 \"";
             Process p = new Process();
+          //  p.Responding
             p.StartInfo.FileName = "CMD.exe";
             p.StartInfo.Arguments = strCmdText;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -57,17 +62,22 @@ namespace AgribankDigital
         public void main()
         {
 
-
+        
             Logger.Log("Service is started");
 
-            host = new Host();
-            // Create new Thread for ATM
-            atmThread = new Thread(new ThreadStart(initATM));
-            atmThread.Start();
 
+            // Create new Thread for ATM
+            /*   atmThread = new Thread(new ThreadStart(initATM));
+               atmThread.Start();*/
+            atm = new ATM();
             // wait ATM connected
             while (true)
             {
+                if (atm.IsConnected())
+                {
+                    host = new Host();
+                }
+
                 if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
                 {
                     Logger.Log("Another Thread starting....");
@@ -77,8 +87,8 @@ namespace AgribankDigital
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                     receiveDataHostThread.Start();
 
-                    checkConnectionThread = new Thread(new ThreadStart(checkConnection));
-                    checkConnectionThread.Start();
+                  /*  checkConnectionThread = new Thread(new ThreadStart(checkConnection));
+                    checkConnectionThread.Start();*/
 
 
                     // start ZF1
@@ -104,7 +114,7 @@ namespace AgribankDigital
 
         public static void initATM()
         {
-            Console.WriteLine("Thread ATM starting...");
+           
             atm = new ATM();
         }
 
@@ -130,8 +140,11 @@ namespace AgribankDigital
                             Logger.Log("Receive data Host aborting...");
                             receiveDataHostThread.Abort();
                         }
-
-                        atm.closeFingerPrintZF1();
+                        if (Utils.HAS_CONTROLLER)
+                        {
+                            atm.closeFingerPrintZF1();
+                        }
+                           
 
                         // Close ATM
                         atm.Close();
@@ -199,7 +212,13 @@ namespace AgribankDigital
 
         protected override void OnStop()
         {
-            atm.closeFingerPrintZF1();
+            if (atm != null)
+                atm.Close();
+                if (Utils.HAS_CONTROLLER)
+                {
+                    atm.closeFingerPrintZF1();
+                }
+                   
             if (checkConnectionThread != null)
                 checkConnectionThread.Abort();
             if (receiveDataAtmThread != null)
