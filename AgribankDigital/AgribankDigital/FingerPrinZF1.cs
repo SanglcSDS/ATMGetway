@@ -71,16 +71,20 @@ namespace AgribankDigital
                         string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                         Logger.Log("> " + dataStr);
+                      //  string condition = @"\1c\1c\1c1";
+                       // string coordination = Utilities.getCoordination(dataStr, condition);
+                      
                         socketHost.Send(data);
                     }
                     else
                     {
-                        string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
-                        string coordination = Utilities.getCoordination(dataStr, condition);
-                        string errData = Utilities.fingerErr(coordination);
-                        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                     //   string condition = @"\1c\1c\1c1";
+                      //  string coordination = Utilities.getCoordination(dataStr, condition);
+                      
+                     //   string errData = Utilities.fingerErr(coordination);
+                     /*   Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                         Logger.Log("> " + errData);
-                        socketATM.Send(Encoding.ASCII.GetBytes(errData));
+                        socketATM.Send(Encoding.ASCII.GetBytes(errData));*/
                     }
 
 

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace AgribankDigital
@@ -9,7 +11,7 @@ namespace AgribankDigital
     {
         //Socket socketATM;
         public Socket socketHost;
-       TcpClient tcpClient;
+        TcpClient tcpClient;
         //TcpListener listener;
         public bool isResetting = false;
         public bool isClosed = false;
@@ -20,8 +22,8 @@ namespace AgribankDigital
             {
                 try
                 {
-                     tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                   
+                    tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+
                     socketHost = tcpClient.Client;
 
                     //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
@@ -59,7 +61,7 @@ namespace AgribankDigital
             {
                 try
                 {
-                     tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                    tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
                     socketHost = tcpClient.Client;
 
                     //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
@@ -78,7 +80,7 @@ namespace AgribankDigital
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
                         Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
-                       tcpClient.Close();
+                        tcpClient.Close();
                     }
                 }
                 catch (Exception ex)
@@ -127,7 +129,7 @@ namespace AgribankDigital
             }
             while (true)
             {
-                 tcpClient = new TcpClient(ipHost, portHost);
+                tcpClient = new TcpClient(ipHost, portHost);
                 socketHost = tcpClient.Client;
 
                 if (socketHost.Connected)
@@ -144,7 +146,7 @@ namespace AgribankDigital
             {
                 bool check = !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
                 //if (!check)
-         
+
                 return check;
             }
             catch (SocketException e)
@@ -187,25 +189,53 @@ namespace AgribankDigital
 
                         if (data.Length > 0)
                         {
-                            //Logger.Log("Raw > " + System.Text.Encoding.ASCII.GetString(data));
+                            Logger.LogRaw("Raw  Host to FW: > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
-                            if (AfterScanFinger.IsCorrectNews(System.Text.Encoding.ASCII.GetString(data)))
-                            {
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
-                                Logger.Log("< Ban tin 4 - code 795");
-                                string list = AfterScanFinger.GetListCardNumber(dataStr);
-                                AfterScanFinger.DecodeCardNumber(list);
-                            }
 
                             if (atm.IsConnected())
                             {
-                                atm.socketATM.Send(data);
+                                if (AfterScanFinger.IsCorrectNews(System.Text.Encoding.ASCII.GetString(data)))
+                                {
+                                    Utilities.getSerialNumber(dataStr);
+                                    atm.isKeyD = true;
+                                    atm.isCheckFinger = true;
+                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
+                                    Logger.Log("< Ban tin 4 - code 795");
 
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
-                                Logger.Log("< " + dataStr);
+                                    List<string> listcard = AfterScanFinger.DecodeCardNumber(AfterScanFinger.GetListCardNumber(dataStr));
+
+                                    if (listcard.Count > 8)
+                                    {
+                                        string cardMess = Utilities.formartMessCard(listcard.GetRange(0, 7), 1);
+
+                                        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                        Logger.Log("< " + cardMess);
+                                        atm.socketATM.Send(Utilities.DCTCP2H_Send(cardMess));
+                                    }
+                                    else
+                                    {
+                                        string cardMess = Utilities.formartMessCard(listcard, 0);
+                                        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                        Logger.Log(cardMess);
+                                        atm.socketATM.Send(Utilities.DCTCP2H_Send(cardMess));
+                                    }
+
+                                }
+                                else
+                                {
+                                    //  atm.isCheckFinger = false;
+                                    atm.socketATM.Send(data);
+                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                    Logger.Log("< " + dataStr);
+                                }
+
+
                             }
+
+
+
                         }
                     }
                 }
@@ -214,21 +244,28 @@ namespace AgribankDigital
 
         public void Close()
         {
-            if (socketHost.Connected)
-                socketHost.Disconnect(true);
-            if (tcpClient.Connected)
-                tcpClient.Close();
+            if (socketHost != null)
+            {
+                if (socketHost.Connected)
+                    socketHost.Disconnect(true);
+                if (tcpClient.Connected)
+                    tcpClient.Close();
 
-            this.isClosed = true;
+                this.isClosed = true;
+            }
+
         }
 
         public void Terminate()
         {
-            if (socketHost.Connected)
-                socketHost.Close();
-            if (tcpClient.Connected)
-                tcpClient.Close();
-            this.isClosed = true;
+            if (socketHost != null)
+            {
+                if (socketHost.Connected)
+                    socketHost.Close();
+                if (tcpClient.Connected)
+                    tcpClient.Close();
+                this.isClosed = true;
+            }
         }
     }
 }

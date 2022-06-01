@@ -46,6 +46,7 @@ namespace AgribankDigital
                     {
                         if (Utils.Test == true)
                         {
+                           
                             socketHost.Send(data);
                             string dataStrs = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");

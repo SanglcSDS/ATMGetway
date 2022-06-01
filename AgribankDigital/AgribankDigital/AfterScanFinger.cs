@@ -28,9 +28,10 @@ namespace AgribankDigital
 
             return result;
         }
-       public static List<string> listCard;
-        public static void DecodeCardNumber(string hexStr)
+        public static List<string> listCard;
+        public static List<string> DecodeCardNumber(string hexStr)
         {
+            List<string> listCardFomat = new List<string>();
             string ascii = Utilities.HEX2ASCII(hexStr);
 
             string[] arr = ascii.Split(';');
@@ -38,12 +39,10 @@ namespace AgribankDigital
             if (arr.Length > 0)
             {
                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " List card number:");
-                RegistryKey versie4 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
-                versie4.Close();
-                RegistryKey versie5 = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\AgribankDigital");
-                versie5.Close();
-                Utilities.DeleteSubKeyLocalMachine("SOFTWARE", "AgribankDigital");
-              //  Utilities.DeleteSubKeyCurrentUser("SOFTWARE", "AgribankDigital");
+
+
+                Utilities.DeleteSubKeyLocalMachine( @"SOFTWARE\AgribankDigital");
+
                 listCard = new List<string>();
                 foreach (string str in arr)
                 {
@@ -51,12 +50,12 @@ namespace AgribankDigital
                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Card Number:");
                     Logger.Log("> " + str);
                     listCard.Add(str);
-                    Logger.LogCardNumber(str);
                 }
-                Utilities.addSubKeyLocalMachine(@"SOFTWARE\AgribankDigital", listCard);
-             //   Utilities.addSubKeyCurrentUser(@"SOFTWARE\AgribankDigital", listCard);
+                listCardFomat = Utilities.addSubKeyLocalMachine( @"SOFTWARE\AgribankDigital", listCard);
+
 
             }
+            return listCardFomat;
         }
     }
 }
