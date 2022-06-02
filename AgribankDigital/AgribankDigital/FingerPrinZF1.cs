@@ -60,9 +60,7 @@ namespace AgribankDigital
                 string fakeAcc = "1600282002291";
                 string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fakeAcc);
                 ReplaceDataStr = ReplaceDataStr.Remove(0, 2);
-                ReplaceDataStr = Utilities.resizeMess(ReplaceDataStr);
-
-                Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
+                Byte[] data = Utilities.DCTCP2H_Send(ReplaceDataStr);
                 if (socketHost.Connected)
                 {
                     if (Utils.Test == true)
@@ -71,9 +69,8 @@ namespace AgribankDigital
                         string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                         Logger.Log("> " + dataStr);
-                      //  string condition = @"\1c\1c\1c1";
-                       // string coordination = Utilities.getCoordination(dataStr, condition);
-                      
+                        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                        Logger.LogRaw("> " + System.Text.Encoding.ASCII.GetString(data));
                         socketHost.Send(data);
                     }
                     else

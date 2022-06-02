@@ -133,7 +133,7 @@ namespace AgribankDigital
                         atm = new ATM();
                         atm.isResetting = true;
                         host.Close();
-                        host.isResetting = true;
+                        host.isResetting = false;
                         // wait ATM connected
                         while (true)
                         {
@@ -156,7 +156,7 @@ namespace AgribankDigital
                             }
                             else continue;
                         }
-                        try
+                     /*   try
                         {
                             atm.closeFingerPrintZF1();
                             if (Utils.HAS_CONTROLLER)
@@ -168,13 +168,14 @@ namespace AgribankDigital
                         catch (Exception e)
                         {
                             Logger.Log("err: " + e.ToString());
-                        }
+                        }*/
 
 
                     }
                 }
                 Thread.Sleep(Utils.CHECK_CONNECTION_DELAY);
             }
+
         }
 
         protected override void OnStop()

@@ -212,14 +212,20 @@ namespace AgribankDigital
 
                                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                         Logger.Log("< " + cardMess);
-                                        atm.socketATM.Send(Utilities.DCTCP2H_Send(cardMess));
+                                        byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
+                                        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                        Logger.LogRaw("< " + System.Text.Encoding.ASCII.GetString(isdata));
+                                        atm.socketATM.Send(isdata);
                                     }
                                     else
                                     {
                                         string cardMess = Utilities.formartMessCard(listcard, 0);
                                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                         Logger.Log(cardMess);
-                                        atm.socketATM.Send(Utilities.DCTCP2H_Send(cardMess));
+                                        byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
+                                        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                        Logger.LogRaw("< " + System.Text.Encoding.ASCII.GetString(isdata));
+                                        atm.socketATM.Send(isdata);
                                     }
 
                                 }
@@ -229,6 +235,8 @@ namespace AgribankDigital
                                     atm.socketATM.Send(data);
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                     Logger.Log("< " + dataStr);
+                                    Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                                    Logger.LogRaw("< " + System.Text.Encoding.ASCII.GetString(data));
                                 }
 
 

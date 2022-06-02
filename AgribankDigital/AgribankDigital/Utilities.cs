@@ -83,15 +83,27 @@ namespace AgribankDigital
 
         public static string FingerReplaceText(string str, string character)
         {
-            int prefixIndex = str.IndexOf("");
-
-            if (prefixIndex > 0)
+            string strdata = "";
+            try
             {
-                return str.Substring(0, prefixIndex + 2) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
+                string ispin = @"8<>7022>401419>=";
+
+                int prefixIndex = str.IndexOf("");
+
+                if (prefixIndex > 0)
+                {
+                    strdata = str.Substring(0, prefixIndex + 1) + ispin + str.Substring(prefixIndex, 1) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message.ToString());
             }
 
-            return str;
+
+            return strdata;
         }
+
         public static string formarHEX2ASCII(string str, string[] character)
         {
             foreach (string eachChar in character)
@@ -284,7 +296,7 @@ namespace AgribankDigital
         public static List<string> addSubKeyLocalMachine(string stepart, List<string> listkey)
         {
             RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
-            versie1.SetValue("CountCard", listkey.Count);
+            versie1.SetValue("CountCard", listkey.Count.ToString());
             versie1.Close();
             List<string> listcard = new List<string>();
             for (int i = 0; i < listkey.Count; i++)
@@ -308,7 +320,7 @@ namespace AgribankDigital
 
             return listcard;
         }
-        public static string getValueRegittry(string name )
+        public static string getValueRegittry(string name)
         {
             RegistryKey versie2 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
             string key = versie2.GetValue(name).ToString();
@@ -318,8 +330,6 @@ namespace AgribankDigital
         public static void DeleteSubKeyLocalMachine(string stepart)
         {
             RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(stepart);
-            versie1.SetValue("CountCard", "0");
-            versie1.SetValue("CardNumber", "");
             versie1.Close();
 
 
@@ -378,7 +388,7 @@ namespace AgribankDigital
         {
             List<string> stt = new List<string> { "FA", "IA", "LA", "OA", "F2", "I2", "L2", "O2" };
             //   string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count) + @"\1c036\1c" + fomatStrCardNumber(listCard, stt)+ @"\0c\1bPEC:\5cVBA_ncrpict_2007\5cVietnamese\5cv800.pcx\1b\5c";
-            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c914\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel)+ @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
+            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c914\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
 
             return strCart;
         }

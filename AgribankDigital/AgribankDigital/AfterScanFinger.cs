@@ -14,7 +14,7 @@ namespace AgribankDigital
 
             bool result = false;
 
-            if (mess[2].Equals('4') && mess.Contains("795")) result = true;
+            if (mess[2].Equals('4') && mess.Substring(9, 3).Equals("795")) result = true;
 
             return result;
         }
