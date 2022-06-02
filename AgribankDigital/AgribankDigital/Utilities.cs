@@ -86,13 +86,13 @@ namespace AgribankDigital
             string strdata = "";
             try
             {
-                string ispin = @"8<>7022>401419>=";
+              //  string ispin = @"8<>7022>401419>=";
 
                 int prefixIndex = str.IndexOf("");
 
                 if (prefixIndex > 0)
                 {
-                    strdata = str.Substring(0, prefixIndex + 1) + ispin + str.Substring(prefixIndex, 1) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
+                    strdata =   str.Substring(0, prefixIndex + 2) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
                 }
             }
             catch (Exception e)
@@ -309,7 +309,7 @@ namespace AgribankDigital
                         RegistryKey Registrystepart = Registry.LocalMachine.CreateSubKey(stepart + "\\" + (i + 1));
                         string keysceen = tr[0].Substring(0, 6) + xLenght(3, "X") + tr[0].Substring(tr[0].Length - 4);
                         listcard.Add(keysceen);
-                        string keystepart = tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
+                        string keystepart = ";"+ tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
                         Registrystepart.SetValue("CONTENTSFORMAT", keysceen);
                         Registrystepart.SetValue("CONTENTS", keystepart);
                         Registrystepart.Close();

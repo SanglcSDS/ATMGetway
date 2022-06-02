@@ -247,6 +247,23 @@ namespace AgribankDigital
                                             Logger.Log("> " + dataStr);
                                         }
                                     }
+                                    else if (dataFinger.Contains("12065000291456119"))
+                                    {
+                                        Logger.Log("> " + "removet to Finger");
+                                        this.isCheckFinger = false;
+                                        string strdata = (Encoding.ASCII.GetString(data).Replace(";0000000000000000=12065000291456119?",CardNumber)).Remove(0,2);
+                                        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Raw ATM to FW:");
+                                        Logger.LogRaw("> " + strdata);
+                                        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
+                                        Logger.Log("> " + dataStr);
+                                        if (host.IsConnected())
+                                        {
+                                            host.socketHost.Send(Utilities.DCTCP2H_Send(strdata));
+                                            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+                                            Logger.Log("> " + dataStr);
+                                       
+                                        }
+                                    }
                                     else
                                     {
 
@@ -263,22 +280,23 @@ namespace AgribankDigital
 
                                                 string condition = Utilities.getcondition(dataStr);
                                                 string serialNumber = versie2.GetValue("SerialNumber").ToString();
-                                                string key = versie1.GetValue("CONTENTS").ToString().Substring(0, 6);
+                                                string key = versie1.GetValue("CONTENTS").ToString().Substring(1, 6);
                                                 CardNumber = versie1.GetValue("CONTENTS").ToString();
                                                 versie3.SetValue("CardNumber", CardNumber);
                                                 if (key.Equals("970405"))
                                                 {
-                                                    this.isCheckFinger = false;
-                                                    Logger.Log("> " + "removet to Finger");
+                                                    /*this.isCheckFinger = false;
+                                                    Logger.Log("> " + "removet to Finger");*/
                                                     string keyformat = @"4\1c000\1c\1c" + "229" + @"\1c00000000\1c" + serialNumber + @"5000\1c" + condition + "00";
                                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                                     Logger.Log("> " + keyformat);
+
                                                     socketATM.Send(Utilities.DCTCP2H_Send(keyformat));
                                                 }
                                                 else
                                                 {
-                                                    this.isCheckFinger = false;
-                                                    Logger.Log("> " + "removet to Finger");
+                                                      /*this.isCheckFinger = false;
+                                                    Logger.Log("> " + "removet to Finger");*/
                                                     string keyformat = @"4\1c000\1c\1c" + "237" + @"\1c00000000\1c" + serialNumber + @"5000\1c" + condition + "00";
                                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                                     Logger.Log("> " + keyformat);
@@ -295,8 +313,8 @@ namespace AgribankDigital
                                 }
                                 else
                                 {
-                                    Logger.Log("> " + "removet to Finger");
-                                    this.isCheckFinger = false;
+                                    /* Logger.Log("> " + "removet to Finger");
+                                     this.isCheckFinger = false;*/
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
                                     Logger.Log("> " + dataStr);
                                     if (host.IsConnected())
