@@ -86,7 +86,7 @@ namespace AgribankDigital
             string strdata = "";
             try
             {
-              //  string ispin = @"8<>7022>401419>=";
+             
 
                 int prefixIndex = str.IndexOf("");
 
@@ -256,23 +256,36 @@ namespace AgribankDigital
              return mess.Insert(0, HEX2ASCII(hexStr));
          }
  */
-        public static string fingerErr(string coordination)
+
+        public static byte[] fingerErr(string condination)
         {
-
-            //    string keyformat = @"4\1c000\1c\1c" + "237" + @"\1c00000000\1c" + serialNumber + @"5000\1c" + condition + "00";
-
             string baseMess = @"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC VAN TAY\1c$00\1c";
-
-            string ascii = baseMess.Replace("$", coordination);
-            ascii = ascii.Replace(@"\1c", HEX2ASCII("1c"));
-            ascii = ascii.Replace(@"\0f", HEX2ASCII("0f"));
-
-            return resizeMess(ascii);
+            string ascii = baseMess.Replace("$", condination);
+            return (DCTCP2H_Send(ascii));
         }
+        public static string fingerErrstring(string condination)
+        {
+            string baseMess = @"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC VAN TAY\1c$00\1c";
+            string ascii = baseMess.Replace("$", condination);
+            return ascii;
+        }
+        /*  public static string fingerErr(string coordination)
+          {
+
+              //    string keyformat = @"4\1c000\1c\1c" + "237" + @"\1c00000000\1c" + serialNumber + @"5000\1c" + condition + "00";
+
+              string baseMess = @"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC VAN TAY\1c$00\1c";
+
+              string ascii = baseMess.Replace("$", coordination);
+              ascii = ascii.Replace(@"\1c", HEX2ASCII("1c"));
+              ascii = ascii.Replace(@"\0f", HEX2ASCII("0f"));
+
+              return resizeMess(ascii);
+          }*/
         public static void getSerialNumber(string mess)
         {
             string str = @"4\1c000\1c\1c795\1c00000000\1c";
-            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
+            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
             int index = mess.IndexOf(str) + str.Length;
 
             versie1.SetValue("SerialNumber", mess.Substring(index, 4));
@@ -280,7 +293,7 @@ namespace AgribankDigital
         }
         public static string getCoordination(string mess, string condition)
         {
-            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
+            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
             int index = mess.IndexOf(condition) + condition.Length;
             versie1.SetValue("condition", mess.Substring(index, 1));
             versie1.Close();
@@ -292,10 +305,16 @@ namespace AgribankDigital
             int index = mess.IndexOf(iscondition) + iscondition.Length;
             return mess.Substring(index, 1);
         }
+        public static string getconditionHEX2(string mess)
+        {
+            string iscondition = Hex2Ascii(@"\1c\1c\1c1");
+            int index = mess.IndexOf(iscondition) + iscondition.Length;
+            return mess.Substring(index, 1);
+        }
         /*------------------------registry Editor-----------------------------*/
         public static List<string> addSubKeyLocalMachine(string stepart, List<string> listkey)
         {
-            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
+            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
             versie1.SetValue("CountCard", listkey.Count.ToString());
             versie1.Close();
             List<string> listcard = new List<string>();
@@ -322,7 +341,7 @@ namespace AgribankDigital
         }
         public static string getValueRegittry(string name)
         {
-            RegistryKey versie2 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\AgribankDigital");
+            RegistryKey versie2 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
             string key = versie2.GetValue(name).ToString();
             versie2.Close();
             return key;

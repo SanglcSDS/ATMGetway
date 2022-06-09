@@ -9,6 +9,7 @@ namespace AgribankDigital
     {
         public int dpi { get; set; }
         public string fingerData { get; set; }
+        public string signature { get; set; }
 
     }
 }

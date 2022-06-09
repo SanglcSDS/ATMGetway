@@ -39,9 +39,10 @@ namespace AgribankDigital
             if (arr.Length > 0)
             {
                 Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " List card number:");
+                Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " List card number:");
 
 
-                Utilities.DeleteSubKeyLocalMachine( @"SOFTWARE\AgribankDigital");
+                Utilities.DeleteSubKeyLocalMachine(Utils.REGISTRY);
 
                 listCard = new List<string>();
                 foreach (string str in arr)
@@ -49,9 +50,11 @@ namespace AgribankDigital
                     if (str == null || str.Length == 0) continue;
                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Card Number:");
                     Logger.Log("> " + str);
+                    Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Card Number:");
+                    Logger.LogRaw("> " + str);
                     listCard.Add(str);
                 }
-                listCardFomat = Utilities.addSubKeyLocalMachine( @"SOFTWARE\AgribankDigital", listCard);
+                listCardFomat = Utilities.addSubKeyLocalMachine(Utils.REGISTRY, listCard);
 
 
             }

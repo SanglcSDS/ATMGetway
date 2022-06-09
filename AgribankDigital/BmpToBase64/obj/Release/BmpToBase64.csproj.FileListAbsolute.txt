@@ -21,3 +21,4 @@ D:\code\mitec\code2\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.C
 D:\code\mitec\code2\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.CopyComplete
 D:\code\mitec\code2\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.exe
 D:\code\mitec\code2\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.pdb
+D:\code\mitec\code2\AgribankDigital\BmpToBase64\obj\Release\BmpToBase64.csproj.AssemblyReference.cache

@@ -9,6 +9,7 @@ namespace AgribankDigital
     {
         public static string IP_WEBSOCKET = ConfigurationManager.AppSettings["ip_webSocket"];
         public static string IP_HOST= ConfigurationManager.AppSettings["ip_host"];
+        public static string REGISTRY = ConfigurationManager.AppSettings["registry"];
         public static string IP_ATM = ConfigurationManager.AppSettings["ip_atm"];
         public static int PORT_FORWARD = Int32.Parse(ConfigurationManager.AppSettings["port_listen"]);
         public static int PORT_HOST = Int32.Parse(ConfigurationManager.AppSettings["port_host"]);

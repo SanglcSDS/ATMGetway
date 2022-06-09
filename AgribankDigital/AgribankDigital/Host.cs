@@ -35,11 +35,13 @@ namespace AgribankDigital
                     if (socketHost.Connected)
                     {
                         Logger.Log("Connected to Host : " + socketHost.Connected);
+                        Logger.LogRaw("Connected to Host : " + socketHost.Connected);
                         return;
                     }
                     else
                     {
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                        Logger.LogRaw("Cannot connect to Host, trying to reconnect ...");
                         Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
                         tcpClient.Close();
@@ -49,6 +51,8 @@ namespace AgribankDigital
                 {
                     Logger.Log("Exception while connecting to Host: " + ex.Message);
                     Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                    Logger.LogRaw("Exception while connecting to Host: " + ex.Message);
+                    Logger.LogRaw("Cannot connect to Host, trying to reconnect ...");
                 }
             }
         }
@@ -73,11 +77,13 @@ namespace AgribankDigital
                     if (socketHost.Connected)
                     {
                         Logger.Log("Connected to Host : " + socketHost.Connected);
+                        Logger.LogRaw("Connected to Host : " + socketHost.Connected);
                         return;
                     }
                     else
                     {
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                        Logger.LogRaw("Cannot connect to Host, trying to reconnect ...");
                         Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
                         tcpClient.Close();
@@ -87,6 +93,8 @@ namespace AgribankDigital
                 {
                     Logger.Log("Exception while connecting to Host: " + ex.Message);
                     Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                    Logger.LogRaw("Exception while connecting to Host: " + ex.Message);
+                    Logger.LogRaw("Cannot connect to Host, trying to reconnect ...");
                 }
             }
         }
@@ -103,11 +111,13 @@ namespace AgribankDigital
                     if (socketHost.Connected)
                     {
                         Logger.Log("Connected to Host : " + socketHost.Connected);
+                        Logger.LogRaw("Connected to Host : " + socketHost.Connected);
                         return socketHost;
                     }
                     else
                     {
                         Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                        Logger.LogRaw("Cannot connect to Host, trying to reconnect ...");
                         socketHost.Close();
                         tcpClient.Close();
                     }
@@ -116,6 +126,8 @@ namespace AgribankDigital
                 {
                     Logger.Log("Exception while connecting to Host: " + ex.Message);
                     Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                    Logger.LogRaw("Exception while connecting to Host: " + ex.Message);
+                    Logger.LogRaw("Cannot connect to Host, trying to reconnect ...");
                 }
             }
         }
@@ -123,6 +135,7 @@ namespace AgribankDigital
         public static Socket Connect(Socket socketHost, TcpClient tcpClient, string ipHost, int portHost)
         {
             Logger.Log("Connecting to Host ...");
+            Logger.LogRaw("Connecting to Host ...");
             if (tcpClient != null && !tcpClient.Connected)
             {
                 tcpClient.Close();
@@ -135,6 +148,7 @@ namespace AgribankDigital
                 if (socketHost.Connected)
                 {
                     Logger.Log("Connected to Host : " + socketHost.Connected);
+                    Logger.LogRaw("Connected to Host : " + socketHost.Connected);
                     return socketHost;
                 }
             }
@@ -189,10 +203,11 @@ namespace AgribankDigital
 
                         if (data.Length > 0)
                         {
-                            Logger.LogRaw("Raw  Host to FW: > " + System.Text.Encoding.ASCII.GetString(data));
                             string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                             Logger.Log("< " + dataStr);
+                            Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
+                            Logger.LogRaw("< " + System.Text.Encoding.ASCII.GetString(data));
 
                             if (atm.IsConnected())
                             {
@@ -203,7 +218,8 @@ namespace AgribankDigital
                                     atm.isCheckFinger = true;
                                     Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
                                     Logger.Log("< Ban tin 4 - code 795");
-
+                                    Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
+                                    Logger.LogRaw("< Ban tin 4 - code 795");
                                     List<string> listcard = AfterScanFinger.DecodeCardNumber(AfterScanFinger.GetListCardNumber(dataStr));
 
                                     if (listcard.Count > 8)
@@ -221,7 +237,7 @@ namespace AgribankDigital
                                     {
                                         string cardMess = Utilities.formartMessCard(listcard, 0);
                                         Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
-                                        Logger.Log(cardMess);
+                                        Logger.Log("< "+cardMess);
                                         byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
                                         Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                                         Logger.LogRaw("< " + System.Text.Encoding.ASCII.GetString(isdata));

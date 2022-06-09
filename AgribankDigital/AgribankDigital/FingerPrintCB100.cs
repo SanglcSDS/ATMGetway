@@ -54,12 +54,12 @@ namespace AgribankDigital
                         }
                         else
                         {
-                            string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
+                           /* string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
                             string coordination = Utilities.getCoordination(dataStr, condition);
                             string errData = Utilities.fingerErr(coordination);
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                             Logger.Log("> " + errData);
-                            socketATM.Send(Encoding.ASCII.GetBytes(errData));
+                            socketATM.Send(Encoding.ASCII.GetBytes(errData));*/
                         }
 
 

@@ -7,7 +7,7 @@ using System.ServiceProcess;
 using System.Diagnostics;
 using System.Threading;
 using WebSocketSharp;
-
+using System.Text;
 
 namespace AgribankDigital
 {
@@ -61,6 +61,7 @@ namespace AgribankDigital
         public void main()
         {
             Logger.Log("Service is started");
+            Logger.LogRaw("Service is started");
             atm = new ATM();
             // wait ATM connected
             while (true)
@@ -73,6 +74,7 @@ namespace AgribankDigital
                 if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
                 {
                     Logger.Log("Another Thread starting....");
+                    Logger.LogRaw("Another Thread starting....");
                     receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
                     receiveDataAtmThread.Start();
                     receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
@@ -89,12 +91,21 @@ namespace AgribankDigital
                 if (Utils.HAS_CONTROLLER)
                 {
                     Logger.Log("ZF1 is starting...");
+                    Logger.LogRaw("ZF1 is starting...");
                     atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
                 }
             }
             catch (Exception e)
             {
                 Logger.Log("err: " + e.ToString());
+                Logger.Log("ZF1 start failed!");
+                Logger.LogRaw("err: " + e.ToString());
+                Logger.LogRaw("ZF1 start failed!");
+                /*     Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+                     Logger.LogRaw("> " + Encoding.ASCII.GetString(Utilities.fingerErr()));
+                     atm.socketATM.Send(Utilities.fingerErr());*/
+
+
             }
 
         }
@@ -110,15 +121,18 @@ namespace AgribankDigital
                     {
                         // Close Thread receive data
                         Logger.Log("Check connection failed: ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
+                        Logger.LogRaw("Check connection failed: ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
                         if (receiveDataAtmThread.IsAlive)
                         {
                             Logger.Log("Receive data ATM aborting...");
+                            Logger.LogRaw("Receive data ATM aborting...");
                             receiveDataAtmThread.Abort();
                         }
 
                         if (receiveDataHostThread.IsAlive)
                         {
                             Logger.Log("Receive data Host aborting...");
+                            Logger.LogRaw("Receive data Host aborting...");
                             receiveDataHostThread.Abort();
                         }
                         if (Utils.HAS_CONTROLLER)
@@ -147,6 +161,7 @@ namespace AgribankDigital
                             if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
                             {
                                 Logger.Log("Reconnect = true");
+                                Logger.LogRaw("Reconnect = true");
                                 receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
                                 receiveDataAtmThread.Start();
                                 receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
@@ -156,20 +171,6 @@ namespace AgribankDigital
                             }
                             else continue;
                         }
-                     /*   try
-                        {
-                            atm.closeFingerPrintZF1();
-                            if (Utils.HAS_CONTROLLER)
-                            {
-                                Logger.Log("ZF1 is starting...");
-                                atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.Log("err: " + e.ToString());
-                        }*/
-
 
                     }
                 }
