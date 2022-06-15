@@ -10,23 +10,30 @@ namespace AgribankDigital
 
         public static string signature(string partKey, string messege)
         {
+
             byte[] SignedHash = null;
             //   string sPrivateKeyPEM = File.ReadAllText(partKey);
             byte[] oraiginalDate = Convert.FromBase64String(messege);
             try
             {
+                Logger.LogFingrprint(">1 ");
                 using (RSACryptoServiceProvider rsa = GetRSA(partKey))
                 {
+                    Logger.LogFingrprint("rsa "+ rsa);
                     if (rsa != null)
                     {
+                        Logger.LogFingrprint("rsa1 " + rsa);
                         using (SHA256 sha256 = SHA256.Create())
                         {
+                            Logger.LogFingrprint("sha256 " + sha256);
                             byte[] hash;
                             hash = sha256.ComputeHash(oraiginalDate);
 
                             RSAPKCS1SignatureFormatter RSAFormatter = new RSAPKCS1SignatureFormatter(rsa);
+                            Logger.LogFingrprint("RSAFormatter " + RSAFormatter);
                             RSAFormatter.SetHashAlgorithm("SHA256");
                             SignedHash = RSAFormatter.CreateSignature(hash);
+                            Logger.LogFingrprint("SignedHash " + SignedHash);
                         }
                     }
                     else
@@ -38,10 +45,11 @@ namespace AgribankDigital
             }
             catch (CryptographicException e)
             {
-                Console.WriteLine(e.Message);
+                Logger.LogFingrprint(">loi");
+                Logger.Log(e.Message);
             }
 
-
+            Logger.LogFingrprint("get signature base64 ");
             return Convert.ToBase64String(SignedHash);
         }
 
@@ -70,6 +78,7 @@ namespace AgribankDigital
                 byte[] privateKeyInDER = System.Convert.FromBase64String(keyFormatted);
 
                 rsa = DecodeRSAPrivateKey(privateKeyInDER);
+                Logger.LogFingrprint("Key " + rsa);
             }
 
             return rsa;

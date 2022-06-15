@@ -12,7 +12,7 @@ namespace AgribankDigital
 {
     public class FingerPrinZF1
     {
-        public static string PubKeyFile = @"-----BEGIN RSA PRIVATE KEY-----
+        string PubKeyFile = @"-----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEA1LvVBQ9eIfiIQuHA/HAbSHTUlZG0B1FTyvVSaY7JbUDiwyDv
 MYMDq5jPe2Snbmvlxeav18yLNhNzNusaApvvzDE7gwgxALRod3WqymL1rYqqF2Bo
 tjch1HdSBrJoikCqQ4ycInsdtfTUUe43M8BuN8GDS+vWlgUqYaew6F5IrGBmvC+U
@@ -40,6 +40,7 @@ k5oBEatimddD9xh7Rz+5NtZkodX2BNM+MRxVSOGsOmRiSM588CqIPxpYpYsqFIC7
 IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
 -----END RSA PRIVATE KEY-----
 ";
+
         public Device _capDevice { get; set; }
         public Socket socketHost { get; set; }
         public Socket socketATM { get; set; }
@@ -84,19 +85,13 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
 
                 //Đèn xanh tắt
                 this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
-
-                // fake success message
-                /*    string fakeAcc = "1600282002291";
-                    string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fakeAcc);
-                    ReplaceDataStr = ReplaceDataStr.Remove(0, 2);
-    */
-                // Byte[] data = Utilities.DCTCP2H_Send(ReplaceDataStr);
-
                 string datafingerprint = ImageToBase64String(e.Image);
                 Logger.LogFingrprint("Finger data:" + datafingerprint);
                 string signature = RSASignature.signature(PubKeyFile, datafingerprint);
                 Logger.LogFingrprint("signature data:" + signature);
                 Model fingerData = WeeFinger(signature, datafingerprint);
+
+                //  Model fingerData = WeeFinger(PubKeyFile, datafingerprint);
 
                 if (fingerData.code == 0)
                 {
@@ -106,11 +101,9 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
 
                     if (socketHost.Connected)
                     {
-                        string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
-                        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
-                        Logger.Log("> " + dataStr);
-                        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
-                        Logger.LogRaw("> " + System.Text.Encoding.ASCII.GetString(data));
+                        string dataStr =  Encoding.ASCII.GetString(data);
+                        string dataStrFormat = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                        Utilities.LogFWToHost(dataStrFormat, dataStr);
                         socketHost.Send(data);
 
                     }
@@ -121,10 +114,7 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                     {
                         string coordination = Utilities.getconditionHEX2(dataStr);
                         byte[] errData = Utilities.fingerErr(coordination);
-                        Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Finger to ATM:");
-                        Logger.Log("> " + Utilities.fingerErrstring(coordination));
-                        Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Finger to ATM:");
-                        Logger.LogRaw("> " + Encoding.ASCII.GetString(errData));
+                        Utilities.LogFWToATM(Utilities.fingerErrstring(coordination), Encoding.ASCII.GetString(errData));
                         socketATM.Send(errData);
 
 
@@ -138,10 +128,7 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                 Logger.Log(ex.Message.ToString());
                 string coordination = Utilities.getconditionHEX2(dataStr);
                 byte[] errData = Utilities.fingerErr(coordination);
-                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Finger to ATM:");
-                Logger.Log("> " + Utilities.fingerErrstring(coordination));
-                Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Finger to ATM:");
-                Logger.LogRaw("> " + Encoding.ASCII.GetString(errData));
+                Utilities.LogFWToATM(Utilities.fingerErrstring(coordination), Encoding.ASCII.GetString(errData));
                 socketATM.Send(errData);
             }
 
@@ -149,19 +136,27 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
 
         public void CloseDevice()
         {
-            if (this._capDevice != null)
+            try
             {
-                if (this._capDevice.IsCapturing)
+                if (this._capDevice != null)
                 {
-                    this._capDevice.Stop();
+                    if (this._capDevice.IsCapturing)
+                    {
+                        this._capDevice.Stop();
+                    }
+                    this.UnbindEvents();
+                    this._capDevice.Dispose();
+                    _capDevice = null;
                 }
-                this.UnbindEvents();
-                this._capDevice.Dispose();
-                _capDevice = null;
             }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message);
+            }
+         
         }
 
-        private void BindEvents()
+    private void BindEvents()
         {
             this._capDevice.OnDetect += new OnDetect(_capDevice_OnDetect);
         }
@@ -182,6 +177,7 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
         }
         public Model WeeFinger(string signature, string fingerData)
         {
+
             Model modelFinger = Http.GetModelFinger("http://10.0.7.23:8081/external/finger/identify", new ModelFinger
             {
                 dpi = 508,
@@ -191,5 +187,38 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
             });
             return modelFinger;
         }
+      /*  public Model WeeFinger(string signature, string fingerData)
+        {
+            ListAccount itemAccount = new ListAccount
+            {
+                branchCode = "1600",
+                cif = "109184157",
+                dpProductCode = "282",
+                dpProductName = "",
+                currencyCode = "VND",
+                accountSequence = "006806",
+                accountNumber = "1600282006806",
+                accountStatus = "001",
+                openDate = ""
+            };
+            Model modelFinger = new Model
+            {
+                code = 0,
+                message = "",
+                signature = signature,
+                customerInfos = new CustomerInfo
+                {
+                    customerID = "629eac13eeb87d806100eff9",
+                    customerNumber = "109184157",
+                    customerName = "TÔ VIỆT PHƯƠNG",
+                    customerStatus = "01",
+                    customerMobile = "0984619940",
+                    smsMobileNumber = "",
+                    listAccount = new  List<ListAccount> { itemAccount, }
+                }
+
+            };
+            return modelFinger;
+        }*/
     }
 }

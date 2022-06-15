@@ -12,7 +12,6 @@ D:\code\mitec\code2\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigita
 D:\code\mitec\code2\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.CopyComplete
 D:\code\mitec\code2\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.exe
 D:\code\mitec\code2\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.pdb
-D:\code\mitec\code2\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.AssemblyReference.cache
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\x86\Debug\AgribankDigital.exe.config
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\x86\Debug\AgribankDigital.exe
 D:\project\ATMGetway\AgribankDigital\AgribankDigital\bin\x86\Debug\AgribankDigital.pdb
@@ -42,3 +41,4 @@ C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\x86
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.exe
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.pdb
 C:\Users\84936\source\repos\service\code\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.AssemblyReference.cache
+D:\code\mitec\code2\AgribankDigital\AgribankDigital\obj\x86\Debug\AgribankDigital.csproj.AssemblyReference.cache

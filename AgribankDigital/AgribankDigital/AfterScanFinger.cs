@@ -14,7 +14,7 @@ namespace AgribankDigital
 
             bool result = false;
 
-            if (mess[2].Equals('4') && mess.Substring(9, 3).Equals("795")) result = true;
+            if (mess[2].Equals('4') && mess.Substring(9, 3).Equals("795") && mess.Contains(Utilities.Hex2Ascii(@"\1b")+"(0*")) result = true;
 
             return result;
         }
@@ -38,19 +38,15 @@ namespace AgribankDigital
 
             if (arr.Length > 0)
             {
-                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " List card number:");
-                Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " List card number:");
-
-
+                Utilities.LogFW(" List card number:");
                 Utilities.DeleteSubKeyLocalMachine(Utils.REGISTRY);
 
                 listCard = new List<string>();
                 foreach (string str in arr)
                 {
                     if (str == null || str.Length == 0) continue;
-                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Card Number:");
+                    Utilities.LogFW(" Card Number:");
                     Logger.Log("> " + str);
-                    Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Card Number:");
                     Logger.LogRaw("> " + str);
                     listCard.Add(str);
                 }

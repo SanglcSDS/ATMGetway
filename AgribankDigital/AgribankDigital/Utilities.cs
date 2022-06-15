@@ -8,6 +8,48 @@ namespace AgribankDigital
 {
     public class Utilities
     {
+
+        public static void LogATMToFW(string log, string Raw)
+        {
+            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " ATM to FW:");
+            Logger.Log("> " + log);
+            Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + "ATM to FW:");
+            Logger.LogRaw("> " + Raw);
+
+        }
+        public static void LogFWToATM(string log, string Raw)
+        {
+            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
+            Logger.Log("> " + log);
+            Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + "FW to ATM:");
+            Logger.LogRaw("> " + Raw);
+
+        }
+        public static void LogFWToHost(string log, string Raw)
+        {
+            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
+            Logger.Log("> " + log);
+            Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + "FW to Host:");
+            Logger.LogRaw("> " + Raw);
+
+        }
+        public static void LogHostToFW(string log, string Raw)
+        {
+            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
+            Logger.Log("> " + log);
+            Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + "Host to FW:");
+            Logger.LogRaw("> " + Raw);
+
+        }
+        public static void LogFW(string log)
+        {
+            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff"));
+            Logger.Log("> " + log);
+            Logger.LogRaw(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff"));
+            Logger.LogRaw("> " + log);
+
+        }
+
         public static string convertToHex(string str, Dictionary<int, string> asciiDictionary, string[] character, string cindex)
         {
             char[] charValues = str.ToCharArray();
@@ -45,7 +87,14 @@ namespace AgribankDigital
                 }
 
             }
-            return textOutput;
+            if (textOutput.Remove(0, 2).Equals("11"))
+            {
+                textOutput = formatCardNumber(textOutput, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
+            }
+
+            {
+                return textOutput;
+            }
         }
 
 
@@ -86,13 +135,13 @@ namespace AgribankDigital
             string strdata = "";
             try
             {
-             
+
 
                 int prefixIndex = str.IndexOf("");
 
                 if (prefixIndex > 0)
                 {
-                    strdata =   str.Substring(0, prefixIndex + 2) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
+                    strdata = str.Substring(0, prefixIndex + 2) + character + str.Substring(prefixIndex + 2, str.Length - (prefixIndex + 2));
                 }
             }
             catch (Exception e)
@@ -140,6 +189,7 @@ namespace AgribankDigital
             }
             catch (Exception ex)
             {
+                Utilities.LogFW(ex.Message);
             }
             return array;
         }
@@ -214,17 +264,13 @@ namespace AgribankDigital
             }
             catch (Exception ex)
             {
-
+                Utilities.LogFW(ex.Message);
             }
             return Hex;
         }
 
 
-        /*   public static string INT2HEX(int intValue)
-           {
-               return intValue.ToString("X");
-           }
-   */
+
         public static string resizeMess(string mess)
         {
             int rawLen = mess.Length;
@@ -240,22 +286,7 @@ namespace AgribankDigital
 
             return mess.Insert(0, HEX2ASCII(hexStr));
         }
-        /* public static string lengthMess(string mess)
-         {
-             int rawLen = mess.Length;
 
-             string hexStr = rawLen.ToString();
-
-             while (hexStr.Length < 4)
-             {
-                 hexStr = hexStr.Insert(0, "0");
-             }
-
-             //   string replaceLen = HEX2ASCII(hexStr);
-
-             return mess.Insert(0, HEX2ASCII(hexStr));
-         }
- */
 
         public static byte[] fingerErr(string condination)
         {
@@ -269,19 +300,6 @@ namespace AgribankDigital
             string ascii = baseMess.Replace("$", condination);
             return ascii;
         }
-        /*  public static string fingerErr(string coordination)
-          {
-
-              //    string keyformat = @"4\1c000\1c\1c" + "237" + @"\1c00000000\1c" + serialNumber + @"5000\1c" + condition + "00";
-
-              string baseMess = @"4\1c000\1c\1c158\1c00000000\1c00005000158\0fKHONG XAC DINH DUOC VAN TAY\1c$00\1c";
-
-              string ascii = baseMess.Replace("$", coordination);
-              ascii = ascii.Replace(@"\1c", HEX2ASCII("1c"));
-              ascii = ascii.Replace(@"\0f", HEX2ASCII("0f"));
-
-              return resizeMess(ascii);
-          }*/
         public static void getSerialNumber(string mess)
         {
             string str = @"4\1c000\1c\1c795\1c00000000\1c";
@@ -328,7 +346,7 @@ namespace AgribankDigital
                         RegistryKey Registrystepart = Registry.LocalMachine.CreateSubKey(stepart + "\\" + (i + 1));
                         string keysceen = tr[0].Substring(0, 6) + xLenght(3, "X") + tr[0].Substring(tr[0].Length - 4);
                         listcard.Add(keysceen);
-                        string keystepart = ";"+ tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
+                        string keystepart = ";" + tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
                         Registrystepart.SetValue("CONTENTSFORMAT", keysceen);
                         Registrystepart.SetValue("CONTENTS", keystepart);
                         Registrystepart.Close();
