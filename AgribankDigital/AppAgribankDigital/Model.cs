@@ -10,6 +10,7 @@ namespace AppAgribankDigital
         public int code { get; set; }
         public string message { get; set; }
         public CustomerInfo customerInfos { get; set; }
+        public string signature { get; set; }
 
     }
 }

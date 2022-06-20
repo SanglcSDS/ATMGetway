@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace AppAgribankDigital
 
             bool result = false;
 
-            if (mess[2].Equals('4') && mess.Contains("795")) result = true;
+            if (mess[2].Equals('4') && mess.Substring(9, 3).Equals("795") && mess.Contains(Utilities.Hex2Ascii(@"\1b")+"(0*")) result = true;
 
             return result;
         }
@@ -27,24 +28,33 @@ namespace AppAgribankDigital
 
             return result;
         }
-
-        public static void DecodeCardNumber(string hexStr)
+        public static List<string> listCard;
+        public static List<string> DecodeCardNumber(string hexStr)
         {
+            List<string> listCardFomat = new List<string>();
             string ascii = Utilities.HEX2ASCII(hexStr);
 
             string[] arr = ascii.Split(';');
 
             if (arr.Length > 0)
             {
-                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " List card number:");
+                Utilities.LogFW(" List card number:");
+                Utilities.DeleteSubKeyLocalMachine(Utils.REGISTRY);
+
+                listCard = new List<string>();
                 foreach (string str in arr)
                 {
                     if (str == null || str.Length == 0) continue;
-                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Card Number:");
+                    Utilities.LogFW(" Card Number:");
                     Logger.Log("> " + str);
-                    Logger.LogCardNumber(str);
+                    Logger.LogRaw("> " + str);
+                    listCard.Add(str);
                 }
+                listCardFomat = Utilities.addSubKeyLocalMachine(Utils.REGISTRY, listCard);
+
+
             }
+            return listCardFomat;
         }
     }
 }

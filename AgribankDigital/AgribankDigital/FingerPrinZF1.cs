@@ -87,16 +87,17 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                 this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
                 string datafingerprint = ImageToBase64String(e.Image);
                 Logger.LogFingrprint("Finger data:" + datafingerprint);
-                string signature = RSASignature.signature(PubKeyFile, datafingerprint);
-                Logger.LogFingrprint("signature data:" + signature);
-                Model fingerData = WeeFinger(signature, datafingerprint);
+               // string signature = RSASignature.signature(PubKeyFile, datafingerprint);
+               // Logger.LogFingrprint("signature data:" + signature);
+               // Model fingerData = WeeFinger(signature, datafingerprint);
 
-                //  Model fingerData = WeeFinger(PubKeyFile, datafingerprint);
+                 Model fingerData = WeeFingers(PubKeyFile, datafingerprint);
 
                 if (fingerData.code == 0)
                 {
                     string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fingerData.customerInfos.listAccount[0].accountNumber);
                     ReplaceDataStr = ReplaceDataStr.Remove(0, 2);
+                    
                     Byte[] data = Utilities.DCTCP2H_Send(ReplaceDataStr);
 
                     if (socketHost.Connected)
@@ -187,7 +188,7 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
             });
             return modelFinger;
         }
-      /*  public Model WeeFinger(string signature, string fingerData)
+        public Model WeeFingers(string signature, string fingerData)
         {
             ListAccount itemAccount = new ListAccount
             {
@@ -214,11 +215,11 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                     customerStatus = "01",
                     customerMobile = "0984619940",
                     smsMobileNumber = "",
-                    listAccount = new  List<ListAccount> { itemAccount, }
+                    listAccount = new List<ListAccount> { itemAccount, }
                 }
 
             };
             return modelFinger;
-        }*/
+        }
     }
 }

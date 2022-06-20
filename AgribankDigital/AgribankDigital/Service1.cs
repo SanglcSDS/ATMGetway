@@ -15,14 +15,14 @@ namespace AgribankDigital
     public partial class Service1 : ServiceBase
     {
         static Thread mainThread = null;
-        static Thread atmThread = null;
+
         static Thread receiveDataAtmThread = null;
         static Thread receiveDataHostThread = null;
         static Thread checkConnectionThread = null;
-        static Thread fingerPrintThread = null;
+
         static ATM atm = null;
         static Host host = null;
-        WebSocket ws = null;
+        // WebSocket ws = null;
 
 
         public Service1()
@@ -61,14 +61,11 @@ namespace AgribankDigital
         public void main()
         {
             Utilities.LogFW("Service is started");
+            isCheckConnection();
             atm = new ATM();
-            // wait ATM connected
-            while (true)
+            if (atm.IsConnected())
             {
-                if (atm.IsConnected())
-                {
-                    host = new Host();
-                }
+                host = new Host();
 
                 if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
                 {
@@ -81,7 +78,6 @@ namespace AgribankDigital
                         receiveDataHostThread.Start();
                         checkConnectionThread = new Thread(new ThreadStart(checkConnection));
                         checkConnectionThread.Start();
-                        break;
                     }
                     catch (Exception e)
                     {
@@ -89,13 +85,28 @@ namespace AgribankDigital
                     }
 
                 }
-                else continue;
+                else
+                {
+                    try
+                    {
+                        checkConnectionThread = new Thread(new ThreadStart(checkConnection));
+                        checkConnectionThread.Start();
+                    }
+                    catch (Exception e)
+                    {
+                        Utilities.LogFW(e.Message);
+                    }
+                }
+
             }
+
+
             // start ZF1
             try
             {
                 if (Utils.HAS_CONTROLLER)
                 {
+
                     Utilities.LogFW("ZF1 is starting...");
                     atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
                 }
@@ -119,40 +130,15 @@ namespace AgribankDigital
                     {
                         // Close Thread receive data
                         Utilities.LogFW("Check connection failed: ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
-                        if (receiveDataAtmThread.IsAlive)
+                        if (!host.IsConnected())
                         {
-                            Utilities.LogFW("Receive data ATM aborting...");
-                            receiveDataAtmThread.Abort();
-                        }
+                            host.Close();
+                            host = new Host();
 
-                        if (receiveDataHostThread.IsAlive)
-                        {
-                            Utilities.LogFW("Receive data Host aborting...");
-                            receiveDataHostThread.Abort();
-                        }
-                        if (Utils.HAS_CONTROLLER)
-                        {
-                            atm.closeFingerPrintZF1();
-                        }
-
-                        // Close ATM
-
-                        atm.Close();
-                        atm.isResetting = false;
-                        atm = new ATM();
-                        atm.isResetting = true;
-                        host.Close();
-                        host.isResetting = false;
-                        // wait ATM connected
-                        while (true)
-                        {
-                            // reconnect Host
-                            if (atm.IsConnected())
-                            {
-                                host = new Host();
-                                host.isResetting = true;
-                            }
-
+                            if (receiveDataAtmThread != null)
+                                receiveDataAtmThread.Abort();
+                            if (receiveDataHostThread != null)
+                                receiveDataHostThread.Abort();
                             if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
                             {
                                 Utilities.LogFW("Reconnect = true");
@@ -161,10 +147,41 @@ namespace AgribankDigital
                                 receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
                                 receiveDataHostThread.Start();
 
-                                break;
+
                             }
-                            else continue;
+                            else
+                            {
+                                Utilities.LogFW("ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
+                            }
+
                         }
+                        if (!atm.IsConnected())
+                        {
+                            atm.Close();
+                            atm = new ATM();
+                            if (receiveDataAtmThread != null)
+                                receiveDataAtmThread.Abort();
+                            if (receiveDataHostThread != null)
+                                receiveDataHostThread.Abort();
+                            if (atm != null && host != null && atm.IsConnected() && host.IsConnected())
+                            {
+                                Utilities.LogFW("Reconnect = true");
+                                receiveDataAtmThread = new Thread(new ThreadStart(() => atm.ReceiveDataFromATM(host)));
+                                receiveDataAtmThread.Start();
+                                receiveDataHostThread = new Thread(new ThreadStart(() => host.ReceiveDataFromHost(atm)));
+                                receiveDataHostThread.Start();
+
+
+                            }
+                            else
+                            {
+                                Utilities.LogFW("ATM is connected " + atm.IsConnected() + " / Host is connected " + host.IsConnected());
+                            }
+
+                        }
+
+
+
 
                     }
                 }
@@ -173,6 +190,28 @@ namespace AgribankDigital
 
         }
 
+        public static void isCheckConnection()
+        {
+            try
+            {
+                if (atm != null)
+                    atm.Close();
+                if (host != null)
+                    atm.Close();
+                if (checkConnectionThread != null)
+                    checkConnectionThread.Abort();
+                if (receiveDataAtmThread != null)
+                    receiveDataAtmThread.Abort();
+                if (receiveDataHostThread != null)
+                    receiveDataHostThread.Abort();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogRaw(ex.Message);
+            }
+
+
+        }
         protected override void OnStop()
         {
             try
@@ -185,23 +224,16 @@ namespace AgribankDigital
                     }
                     atm.Close();
                 }
+                if (host != null)
+                    host.Close();
                 if (checkConnectionThread != null)
                     checkConnectionThread.Abort();
                 if (receiveDataAtmThread != null)
                     receiveDataAtmThread.Abort();
                 if (receiveDataHostThread != null)
                     receiveDataHostThread.Abort();
-                if (host != null)
-                    host.Terminate();
-                if (atmThread != null)
-                    atmThread.Abort();
-
-                if (ws != null)
-                    ws.Close();
-                if (fingerPrintThread != null)
-                    fingerPrintThread.Abort();
-
-                mainThread.Abort();
+                if (mainThread != null)
+                    mainThread.Abort();
             }
             catch (Exception e)
             {

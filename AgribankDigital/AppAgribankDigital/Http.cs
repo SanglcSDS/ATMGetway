@@ -30,10 +30,6 @@ namespace AppAgribankDigital
                     string value = streamReader.ReadToEnd();
 
                     Logger.Log("API > " + value);
-
-                    Console.WriteLine("API > " + value); 
-
-                    Console.WriteLine(JsonConvert.DeserializeObject<Model>(value).code);
                     return JsonConvert.DeserializeObject<Model>(value);
 
                 }

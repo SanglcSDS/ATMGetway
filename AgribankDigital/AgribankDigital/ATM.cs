@@ -17,11 +17,9 @@ namespace AgribankDigital
         WebSocket ws = null;
         public Socket socketATM;
         TcpListener listener;
-        public bool isResetting = false;
         public static string CardNumber = "";
         public bool isCheckFinger = false;
         public bool isWithdrawMoney = false;
-
         public bool isKeyD = true;
         public static int itemnCard = 1;
         public static Thread ThreadTimeoutFinger = null;
@@ -30,39 +28,40 @@ namespace AgribankDigital
 
         public ATM()
         {
-            try
+            while (true)
             {
-                Utilities.LogFW("Waiting connect from ATM ...");
-                listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
-                listener.Start();
-
-                Utilities.LogFW("Start listener ");
-
-                socketATM = listener.AcceptSocket();
-                Utilities.LogFW("socketATM Accept ");
-                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-                LingerOption lingerOption = new LingerOption(false, 3);
-                socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
-                listener.Stop();
-                if (socketATM.Connected)
+                try
                 {
-                    Utilities.LogFW("Connected to ATM : " + socketATM.Connected);
-                    return;
-                }
-                else
-                {
-
-                    Utilities.LogFW("Cannot connect to ATM");
-                    socketATM.Close();
+                    Utilities.LogFW("Waiting connect from ATM ...");
+                    listener = new TcpListener(IPAddress.Any, Utils.PORT_FORWARD);
+                    listener.Start();
+                    Utilities.LogFW("Start listener ");
+                    socketATM = listener.AcceptSocket();
+                    Utilities.LogFW("socketATM Accept ");
+                    socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
+                    socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                    LingerOption lingerOption = new LingerOption(false, 3);
+                    socketATM.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
                     listener.Stop();
+                    if (socketATM.Connected)
+                    {
+                        Utilities.LogFW("Connected to ATM : " + socketATM.Connected);
+                        return;
+                    }
+                    else
+                    {
+
+                        Utilities.LogFW("Cannot connect to ATM");
+                        socketATM.Close();
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Utilities.LogFW("Exception while connecting to ATM: " + ex.Message);
 
                 }
-            }
-            catch (Exception ex)
-            {
-                Utilities.LogFW("Exception while connecting to ATM: " + ex.Message);
 
             }
 
@@ -176,6 +175,8 @@ namespace AgribankDigital
                     if (fingerPrinZF1._capDevice != null)
                     {
                         fingerPrinZF1.dataStr = dataStr;
+                        fingerPrinZF1.socketATM = socketATM;
+                        fingerPrinZF1.socketHost = socketHost;
                         //Cho phép nhận vân tay
                         this.fingerPrinZF1._capDevice.Freeze(false);
                         fingerPrinZF1._capDevice.Property[PropertyType.FG_GREEN_LED] = 1;
@@ -252,6 +253,9 @@ namespace AgribankDigital
 
                 if (str.Contains("Exit: 49"))
                 {
+                    this.isCheckFinger = false;
+                    this.isWithdrawMoney = false;
+                    Utilities.CopyFilesRecursively(Utils.IMAGE_CARD, Utils.IMAGE_NCRPICT);
                     RegistryKey versie3 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY + @"\cardTrack2");
                     RegistryKey versie4 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Wincor Nixdorf\AgribankDigital\cardTrack2");
                     versie3.SetValue("CardNumber", "");
@@ -259,7 +263,6 @@ namespace AgribankDigital
                     versie4.Close();
                     versie3.Close();
                     Logger.LogFingrprint(str);
-                    this.isWithdrawMoney = false;
                     process.Close();
                     break;
                 }
@@ -280,8 +283,7 @@ namespace AgribankDigital
 
             while (true)
             {
-                if (!this.isResetting && !host.isResetting)
-                {
+               
                     if (this.IsConnected())
                     {
 
@@ -295,6 +297,7 @@ namespace AgribankDigital
                             {
                                 try
                                 {
+                                    Utilities.CopyFilesRecursively(Utils.IMAGE_FINGER, Utils.IMAGE_NCRPICT);
                                     itemnCard = 1;
                                     Utilities.LogATMToFW(dataStrFormart, dataStr);
 
@@ -363,8 +366,8 @@ namespace AgribankDigital
                                                     this.isCheckFinger = false;
                                                     this.isWithdrawMoney = true;
 
-                                                    Threadcheckdcctrl = new Thread(new ThreadStart(() => checkdcctrl()));
-                                                    Threadcheckdcctrl.Start();
+                                                  /*  Threadcheckdcctrl = new Thread(new ThreadStart(() => checkdcctrl()));
+                                                    Threadcheckdcctrl.Start();*/
                                                     RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY + "\\" + (i + itemnCard));
                                                     RegistryKey versie2 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
                                                     RegistryKey versie3 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY + @"\cardTrack2");
@@ -407,7 +410,7 @@ namespace AgribankDigital
                                 }
 
                             }
-                            else if (this.isWithdrawMoney == true)
+                           /* else if (this.isWithdrawMoney == true)
                             {
                                 try
                                 {
@@ -452,7 +455,7 @@ namespace AgribankDigital
                                     Utilities.LogFW(ex.Message);
                                 }
 
-                            }
+                            }*/
 
                             else
                             {
@@ -467,7 +470,7 @@ namespace AgribankDigital
 
 
                         }
-                    }
+                    
                 }
             }
         }
@@ -480,7 +483,7 @@ namespace AgribankDigital
                 {
                     if (socketATM.Connected)
                         socketATM.Close();
-                    listener.Stop();
+                        listener.Stop();
                 }
 
             }

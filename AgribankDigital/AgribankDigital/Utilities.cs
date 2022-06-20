@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -8,6 +9,50 @@ namespace AgribankDigital
 {
     public class Utilities
     {
+        public static string PathLocation(string value)
+        {
+            try
+            {
+                if (Directory.Exists(value))
+                {
+                    return value;
+                }
+                DirectoryInfo di = Directory.CreateDirectory(value);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(string.Format("The process failed: {0}", ex.ToString()));
+
+            }
+            return value;
+
+
+
+        }
+        public static void CopyFilesRecursively(string sourcePath, string targetPath)
+        {
+            PathLocation(sourcePath);
+            PathLocation(targetPath);
+            try
+            {
+                //Now Create all of the directories
+                foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+                }
+
+                //Copy all the files & Replaces any files with the same name
+                foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+                }
+            }
+            catch (Exception e)
+            {
+                LogFW(e.Message);
+            }
+
+        }
 
         public static void LogATMToFW(string log, string Raw)
         {
@@ -425,7 +470,7 @@ namespace AgribankDigital
         {
             List<string> stt = new List<string> { "FA", "IA", "LA", "OA", "F2", "I2", "L2", "O2" };
             //   string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count) + @"\1c036\1c" + fomatStrCardNumber(listCard, stt)+ @"\0c\1bPEC:\5cVBA_ncrpict_2007\5cVietnamese\5cv800.pcx\1b\5c";
-            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c914\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
+            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c027\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
 
             return strCart;
         }

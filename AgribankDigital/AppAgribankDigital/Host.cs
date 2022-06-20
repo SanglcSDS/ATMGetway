@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace AppAgribankDigital
@@ -10,7 +13,7 @@ namespace AppAgribankDigital
         //Socket socketATM;
         public Socket socketHost;
         TcpClient tcpClient;
-        //TcpListener listener;
+        TcpListener listener;
         public bool isResetting = false;
         public bool isClosed = false;
 
@@ -20,23 +23,22 @@ namespace AppAgribankDigital
             {
                 try
                 {
-                    TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                    socketHost = newTcpClient.Client;
 
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-                    //LingerOption lingerOption = new LingerOption(false, 3);
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
-
+                 /*   IPEndPoint localEP = new IPEndPoint(IPAddress.Parse(Utils.IP_HOST), Utils.PORT_HOST);
+                    listener = new TcpListener(localEP);
+                    listener.Start();*/
+                    tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                //    tcpClient = listener.AcceptTcpClient();
+                    socketHost = tcpClient.Client;
+                 //   listener.Stop();
                     if (socketHost.Connected)
                     {
-                        Logger.Log("Connected to Host : " + socketHost.Connected);
+                        Utilities.LogFW("Connected to Host : " + socketHost.Connected);
                         return;
                     }
                     else
                     {
-                        Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                        Utilities.LogFW("Cannot connect to Host, trying to reconnect ...");
                         Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
                         tcpClient.Close();
@@ -44,8 +46,8 @@ namespace AppAgribankDigital
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log("Exception while connecting to Host: " + ex.Message);
-                    Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                    Utilities.LogFW("Exception while connecting to Host: " + ex.Message);
+                    Utilities.LogFW("Cannot connect to Host, trying to reconnect ...");
                 }
             }
         }
@@ -58,23 +60,16 @@ namespace AppAgribankDigital
             {
                 try
                 {
-                    TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                    socketHost = newTcpClient.Client;
-
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, Utils.SEND_DATA_TIMEOUT);
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-                    //LingerOption lingerOption = new LingerOption(false, 3);
-                    //socketHost.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingerOption);
-
+                    tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                    socketHost = tcpClient.Client;
                     if (socketHost.Connected)
                     {
-                        Logger.Log("Connected to Host : " + socketHost.Connected);
+                        Utilities.LogFW("Connected to Host : " + socketHost.Connected);
                         return;
                     }
                     else
                     {
-                        Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                        Utilities.LogFW("Cannot connect to Host, trying to reconnect ...");
                         Thread.Sleep(Utils.RESET_ERR_DELAY);
                         socketHost.Close();
                         tcpClient.Close();
@@ -82,8 +77,8 @@ namespace AppAgribankDigital
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log("Exception while connecting to Host: " + ex.Message);
-                    Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                    Utilities.LogFW("Exception while connecting to Host: " + ex.Message);
+                    Utilities.LogFW("Cannot connect to Host, trying to reconnect ...");
                 }
             }
         }
@@ -94,44 +89,44 @@ namespace AppAgribankDigital
             {
                 try
                 {
-                    TcpClient newTcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
-                    var socketHost = newTcpClient.Client;
+                    tcpClient = new TcpClient(Utils.IP_HOST, Utils.PORT_HOST);
+                    socketHost = tcpClient.Client;
 
                     if (socketHost.Connected)
                     {
-                        Logger.Log("Connected to Host : " + socketHost.Connected);
+                        Utilities.LogFW("Connected to Host : " + socketHost.Connected);
                         return socketHost;
                     }
                     else
                     {
-                        Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                        Utilities.LogFW("Cannot connect to Host, trying to reconnect ...");
                         socketHost.Close();
                         tcpClient.Close();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log("Exception while connecting to Host: " + ex.Message);
-                    Logger.Log("Cannot connect to Host, trying to reconnect ...");
+                    Utilities.LogFW("Exception while connecting to Host: " + ex.Message);
+                    Utilities.LogFW("Cannot connect to Host, trying to reconnect ...");
                 }
             }
         }
 
         public static Socket Connect(Socket socketHost, TcpClient tcpClient, string ipHost, int portHost)
         {
-            Logger.Log("Connecting to Host ...");
+            Utilities.LogFW("Connecting to Host ...");
             if (tcpClient != null && !tcpClient.Connected)
             {
                 tcpClient.Close();
             }
             while (true)
             {
-                TcpClient newTcpClient = new TcpClient(ipHost, portHost);
-                socketHost = newTcpClient.Client;
+                tcpClient = new TcpClient(ipHost, portHost);
+                socketHost = tcpClient.Client;
 
                 if (socketHost.Connected)
                 {
-                    Logger.Log("Connected to Host : " + socketHost.Connected);
+                    Utilities.LogFW("Connected to Host : " + socketHost.Connected);
                     return socketHost;
                 }
             }
@@ -143,15 +138,18 @@ namespace AppAgribankDigital
             {
                 bool check = !(socketHost.Poll(Utils.CHECK_CONNECTION_TIMEOUT, SelectMode.SelectRead) && socketHost.Available == 0);
                 //if (!check)
-                //    Logger.Log("Host not responding");
+
                 return check;
             }
-            catch (SocketException) {
-                //Logger.Log("Host not responding");
+            catch (SocketException e)
+            {
+                Utilities.LogFW(e.Message.ToString());
                 return false;
             }
-            catch (ObjectDisposedException) {
-                //Logger.Log("Host not responding");
+            catch (ObjectDisposedException e)
+            {
+                Utilities.LogFW(e.Message.ToString());
+
                 return false;
             }
         }
@@ -182,55 +180,88 @@ namespace AppAgribankDigital
 
                         if (data.Length > 0)
                         {
-                            Logger.LogRaw("Raw Host to FW > " + System.Text.Encoding.ASCII.GetString(data));
+                            string dataStr = Encoding.ASCII.GetString(data);
+                            string dataStrFormat = Utilities.convertToHex(dataStr, Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                            Utilities.LogHostToFW(dataStrFormat, dataStr);
 
-                            string dataStr = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.RECEIVE_CHARACTER, @"\1c");
-                            Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
-                            Logger.Log("< " + dataStr);
-
-                            // test
-                            if (AfterScanFinger.IsCorrectNews(System.Text.Encoding.ASCII.GetString(data)))
+                            if (atm.IsConnected())
                             {
-                                Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " Host to FW:");
-                                Logger.Log("< Ban tin 4 - code 795");
-                                string list = AfterScanFinger.GetListCardNumber(dataStr);
-                                AfterScanFinger.DecodeCardNumber(list);
-                            }
-                            else
-                            {
-                                if (atm.IsConnected())
+                                if (AfterScanFinger.IsCorrectNews(dataStr))
                                 {
-                                    atm.socketATM.Send(data);
+                                    Utilities.getSerialNumber(dataStrFormat);
+                                    atm.isKeyD = true;
+                                    atm.isCheckFinger = true;
+                                    Utilities.LogHostToFW("Ban tin 4 - code 795", "Ban tin 4 - code 795");
+                                    List<string> listcard = AfterScanFinger.DecodeCardNumber(AfterScanFinger.GetListCardNumber(dataStrFormat));
 
-                                    Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
-                                    Logger.Log("< " + dataStr);
+                                    if (listcard.Count > 8)
+                                    {
+                                        string cardMess = Utilities.formartMessCard(listcard.GetRange(0, 7), 1);
+                                        byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
+                                        Utilities.LogFWToATM(cardMess, Encoding.ASCII.GetString(isdata));
+                                        atm.socketATM.Send(isdata);
+                                    }
+                                    else
+                                    {
+                                        string cardMess = Utilities.formartMessCard(listcard, 0);
+                                        byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
+                                        Utilities.LogFWToATM(cardMess, Encoding.ASCII.GetString(isdata));
+                                        atm.socketATM.Send(isdata);
+                                    }
+
+                                }
+                                else
+                                {
+                                    //  atm.isCheckFinger = false;
+                                    atm.socketATM.Send(data);
+                                    Utilities.LogFWToATM(dataStrFormat, dataStr);
                                 }
                             }
 
-                            
                         }
                     }
                 }
             }
         }
 
-        public void Close()
+    /*    public void Close()
         {
-            if (socketHost.Connected)
-                socketHost.Disconnect(true);
-            //if (tcpClient.Connected)
-            //    tcpClient.Close();
+            try
+            {
+                if (socketHost != null)
+                {
+                    if (socketHost.Connected)
+                        socketHost.Disconnect(true);
+                    if (tcpClient.Connected)
+                        tcpClient.Close();
 
-            this.isClosed = true;
-        }
+                    this.isClosed = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message);
+            }
+
+
+        }*/
 
         public void Terminate()
         {
-            if (socketHost.Connected)
-                socketHost.Close();
-            if (tcpClient.Connected)
-                tcpClient.Close();
-            this.isClosed = true;
+            try
+            {
+                if (socketHost != null)
+                {
+                    if (socketHost.Connected)
+                        socketHost.Close();
+                   
+                        tcpClient.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message);
+            }
         }
     }
 }

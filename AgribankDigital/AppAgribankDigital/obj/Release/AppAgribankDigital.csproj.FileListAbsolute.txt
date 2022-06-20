@@ -1,0 +1,16 @@
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\AppAgribankDigital.exe.config
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\AppAgribankDigital.exe
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\AppAgribankDigital.pdb
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\Dermalog.Imaging.Capturing.dll
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\Newtonsoft.Json.dll
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\websocket-sharp.dll
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\Newtonsoft.Json.xml
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\bin\Release\websocket-sharp.xml
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.Form1.resources
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.Properties.Resources.resources
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.csproj.GenerateResource.cache
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.csproj.CoreCompileInputs.cache
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.csproj.CopyComplete
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.exe
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.pdb
+D:\code\mitec\code2\AgribankDigital\AppAgribankDigital\obj\Release\AppAgribankDigital.csproj.AssemblyReference.cache

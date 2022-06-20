@@ -46,6 +46,7 @@ namespace AppAgribankDigital
                     {
                         if (Utils.Test == true)
                         {
+                           
                             socketHost.Send(data);
                             string dataStrs = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
@@ -53,12 +54,12 @@ namespace AppAgribankDigital
                         }
                         else
                         {
-                            string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
+                           /* string condition = Utilities.HEX2ASCII(@"1c1c1c") + "1";
                             string coordination = Utilities.getCoordination(dataStr, condition);
                             string errData = Utilities.fingerErr(coordination);
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to ATM:");
                             Logger.Log("> " + errData);
-                            socketATM.Send(Encoding.ASCII.GetBytes(errData));
+                            socketATM.Send(Encoding.ASCII.GetBytes(errData));*/
                         }
 
 
