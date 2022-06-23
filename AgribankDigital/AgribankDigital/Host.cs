@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
@@ -11,7 +12,9 @@ namespace AgribankDigital
     {
         public Socket socketHost;
         TcpClient tcpClient;
-        public bool isClosed = false;
+        public static List<Cards> listcard ;
+     
+        //   public bool isClosed = false;
 
         public Host()
         {
@@ -77,32 +80,36 @@ namespace AgribankDigital
                     if (data.Length > 0)
                     {
                         string dataStr = Encoding.ASCII.GetString(data);
-                        string dataStrFormat = Utilities.convertToHex(dataStr, Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                        string dataStrFormat = Utilities.convertToHex(dataStr);
                         Utilities.LogHostToFW(dataStrFormat, dataStr);
 
                         if (atm.IsConnected())
                         {
                             if (AfterScanFinger.IsCorrectNews(dataStr))
                             {
-                                Utilities.getSerialNumber(dataStrFormat);
-                                atm.isKeyD = true;
+                                Utilities.setSerialNumber(dataStrFormat);
+                                ATM.page = 1;
                                 atm.isCheckFinger = true;
                                 Utilities.LogHostToFW("Ban tin 4 - code 795", "Ban tin 4 - code 795");
-                                List<string> listcard = AfterScanFinger.DecodeCardNumber(AfterScanFinger.GetListCardNumber(dataStrFormat));
+                               listcard = AfterScanFinger.DecodeCardNumber(AfterScanFinger.GetListCardNumber(dataStrFormat));
+                            
+                                string cardMess = Utilities.formartMessCard(listcard, 1);
 
-                                if (listcard.Count > 8)
+                                byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
+                                Utilities.LogFWToATM(cardMess, Encoding.ASCII.GetString(isdata));
+                                atm.socketATM.Send(isdata);
+
+
+                            }
+                            else if (atm.isCheckFinger == true)
+                            {
+                                atm.isCheckFinger = false;
+                                Utilities.LogFW("removet to Finger");
+                                if (this.IsConnected())
                                 {
-                                    string cardMess = Utilities.formartMessCard(listcard.GetRange(0, 7), 1);
-                                    byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
-                                    Utilities.LogFWToATM(cardMess, Encoding.ASCII.GetString(isdata));
-                                    atm.socketATM.Send(isdata);
-                                }
-                                else
-                                {
-                                    string cardMess = Utilities.formartMessCard(listcard, 0);
-                                    byte[] isdata = Utilities.DCTCP2H_Send(cardMess);
-                                    Utilities.LogFWToATM(cardMess, Encoding.ASCII.GetString(isdata));
-                                    atm.socketATM.Send(isdata);
+                                    byte[] errData = Utilities.fingerErr(ATM.coordination21);
+                                    Utilities.LogFWToATM(Utilities.fingerErrstring(ATM.coordination21), Encoding.ASCII.GetString(errData));
+                                    atm.socketATM.Send(errData);
                                 }
 
                             }
@@ -120,6 +127,25 @@ namespace AgribankDigital
             }
         }
 
+        public void Terminate()
+        {
+            try
+            {
+                if (socketHost != null)
+                {
+                    if (socketHost.Connected)
+                        socketHost.Close();
+                    if (tcpClient.Connected)
+                        tcpClient.Close();
+
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message);
+            }
+
+        }
         public void Close()
         {
             try
@@ -131,7 +157,7 @@ namespace AgribankDigital
                     if (tcpClient.Connected)
                         tcpClient.Close();
 
-                    this.isClosed = true;
+
                 }
             }
             catch (Exception e)
@@ -142,6 +168,6 @@ namespace AgribankDigital
 
         }
 
-       
+
     }
 }

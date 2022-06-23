@@ -225,7 +225,7 @@ namespace AgribankDigital
                     atm.Close();
                 }
                 if (host != null)
-                    host.Close();
+                    host.Terminate();
                 if (checkConnectionThread != null)
                     checkConnectionThread.Abort();
                 if (receiveDataAtmThread != null)

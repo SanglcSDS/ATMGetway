@@ -39,7 +39,7 @@ namespace AgribankDigital
                     string fakeAcc = "1600282002291";
                     string ReplaceDataStr = Utilities.FingerReplaceText(dataStr, fakeAcc);
                     ReplaceDataStr = ReplaceDataStr.Remove(0, 2);
-                    ReplaceDataStr = Utilities.resizeMess(ReplaceDataStr);
+                //    ReplaceDataStr = Utilities.resizeMess(ReplaceDataStr);
 
                     Byte[] data = Encoding.ASCII.GetBytes(ReplaceDataStr);
                     if (socketHost.Connected)
@@ -48,7 +48,7 @@ namespace AgribankDigital
                         {
                            
                             socketHost.Send(data);
-                            string dataStrs = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                            string dataStrs = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data));
                             Logger.Log(Environment.NewLine + DateTime.Now.ToString("HH:mm:ss fff") + " FW to Host:");
                             Logger.Log("> " + dataStrs);
                         }

@@ -35,13 +35,11 @@ namespace AgribankDigital
             PathLocation(targetPath);
             try
             {
-                //Now Create all of the directories
                 foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
                 {
                     Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
                 }
 
-                //Copy all the files & Replaces any files with the same name
                 foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
                 {
                     File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
@@ -95,54 +93,44 @@ namespace AgribankDigital
 
         }
 
-        public static string convertToHex(string str, Dictionary<int, string> asciiDictionary, string[] character, string cindex)
+        public static string convertToHex(string str)
         {
-            char[] charValues = str.ToCharArray();
-            string textOutput = "";
-
-            foreach (char _eachChar in charValues)
+            string indexstr = Ascii2Hex(str);
+            try
             {
-                int value = Convert.ToInt32(_eachChar);
-                if (asciiDictionary.ContainsKey(value))
+                int index1c = indexstr.IndexOf(@"\1c");
+
+                string index = indexstr.Substring(index1c - 2, 2);
+
+                string strNeedCheck = "23,22,12,11";
+                string[] arrListStr = strNeedCheck.Split(',');
+
+
+                if (arrListStr.Contains(index))
                 {
-                    textOutput += asciiDictionary[value];
+                    indexstr = indexstr.Substring(index1c - 2);
                 }
                 else
                 {
-                    textOutput += _eachChar;
-                }
-            }
+                    indexstr = indexstr.Substring(index1c - 1);
 
-            for (var i = 0; i < character.Length; i++)
-            {
-                if (textOutput.Length > 1)
+                }
+
+                if (indexstr.Remove(0, 2).Equals("11"))
                 {
-                    int characterIndex = textOutput.Substring(0, textOutput.IndexOf(cindex) + 3).IndexOf(character[i]);
-                    if (textOutput.Substring(0, textOutput.IndexOf(cindex) + 3).Equals(cindex))
-                    {
-                        textOutput = textOutput.Substring(cindex.Length, textOutput.Length - cindex.Length);
-                        break;
-                    }
-                    if (characterIndex >= 0)
-                    {
-                        textOutput = textOutput.Substring(characterIndex, textOutput.Length - characterIndex);
-                        break;
-
-                    }
+                    indexstr = formatCardNumber(indexstr, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
                 }
-
             }
-            if (textOutput.Remove(0, 2).Equals("11"))
+            catch (Exception ex)
             {
-                textOutput = formatCardNumber(textOutput, @"\1c;", "=", @"?\1c", @"11\1c", @"A\1c000000000000\1c");
+                LogFW(ex.Message);
             }
 
-            {
-                return textOutput;
-            }
+
+
+            return indexstr;
+
         }
-
-
         public static string formatCardNumber(string data, string prefix, string middle, string surfix, string condition, string textnumber)
         {
             if ((data.Length >= condition.Length))
@@ -261,7 +249,7 @@ namespace AgribankDigital
         }
 
 
-        static string xLenght(int lenght, string character)
+        public static string xLenght(int lenght, string character)
         {
             string result = "";
             for (int i = 0; i < lenght; i++)
@@ -270,6 +258,48 @@ namespace AgribankDigital
             }
             return result;
         }
+        public static string Ascii2Hex(string Ascii)
+        {
+            try
+            {
+                Ascii = Ascii.Replace(" ", "\\00");
+                Ascii = Ascii.Replace("\u0001", "\\01");
+                Ascii = Ascii.Replace("\u0002", "\\02");
+                Ascii = Ascii.Replace("\u0003", "\\03");
+                Ascii = Ascii.Replace("\u0004", "\\04");
+                Ascii = Ascii.Replace("\u0005", "\\05");
+                Ascii = Ascii.Replace("\u0006", "\\06");
+                Ascii = Ascii.Replace("\a", "\\07");
+                Ascii = Ascii.Replace("\b", "\\08");
+                Ascii = Ascii.Replace("\t", "\\09");
+                Ascii = Ascii.Replace("\v", "\\0b");
+                Ascii = Ascii.Replace("\f", "\\0c");
+                Ascii = Ascii.Replace("\u000e", "\\0e");
+                Ascii = Ascii.Replace("\u000f", "\\0f");
+                Ascii = Ascii.Replace("\u0010", "\\10");
+                Ascii = Ascii.Replace("\u0011", "\\11");
+                Ascii = Ascii.Replace("\u0012", "\\12");
+                Ascii = Ascii.Replace("\u0013", "\\13");
+                Ascii = Ascii.Replace("\u0014", "\\14");
+                Ascii = Ascii.Replace("\u0015", "\\15");
+                Ascii = Ascii.Replace("\u0016", "\\16");
+                Ascii = Ascii.Replace("\u0017", "\\17");
+                Ascii = Ascii.Replace("\u0018", "\\18");
+                Ascii = Ascii.Replace("\u0019", "\\19");
+                Ascii = Ascii.Replace("\u001a", "\\1a");
+                Ascii = Ascii.Replace("\u001b", "\\1b");
+                Ascii = Ascii.Replace("\u001c", "\\1c");
+                Ascii = Ascii.Replace("\u001d", "\\1d");
+                Ascii = Ascii.Replace("\u001e", "\\1e");
+                Ascii = Ascii.Replace("\u001f", "\\1f");
+            }
+            catch (Exception ex)
+            {
+                Utilities.LogFW(ex.Message);
+            }
+            return Ascii;
+        }
+
         public static string Hex2Ascii(string Hex)
         {
             try
@@ -316,21 +346,6 @@ namespace AgribankDigital
 
 
 
-        public static string resizeMess(string mess)
-        {
-            int rawLen = mess.Length;
-
-            string hexStr = rawLen.ToString("X");
-
-            while (hexStr.Length < 4)
-            {
-                hexStr = hexStr.Insert(0, "0");
-            }
-
-            //   string replaceLen = HEX2ASCII(hexStr);
-
-            return mess.Insert(0, HEX2ASCII(hexStr));
-        }
 
 
         public static byte[] fingerErr(string condination)
@@ -345,7 +360,7 @@ namespace AgribankDigital
             string ascii = baseMess.Replace("$", condination);
             return ascii;
         }
-        public static void getSerialNumber(string mess)
+        public static void setSerialNumber(string mess)
         {
             string str = @"4\1c000\1c\1c795\1c00000000\1c";
             RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
@@ -354,196 +369,130 @@ namespace AgribankDigital
             versie1.SetValue("SerialNumber", mess.Substring(index, 4));
             versie1.Close();
         }
-        public static string getCoordination(string mess, string condition)
+        public static void setCardTrack2(string CardNumber)
         {
-            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
-            int index = mess.IndexOf(condition) + condition.Length;
-            versie1.SetValue("condition", mess.Substring(index, 1));
-            versie1.Close();
-            return mess.Substring(index, 1);
+            RegistryKey versie3 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY + @"\cardTrack2");
+            RegistryKey versie4 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Wincor Nixdorf\AgribankDigital\cardTrack2");
+            versie3.SetValue("CardNumber", CardNumber);
+            versie4.SetValue("CardNumber", CardNumber);
+            versie3.Close();
+            versie4.Close();
         }
-        public static string getcondition(string mess)
+        public static string getCardTrack2()
+        {
+            string CardNumber;
+            RegistryKey versie3 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY + @"\cardTrack2");
+            CardNumber = versie3.GetValue("CardNumber").ToString();
+            versie3.Close();
+            return CardNumber;
+
+
+        }
+        public static void CleanCardTrack2()
+        {
+            RegistryKey versie3 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY + @"\cardTrack2");
+            RegistryKey versie4 = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Wincor Nixdorf\AgribankDigital\cardTrack2");
+            versie3.SetValue("CardNumber", "");
+            versie4.SetValue("CardNumber", "");
+            versie4.Close();
+            versie3.Close();
+        }
+        public static string getSerialNumber()
+        {
+            string SerialNumber ;
+            RegistryKey versie2 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
+            SerialNumber = versie2.GetValue("SerialNumber").ToString();
+            return SerialNumber;
+        }
+        public static string getcondition(string dataStrFormart)
         {
             string iscondition = @"\1c\1c\1c1";
-            int index = mess.IndexOf(iscondition) + iscondition.Length;
-            return mess.Substring(index, 1);
+            int index = dataStrFormart.IndexOf(iscondition) + iscondition.Length;
+            return dataStrFormart.Substring(index, 1);
         }
-        public static string getconditionHEX2(string mess)
+        public static string getconditionHEX2(string dataStr)
         {
             string iscondition = Hex2Ascii(@"\1c\1c\1c1");
-            int index = mess.IndexOf(iscondition) + iscondition.Length;
-            return mess.Substring(index, 1);
+            int index = dataStr.IndexOf(iscondition) + iscondition.Length;
+            return dataStr.Substring(index, 1);
         }
-        /*------------------------registry Editor-----------------------------*/
-        public static List<string> addSubKeyLocalMachine(string stepart, List<string> listkey)
+
+        public static string formartMessCard(List<Cards> listCard, int page)
         {
-            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
-            versie1.SetValue("CountCard", listkey.Count.ToString());
-            versie1.Close();
-            List<string> listcard = new List<string>();
-            for (int i = 0; i < listkey.Count; i++)
-            {
-                if (listkey[i].IndexOf("|") > 0)
-                {
-                    string[] tr = listkey[i].Split('|');
-                    if (tr.Length >= 1)
-                    {
-                        RegistryKey Registrystepart = Registry.LocalMachine.CreateSubKey(stepart + "\\" + (i + 1));
-                        string keysceen = tr[0].Substring(0, 6) + xLenght(3, "X") + tr[0].Substring(tr[0].Length - 4);
-                        listcard.Add(keysceen);
-                        string keystepart = ";" + tr[0] + "=" + tr[1] + "999" + tr[2] + "?";
-                        Registrystepart.SetValue("CONTENTSFORMAT", keysceen);
-                        Registrystepart.SetValue("CONTENTS", keystepart);
-                        Registrystepart.Close();
-                    }
-                }
 
-            }
-
-            return listcard;
-        }
-        public static string getValueRegittry(string name)
-        {
-            RegistryKey versie2 = Registry.LocalMachine.CreateSubKey(Utils.REGISTRY);
-            string key = versie2.GetValue(name).ToString();
-            versie2.Close();
-            return key;
-        }
-        public static void DeleteSubKeyLocalMachine(string stepart)
-        {
-            RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(stepart);
-            versie1.Close();
-
-
-            for (int i = 1; i <= 14; i++)
-            {
-                RegistryKey Registrystepart = Registry.LocalMachine.CreateSubKey(stepart + "\\" + i.ToString());
-                Registrystepart.SetValue("CONTENTS", "");
-                Registrystepart.SetValue("CONTENTSFORMAT", "");
-                Registrystepart.Close();
-
-
-            }
-        }
-        /* ------------------------registry Editor-----------------------------*/
-        public static byte[] lengthMess(string mess)
-        {
-            byte[] result = new byte[0];
-            mess = Hex2Ascii(mess);
-            int rawLen = mess.Length;
-
-            string hexStr = rawLen.ToString("X");
-
-            while (hexStr.Length < 4)
-            {
-                hexStr = hexStr.Insert(0, "0");
-            }
-
-            mess.Insert(0, HEX2ASCII(hexStr));
-
-            result = Encoding.ASCII.GetBytes(mess);
-            return result;
-
-        }
-        public static string formartMessCard1(string mess, List<string> listCard)
-        {
-            string card = "";
-            foreach (string item in listCard)
-            {
-                if (item != null)
-                {
-                    string[] itemCard = item.Split('|');
-
-                    card = card + "-" + itemCard[0];
-                }
-
-            }
-            card.Substring(0, 3);
-            int startIdx = mess.IndexOf("0*");
-
-            int endIdx = mess.IndexOf(HEX2ASCII("1b") + "(1" + HEX2ASCII("0f"));
-            string textCard = mess.Substring(2, startIdx + 2) + card.Remove(0, 1) + mess.Substring(endIdx, mess.Length - endIdx);
-            return resizeMess(textCard);
-
-        }
-        public static string formartMessCard(List<string> listCard, int iscancel)
-        {
-            List<string> stt = new List<string> { "FA", "IA", "LA", "OA", "F2", "I2", "L2", "O2" };
-            //   string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count) + @"\1c036\1c" + fomatStrCardNumber(listCard, stt)+ @"\0c\1bPEC:\5cVBA_ncrpict_2007\5cVietnamese\5cv800.pcx\1b\5c";
-            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c027\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
+            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard, page) + @"\1c027\1c\0e914" + fomatStrCardNumber(listCard, page) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
 
             return strCart;
         }
-        public static string fomatStrCardNumber(List<string> listCard, List<string> stt, int iscancel)
+        public static string fomatStrCardNumber(List<Cards> listCard, int page)
+
         {
             string strCart = "";
-            if (iscancel == 1)
+            try
             {
-                for (int i = 0; i < listCard.Count; i++)
+                foreach (Cards item in listCard)
                 {
-                    strCart = strCart + @"\0f" + stt[i] + listCard[i];
+                    if (item.index == page)
+                    {
+                        strCart = strCart + @"\0f" + item.KeyPosition + item.CardNumberFormat;
+                    }
                 }
-                strCart = strCart + @"\0fO2NEXT";
-                Logger.LogRaw("string  listCard.Count: > " + strCart);
+                Utilities.LogFW("string  listCard: > " + strCart);
             }
-            else
+            catch (Exception ex)
             {
-
-                for (int i = 0; i < listCard.Count; i++)
-                {
-                    strCart = strCart + @"\0f" + stt[i] + listCard[i];
-                }
-                Logger.LogRaw("string  listCard.Count: > " + strCart);
+                Utilities.LogFW(ex.Message);
 
             }
+
 
             return strCart;
 
         }
-        public static string fomatStrCard(int lenghtCard, int iscancel)
+        public static string fomatStrCard(List<Cards> listCard, int page)
         {
             string strCard = "";
-
-            if (iscancel == 1)
+            try
             {
+                int page1 = listCard.Where(n => n.index == 1).Count();
+                int page2 = listCard.Where(n => n.index == 2).Count();
 
-                strCard = xLenght(9, "1");
-
-
-            }
-            else
-            {
-                if (lenghtCard <= 4)
+                if (page == 1)
                 {
-                    strCard = xLenght(4, "0") + "1" + xLenght(4 - lenghtCard, "0") + xLenght(lenghtCard, "1");
+
+                    if (page1 <= 4)
+                    {
+                        strCard = xLenght(4, "0") + "1" + xLenght(4 - page1, "0") + xLenght(page1, "1");
+
+                    }
+                    else
+                    {
+                        strCard = xLenght(page1 - 4, "1") + xLenght(4 - (page1 - 4), "0") + "1" + xLenght(4, "1");
+                    }
+
 
                 }
                 else
                 {
-                    strCard = xLenght(lenghtCard - 4, "1") + xLenght(4 - (lenghtCard - 4), "0") + "1" + xLenght(4, "1");
+                    if (page2 <= 4)
+                    {
+                        strCard = xLenght(4, "0") + "11" + xLenght(4 - page2, "0") + xLenght(page2 - 1, "1");
+
+                    }
+                    else
+                    {
+                        strCard = xLenght(page2 - 4, "1") + xLenght(4 - (page2 - 4), "0") + "1" + xLenght(4, "1");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Utilities.LogFW(ex.Message);
 
             }
-
 
             return strCard;
         }
-        public static List<string> listCard2(string part)
-        {
-            List<string> listCard2 = new List<string>();
-            for (int i = 8; i <= 14; i++)
-            {
-                RegistryKey versie1 = Registry.LocalMachine.CreateSubKey(part + "\\" + i.ToString());
-                string keycard = versie1.GetValue("CONTENTSFORMAT").ToString();
 
-                if (!keycard.Equals(""))
-                {
-                    listCard2.Add(keycard);
-                }
-                versie1.Close();
-
-            }
-            return listCard2;
-        }
     }
 }

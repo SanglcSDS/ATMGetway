@@ -124,6 +124,7 @@
   <ItemGroup>
     <Compile Include="AfterScanFinger.cs" />
     <Compile Include="ATM.cs" />
+    <Compile Include="Cards.cs" />
     <Compile Include="CustomerInfo.cs" />
     <Compile Include="FingerPrintCB100.cs" />
     <Compile Include="FingerPrinZF1.cs" />

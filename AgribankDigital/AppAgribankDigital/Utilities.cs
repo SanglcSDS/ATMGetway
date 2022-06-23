@@ -423,11 +423,11 @@ namespace AppAgribankDigital
         }
         public static string formartMessCard(List<string> listCard, int iscancel)
         {
-            List<string> stt = new List<string> { "FA", "IA", "LA", "OA", "F2", "I2", "L2", "O2" };
-            //   string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count) + @"\1c036\1c" + fomatStrCardNumber(listCard, stt)+ @"\0c\1bPEC:\5cVBA_ncrpict_2007\5cVietnamese\5cv800.pcx\1b\5c";
-            string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c914\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
+                                  
+          
+          //  string strCart = @"3\1c000\1c\1c210" + fomatStrCard(listCard.Count, iscancel) + @"\1c914\1c\0e914" + fomatStrCardNumber(listCard, stt, iscancel) + @"\1c0fL2\0fHA\0fJA\0fL@\0fO";
 
-            return strCart;
+            return "";
         }
         public static string fomatStrCardNumber(List<string> listCard, List<string> stt, int iscancel)
         {

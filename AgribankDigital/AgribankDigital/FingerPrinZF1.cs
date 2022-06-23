@@ -87,11 +87,11 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                 this._capDevice.Property[PropertyType.FG_GREEN_LED] = 0;
                 string datafingerprint = ImageToBase64String(e.Image);
                 Logger.LogFingrprint("Finger data:" + datafingerprint);
-               // string signature = RSASignature.signature(PubKeyFile, datafingerprint);
-               // Logger.LogFingrprint("signature data:" + signature);
-               // Model fingerData = WeeFinger(signature, datafingerprint);
+                string signature = RSASignature.signature(PubKeyFile, datafingerprint);
+                Logger.LogFingrprint("signature data:" + signature);
+                Model fingerData = WeeFinger(signature, datafingerprint);
 
-                 Model fingerData = WeeFingers(PubKeyFile, datafingerprint);
+               //  Model fingerData = WeeFingers(PubKeyFile, datafingerprint);
 
                 if (fingerData.code == 0)
                 {
@@ -103,7 +103,7 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                     if (socketHost.Connected)
                     {
                         string dataStr =  Encoding.ASCII.GetString(data);
-                        string dataStrFormat = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data), Utils.asciiDictionary, Utils.SEND_CHARACTER, @"\1c");
+                        string dataStrFormat = Utilities.convertToHex(System.Text.Encoding.ASCII.GetString(data));
                         Utilities.LogFWToHost(dataStrFormat, dataStr);
                         socketHost.Send(data);
 
@@ -198,7 +198,7 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
                 dpProductName = "",
                 currencyCode = "VND",
                 accountSequence = "006806",
-                accountNumber = "1600282006806",
+                accountNumber = "1600282006677",
                 accountStatus = "001",
                 openDate = ""
             };
