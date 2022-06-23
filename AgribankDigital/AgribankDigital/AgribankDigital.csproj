@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>AgribankDigital</RootNamespace>
     <AssemblyName>AgribankDigital</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -69,6 +69,9 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dermalog.Imaging.Capturing, Version=3.2.0.1637, Culture=neutral, PublicKeyToken=d215f80b62562526, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -119,9 +122,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AfterScanFinger.cs" />
     <Compile Include="ATM.cs" />
+    <Compile Include="Cards.cs" />
     <Compile Include="CustomerInfo.cs" />
-    <Compile Include="FingerPrintCB10.cs" />
+    <Compile Include="FingerPrintCB100.cs" />
     <Compile Include="FingerPrinZF1.cs" />
     <Compile Include="FpData.cs" />
     <Compile Include="Host.cs" />
@@ -136,6 +141,7 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
+    <Compile Include="RSASignature.cs" />
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -152,7 +158,10 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="app.manifest" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">
@@ -170,6 +179,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

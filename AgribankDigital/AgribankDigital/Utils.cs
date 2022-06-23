@@ -7,18 +7,28 @@ namespace AgribankDigital
 {
     public static class Utils
     {
+
+        public static string IMAGE_CARD = ConfigurationManager.AppSettings["image_card"];
+        public static string IMAGE_FINGER = ConfigurationManager.AppSettings["image_finger"];
+        public static string IMAGE_NCRPICT = ConfigurationManager.AppSettings["image_ncrpict"];
+
         public static string IP_WEBSOCKET = ConfigurationManager.AppSettings["ip_webSocket"];
-        public static string IP_HOST= ConfigurationManager.AppSettings["ip_host"];
+        public static string IP_HOST = ConfigurationManager.AppSettings["ip_host"];
+        public static string REGISTRY = ConfigurationManager.AppSettings["registry"];
+        public static string IP_ATM = ConfigurationManager.AppSettings["ip_atm"];
         public static int PORT_FORWARD = Int32.Parse(ConfigurationManager.AppSettings["port_listen"]);
         public static int PORT_HOST = Int32.Parse(ConfigurationManager.AppSettings["port_host"]);
         public static string[] SEND_CHARACTER = ConfigurationManager.AppSettings["send_character"].Split(new char[] { ',' });
         public static string[] RECEIVE_CHARACTER = ConfigurationManager.AppSettings["receive_character"].Split(new char[] { ',' });
 
         public static bool HAS_CONTROLLER = Boolean.Parse(ConfigurationManager.AppSettings["hasController"]);
+        public static bool Test = Boolean.Parse(ConfigurationManager.AppSettings["Test"]);
         public static int CHECK_CONNECTION_TIMEOUT = Int32.Parse(ConfigurationManager.AppSettings["check_connection_timeout"]);
         public static int CHECK_CONNECTION_DELAY = Int32.Parse(ConfigurationManager.AppSettings["check_connection_delay"]);
         public static int RESET_ERR_DELAY = Int32.Parse(ConfigurationManager.AppSettings["reset_err_delay"]);
         public static int FINGER_PRINT_DELAY = Int32.Parse(ConfigurationManager.AppSettings["finger_print_delay"]);
+        public static int SEND_DATA_TIMEOUT = Int32.Parse(ConfigurationManager.AppSettings["send_data_timeout"]);
+        public static int TIMEOUT_API = Int32.Parse(ConfigurationManager.AppSettings["timeout_api"]);
         public static Dictionary<int, string> asciiDictionary = new Dictionary<int, string>()
         {
             {1, "\\1"},// SOH
