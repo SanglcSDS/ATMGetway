@@ -28,7 +28,7 @@ namespace AgribankDigital
 
             return result;
         }
-        public static List<string> listCard;
+       
         /*   public static List<string> DecodeCardNumber(string hexStr)
            {
                List<string> listCardFomat = new List<string>();

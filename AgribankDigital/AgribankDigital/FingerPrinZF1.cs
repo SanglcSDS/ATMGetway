@@ -1,4 +1,4 @@
-﻿using Dermalog.Imaging.Capturing;
+﻿/*using Dermalog.Imaging.Capturing;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -223,3 +223,4 @@ IjPXul0tAoF40+TgfRc9geNEIubJP/rEp2Y7Yazu7TNuXnP1NDA=
         }
     }
 }
+*/
