@@ -101,21 +101,6 @@ namespace AgribankDigital
             }
 
 
-            // start ZF1
-            try
-            {
-                if (Utils.HAS_CONTROLLER)
-                {
-
-                    Utilities.LogFW("ZF1 is starting...");
-                    atm.initFingerPrintZF1(host.socketHost, atm.socketATM);
-                }
-            }
-            catch (Exception e)
-            {
-                Utilities.LogFW("err: " + e.ToString());
-                Utilities.LogFW("ZF1 start failed!");
-            }
 
         }
 
@@ -217,15 +202,9 @@ namespace AgribankDigital
             try
             {
                 if (atm != null)
-                {
-                    if (Utils.HAS_CONTROLLER)
-                    {
-                        atm.closeFingerPrintZF1();
-                    }
                     atm.Close();
-                }
                 if (host != null)
-                    host.Terminate();
+                    host.Close();
                 if (checkConnectionThread != null)
                     checkConnectionThread.Abort();
                 if (receiveDataAtmThread != null)
